@@ -3,12 +3,12 @@ import React from "react";
 function Register() {
   return (
     <div className="container mt-3">
-      <div className="row bg-warning align-items-center">
+      <div className="row align-items-center">
         <div className="col-md-6">
           <img src="/login-bkg.jpg" alt="Filler" className="img-fluid" />
         </div>
-        <div className="col-md-6 bg-danger">
-          <div className="col bg-info">
+        <div className="col-md-6">
+          <div className="col">
             <h2 className="text-center">Sign Up</h2>
             <form>
               <div className="row">
