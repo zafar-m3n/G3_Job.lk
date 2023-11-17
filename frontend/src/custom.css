@@ -4,6 +4,11 @@
   font-weight: 900;
   font-size: 32;
 }
+.footer-logo {
+  color: #19376d;
+  font-weight: 900;
+  font-size: 32;
+}
 
 .custom-primary-btn {
   background-color: #0b2447;
@@ -48,5 +53,27 @@ h1 {
 
 .third-section {
   background-color: #0b2447;
+  color: #fffbfe;
+}
+
+.third-section .heading,
+.footer-content {
+  background: transparent;
+  color: #fffbfe;
+  border: none;
+}
+
+.third-section .heading,
+.fourth-section .heading {
+  font-size: 32px;
+  font-family: "Roboto Serif", serif;
+}
+
+.list-section {
+  background: transparent;
+  color: #fffbfe;
+}
+.fifth-section {
+  background-color: #282c34;
   color: #fffbfe;
 }
