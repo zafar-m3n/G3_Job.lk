@@ -1,0 +1,52 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Roboto+Serif:opsz,wght@8..144,100;8..144,200;8..144,300;8..144,400;8..144,500;8..144,600;8..144,700;8..144,800;8..144,900&display=swap");
+.logo-font {
+  color: #0b2447;
+  font-weight: 900;
+  font-size: 32;
+}
+
+.custom-primary-btn {
+  background-color: #0b2447;
+  border: #0b2447;
+  color: #fffbfe;
+}
+.get-started-btn {
+  font-size: 18;
+}
+
+.custom-primary-btn:hover,
+.custom-primary-btn:focus {
+  background-color: #19376d;
+}
+
+h1 {
+  font-family: "Roboto Serif", serif;
+  font-size: 52px;
+  font-weight: bold;
+  color: #19376d;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  align-items: center; /* Align vertically */
+}
+
+.carousel-control-prev {
+  justify-content: flex-start; /* Align to the left */
+}
+
+.carousel-control-next {
+  justify-content: flex-end; /* Align to the right */
+}
+
+.card-title-custom {
+  color: #19376d;
+  font-family: "Roboto Serif", serif; /* Ensure the font is loaded or available */
+  font-size: 20px;
+  text-align: center; /* Center align the text */
+}
+
+.third-section {
+  background-color: #0b2447;
+  color: #fffbfe;
+}
