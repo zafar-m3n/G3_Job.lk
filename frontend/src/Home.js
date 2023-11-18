@@ -10,7 +10,6 @@ import {
   Card,
   Form,
 } from "react-bootstrap";
-import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 
 function Home() {
   const services = [
@@ -111,13 +110,13 @@ function Home() {
           indicators={false}
           interval={null}
           prevIcon={
-            <span className="carousel-control-prev">
-              <FaArrowAltCircleLeft size={30} />
+            <span aria-hidden="true" className="carousel-control-prev-icon">
+              <i className="fas fa-arrow-circle-left fa-2x"></i>
             </span>
           }
           nextIcon={
-            <span className="carousel-control-next">
-              <FaArrowAltCircleRight size={30} />
+            <span aria-hidden="true" className="carousel-control-next-icon">
+              <i className="fas fa-arrow-circle-right fa-2x"></i>
             </span>
           }
           className="custom-carousel"
@@ -247,7 +246,7 @@ function Home() {
         </Row>
       </Container>
 
-      <Container fluid className="mt-5 px-5 pt-3 fifth-section">
+      <Container fluid className="mt-5 px-5 py-3 fifth-section">
         <Row className="bg-transparent">
           {/* First Column - Logo and About */}
           <Col md={5} className="mx-auto mb-3 bg-transparent">
@@ -285,10 +284,10 @@ function Home() {
           <Col md={3} className="mx-auto mb-3 bg-transparent">
             <h5 className="footer-content">Get in touch</h5>
             <Form className="footer-content">
-              <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Group className="mb-3 rounded" controlId="formBasicEmail">
                 <Form.Control type="email" placeholder="Enter email" />
               </Form.Group>
-              <Form.Group className="mb-3" controlId="formBasicName">
+              <Form.Group className="mb-3 rounded" controlId="formBasicName">
                 <Form.Control type="text" placeholder="Your Name" />
               </Form.Group>
               <Button
@@ -301,9 +300,10 @@ function Home() {
             </Form>
           </Col>
         </Row>
-        
-            <h5 className="footer-content text-center">CCG3 All Rights Reserved.</h5>
-          
+
+        <h5 className="footer-content text-center">
+          CCG3 All Rights Reserved.
+        </h5>
       </Container>
     </>
   );
