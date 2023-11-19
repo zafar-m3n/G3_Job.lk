@@ -19,26 +19,40 @@ const db = mysql.createConnection({
 });
 
 app.post("/register", (req, res) => {
-  const sql =
-    "INSERT INTO users (first_name, last_name, email, password, district, user_role) VALUES (?)";
-
-  bcrypt.hash(req.body.password.toString(), salt, (err, hash) => {
+  // First, check if the email already exists
+  const checkEmailQuery = "SELECT * FROM users WHERE email = ?";
+  db.query(checkEmailQuery, [req.body.email], (err, result) => {
     if (err) {
-      return res.json({ Error: "Error for hashing password" });
+      return res.json({ Error: "Database query error" });
     }
-    const values = [
-      req.body.firstName,
-      req.body.lastName,
-      req.body.email,
-      hash,
-      req.body.district,
-      req.body.userRole,
-    ];
-    db.query(sql, [values], (err, result) => {
+
+    if (result.length > 0) {
+      // Email already exists
+      return res.json({ Error: "Email is already in use" });
+    }
+
+    // If email does not exist, proceed to insert new user
+    const sql =
+      "INSERT INTO users (first_name, last_name, email, password, district, user_role) VALUES (?)";
+
+    bcrypt.hash(req.body.password.toString(), salt, (err, hash) => {
       if (err) {
-        return res.json({ Error: err.message });
+        return res.json({ Error: "Error for hashing password" });
       }
-      return res.json({ Status: "Success" });
+      const values = [
+        req.body.firstName,
+        req.body.lastName,
+        req.body.email,
+        hash,
+        req.body.district,
+        req.body.userRole,
+      ];
+      db.query(sql, [values], (err, result) => {
+        if (err) {
+          return res.json({ Error: err.message });
+        }
+        return res.json({ Status: "Success" });
+      });
     });
   });
 });

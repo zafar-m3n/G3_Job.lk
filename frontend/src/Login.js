@@ -8,28 +8,55 @@ function Login() {
     password: "",
   });
   const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    let newErrors = {};
+    let formIsValid = true;
+
+    // Email Validation
+    if (!values.email.trim()) {
+      formIsValid = false;
+      newErrors["email"] = "Email is required";
+    }
+    // Password Validation
+    if (!values.password) {
+      formIsValid = false;
+      newErrors["password"] = "Password is required";
+    }
+
+    setErrors(newErrors);
+    return formIsValid;
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios
-      .post("http://localhost:8081/login", values)
-      .then((response) => {
-        if (response.data.Status === "Success") {
-          navigate(
-            response.data.userRole === "freelancer"
-              ? "/freelancer-dashboard"
-              : "/employer-dashboard"
-          );
-        } else {
-          alert(response.data.Error);
-        }
-      })
-      .catch((err) => console.log(err));
+    if (validateForm()) {
+      axios
+        .post("http://localhost:8081/login", values)
+        .then((response) => {
+          if (response.data.Status === "Success") {
+            navigate(
+              response.data.userRole === "freelancer"
+                ? "/freelancer-dashboard"
+                : "/employer-dashboard"
+            );
+          } else {
+            if (response.data.Error === "User not found") {
+              setErrors({ ...errors, email: "User not found" });
+            } else if (response.data.Error === "Wrong password") {
+              setErrors({ ...errors, password: "Wrong password" });
+            }
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   };
   return (
     <div className="container mt-3">
       <div className="row align-items-center">
         <div className="col-md-7">
-          <img src="/login-bkg.jpg" alt="Filler" className="img-fluid" />
+          <img src="/images/login-bkg.jpg" alt="Filler" className="img-fluid" />
         </div>
         <div className="col-md-4">
           <div className="col">
@@ -46,9 +73,12 @@ function Login() {
                   onChange={(e) =>
                     setValues({ ...values, email: e.target.value })
                   }
-                  className="form-control"
                   id="email"
+                  className={`form-control ${errors.email ? "is-invalid" : ""}`}
                 />
+                {errors.email && (
+                  <div className="text-danger">{errors.email}</div>
+                )}
               </div>
               <div className="mb-3">
                 <label htmlFor="password" className="form-label">
@@ -61,13 +91,21 @@ function Login() {
                   onChange={(e) =>
                     setValues({ ...values, password: e.target.value })
                   }
-                  className="form-control"
                   id="password"
+                  className={`form-control ${
+                    errors.password ? "is-invalid" : ""
+                  }`}
                 />
+                {errors.password && (
+                  <div className="text-danger">{errors.password}</div>
+                )}
               </div>
 
               <div className="d-flex justify-content-center">
-                <button type="submit" className="btn btn-primary">
+                <button
+                  type="submit"
+                  className="btn btn-primary .custom-primary-btn"
+                >
                   Sign In
                 </button>
               </div>

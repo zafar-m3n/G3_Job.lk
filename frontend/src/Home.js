@@ -13,16 +13,16 @@ import {
 
 function Home() {
   const services = [
-    { name: "UI/UX Design", image: "/uiux-designer.jpg" },
-    { name: "Full Stack Development", image: "/fullstack-dev.jpg" },
-    { name: "QA Engineering", image: "/qa-engineer.jpg" },
-    { name: "Project Management", image: "/project-manager.jpg" },
-    { name: "Front-End Development", image: "/frontend-dev.jpg" },
-    { name: "Back-End Development", image: "/backend-dev.jpg" },
-    { name: "E-Commerce Development", image: "/ecommerce-dev.jpg" },
+    { name: "UI/UX Design", image: "/images/uiux-designer.jpg" },
+    { name: "Full Stack Development", image: "/images/fullstack-dev.jpg" },
+    { name: "QA Engineering", image: "/images/qa-engineer.jpg" },
+    { name: "Project Management", image: "/images/project-manager.jpg" },
+    { name: "Front-End Development", image: "/images/frontend-dev.jpg" },
+    { name: "Back-End Development", image: "/images/backend-dev.jpg" },
+    { name: "E-Commerce Development", image: "/images/ecommerce-dev.jpg" },
     {
       name: "Mobile Responsive Design",
-      image: "/mobile-design.jpg",
+      image: "/images/mobile-design.jpg",
     },
   ];
   const chunkServices = (arr, size) =>
@@ -34,22 +34,32 @@ function Home() {
 
   const reviews = [
     {
-      name: "John Doe",
-      title: "Web Developer",
-      review: "This platform has been instrumental in my career growth.",
-      image: "path-to-profile-picture.jpg",
+      name: "John Cena",
+      title: "Frontend Web Developer",
+      review:
+        "You can't see me, but you can see my success on Job.lk! It's a champion's ring for freelancers, where hustle, loyalty, and respect lead to victory!",
+      image: "/images/john-cena.jpg",
     },
     {
-      name: "Jane Doe",
-      title: "Web Developer",
-      review: "This platform has been instrumental in my career growth.",
-      image: "path-to-profile-picture.jpg",
+      name: "Bruce Wayne",
+      title: "Fullstack Web Developer",
+      review:
+        "In the shadows of Gotham, I found Job.lk. Efficient, reliable, a beacon in the night for freelancers seeking justice in opportunities. It's my trusted ally. Not the freelancing site we needed, but the freelancing site we deserve.",
+      image: "/images/bruce-wayne.jpg",
     },
     {
-      name: "Jack Doe",
-      title: "Web Developer",
-      review: "This platform has been instrumental in my career growth.",
-      image: "path-to-profile-picture.jpg",
+      name: "Ryan Reynolds",
+      title: "Owner of mintmobile.com",
+      review:
+        "JOB.LK is the Deadpool of freelancing - cheeky, bold, and effective. Finding freelancers is smooth and fun. Don't miss out on this freelancing party. #FreelanceLikeDeadpool",
+      image: "/images/ryan-reynolds.jpg",
+    },
+    {
+      name: "Optimus Prime",
+      title: "Leader of Autobots",
+      review:
+        "Job.lk transforms the hiring battlefield. As an employer, it’s my Autobot ally in recruiting skilled warriors. Together, we ensure a future of success and innovation.",
+      image: "/images/optimus.jpg",
     },
   ];
 
@@ -99,7 +109,7 @@ function Home() {
           </Col>
 
           <Col md={4}>
-            <img src="/bkg.png" alt="Hero" className="img-fluid m-0" />
+            <img src="/images/bkg.png" alt="Hero" className="img-fluid m-0" />
           </Col>
         </Row>
       </Container>
@@ -188,7 +198,7 @@ function Home() {
 
           <Col md={6} className="p-0 bg-transparent d-flex justify-content-end">
             <img
-              src="corporate-workers.jpg"
+              src="/images/corporate-workers.jpg"
               alt="Corporate Workers"
               className="img-fluid"
             />
@@ -218,18 +228,20 @@ function Home() {
               {reviews.map((review, index) => (
                 <Carousel.Item>
                   <Row>
-                    <Col key={index} className="d-flex justify-content-center">
-                      <Card
-                        style={{ width: "500px", height: "300px" }}
-                        className="text-center"
-                      >
-                        <Card.Img
-                          variant="top"
-                          src={review.image}
-                          className="rounded-circle mx-auto"
-                          style={{ width: "100px", height: "100px" }}
-                        />
-                        <Card.Body>
+                    <Col
+                      key={index}
+                      className="d-flex justify-content-center align-items-center"
+                    >
+                      <Card style={{ width: "500px" }} className="text-center">
+                        <Card.Header className="p-2 bg-transparent border-0">
+                          <Card.Img
+                            variant="top"
+                            src={review.image}
+                            className="rounded-circle mx-auto"
+                            style={{ width: "100px", height: "100px" }}
+                          />
+                        </Card.Header>
+                        <Card.Body className="p-2">
                           <Card.Title>{review.name}</Card.Title>
                           <Card.Subtitle className="mb-2">
                             {review.title}

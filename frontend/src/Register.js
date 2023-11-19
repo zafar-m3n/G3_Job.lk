@@ -11,29 +11,96 @@ function Register() {
     district: "",
     userRole: "",
   });
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const validateForm = () => {
+    let newErrors = {};
+    let formIsValid = true;
+
+    // First Name Validation
+    if (!values.firstName.trim()) {
+      formIsValid = false;
+      newErrors["firstName"] = "First Name is required";
+    }
+
+    // Last Name Validation
+    if (!values.lastName.trim()) {
+      formIsValid = false;
+      newErrors["lastName"] = "Last Name is required";
+    }
+
+    // Email Validation
+    if (!values.email.trim()) {
+      formIsValid = false;
+      newErrors["email"] = "Email is required";
+    }
+
+    // Password Validation
+    if (!values.password) {
+      formIsValid = false;
+      newErrors["password"] = "Password is required";
+    } else if (values.password.length < 8) {
+      formIsValid = false;
+      newErrors["password"] = "Password must be at least 8 characters";
+    }
+
+    // District Validation
+    if (!values.district) {
+      formIsValid = false;
+      newErrors["district"] = "District is required";
+    }
+
+    // UserRole Validation
+    if (!values.userRole) {
+      formIsValid = false;
+      newErrors["userRole"] = "User Role is required";
+    }
+
+    setErrors(newErrors);
+    setShowSuccess(false);
+    return formIsValid;
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios
-      .post("http://localhost:8081/register", values)
-      .then((response) => {
-        if (response.data.Status === "Success") {
-          navigate("/login");
-        } else {
-          alert(response.data.Error);
-        }
-      })
-      .catch((err) => console.log(err));
+    if (validateForm()) {
+      axios
+        .post("http://localhost:8081/register", values)
+        .then((response) => {
+          if (response.data.Status === "Success") {
+            setShowSuccess(true);
+            setTimeout(() => {
+              navigate("/login");
+            }, 3000);
+          } else {
+            // Handle email in use error
+            if (response.data.Error === "Email is already in use") {
+              setErrors({ ...errors, email: "Email is already in use" });
+            } else {
+              alert(response.data.Error);
+            }
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   };
+
   return (
     <div className="container mt-3">
       <div className="row align-items-center">
         <div className="col-md-6">
-          <img src="/login-bkg.jpg" alt="Filler" className="img-fluid" />
+          <img src="/images/login-bkg.jpg" alt="Filler" className="img-fluid" />
         </div>
         <div className="col-md-6">
           <div className="col">
             <h2 className="text-center">Sign Up</h2>
+            {showSuccess && (
+              <div className="alert alert-success" role="alert">
+                Registered successfully!
+              </div>
+            )}
             <form onSubmit={handleSubmit}>
               <div className="row">
                 <div className="col">
@@ -48,9 +115,14 @@ function Register() {
                       onChange={(e) =>
                         setValues({ ...values, firstName: e.target.value })
                       }
-                      className="form-control"
+                      className={`form-control ${
+                        errors.firstName ? "is-invalid" : ""
+                      }`}
                       id="firstName"
                     />
+                    {errors.firstName && (
+                      <div className="text-danger">{errors.firstName}</div>
+                    )}
                   </div>
                 </div>
                 <div className="col">
@@ -65,9 +137,14 @@ function Register() {
                       onChange={(e) =>
                         setValues({ ...values, lastName: e.target.value })
                       }
-                      className="form-control"
+                      className={`form-control ${
+                        errors.lastName ? "is-invalid" : ""
+                      }`}
                       id="lastName"
                     />
+                    {errors.lastName && (
+                      <div className="text-danger">{errors.lastName}</div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -82,9 +159,12 @@ function Register() {
                   onChange={(e) =>
                     setValues({ ...values, email: e.target.value })
                   }
-                  className="form-control"
+                  className={`form-control ${errors.email ? "is-invalid" : ""}`}
                   id="email"
                 />
+                {errors.email && (
+                  <div className="text-danger">{errors.email}</div>
+                )}
               </div>
               <div className="mb-3">
                 <label htmlFor="password" className="form-label">
@@ -97,21 +177,29 @@ function Register() {
                   onChange={(e) =>
                     setValues({ ...values, password: e.target.value })
                   }
-                  className="form-control"
+                  className={`form-control ${
+                    errors.password ? "is-invalid" : ""
+                  }`}
                   id="password"
                 />
+                {errors.password && (
+                  <div className="text-danger">{errors.password}</div>
+                )}
               </div>
               <div className="mb-3">
                 <label htmlFor="district" className="form-label">
                   District
                 </label>
                 <select
-                  className="form-control"
+                  className={`form-control ${
+                    errors.district ? "is-invalid" : ""
+                  }`}
                   id="district"
                   onChange={(e) =>
                     setValues({ ...values, district: e.target.value })
                   }
                 >
+                  <option value="">Select your district</option>
                   <option value="Ampara">Ampara</option>
                   <option value="Anuradhapura">Anuradhapura</option>
                   <option value="Badulla">Badulla</option>
@@ -138,14 +226,22 @@ function Register() {
                   <option value="Trincomalee">Trincomalee</option>
                   <option value="Vavuniya">Vavuniya</option>
                 </select>
+                {errors.district && (
+                  <div className="text-danger">{errors.district}</div>
+                )}
               </div>
 
               <div className="mb-3">
-                <label className="form-label">Select your role:</label>
+                <label className="form-label">
+                  Select your role:
+                  {errors.userRole && (
+                    <div className="text-danger">{errors.userRole}</div>
+                  )}
+                </label>
                 <div className="row">
                   <div className="col text-center">
                     <img
-                      src="/freelancer-icon.jpg"
+                      src="/images/freelancer-icon.jpg"
                       alt="Freelancer"
                       width="100"
                       className="mb-2"
@@ -170,7 +266,7 @@ function Register() {
 
                   <div className="col text-center">
                     <img
-                      src="/employer-icon.jpg"
+                      src="/images/employer-icon.jpg"
                       alt="Employer"
                       width="100"
                       className="mb-2"
@@ -196,7 +292,10 @@ function Register() {
               </div>
 
               <div className="d-flex justify-content-center">
-                <button type="submit" className="btn btn-primary">
+                <button
+                  type="submit"
+                  className="btn btn-primary .custom-primary-btn"
+                >
                   Sign Up
                 </button>
               </div>
