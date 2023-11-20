@@ -58,7 +58,7 @@ function Home() {
       name: "Optimus Prime",
       title: "Leader of Autobots",
       review:
-        "Job.lk transforms the hiring battlefield. As an employer, it’s my Autobot ally in recruiting skilled warriors. Together, we ensure a future of success and innovation.",
+        "Job.lk transforms the hiring battlefield. As an employer, it’s my Autobot ally in recruiting skilled developers. Together, we ensure a future of success and innovation.",
       image: "/images/optimus.jpg",
     },
   ];

@@ -64,7 +64,7 @@ app.post("/login", (req, res) => {
       return res.json({ Error: err.message });
     }
     if (result.length === 0) {
-      return res.json({ Error: "User not found" });
+      return res.json({ Error: "Invalid email or password" });
     }
     bcrypt.compare(
       req.body.password.toString(),
@@ -74,9 +74,17 @@ app.post("/login", (req, res) => {
           return res.json({ Error: "Error for comparing password" });
         }
         if (match) {
-          return res.json({ Status: "Success", userRole: result[0].user_role });
+          // Generate token
+          const token = jwt.sign({ id: result[0].id }, "CCG3ZNARCH", {
+            expiresIn: "1d",
+          });
+          return res.json({
+            Status: "Success",
+            userRole: result[0].user_role,
+            token,
+          });
         } else {
-          return res.json({ Error: "Wrong password" });
+          return res.json({ Error: "Invalid email or password" });
         }
       }
     );

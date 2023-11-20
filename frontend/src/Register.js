@@ -307,7 +307,7 @@ function Register() {
                   className="link-primary"
                   style={{ textDecoration: "none" }}
                 >
-                  Sign in
+                  Log in
                 </a>
               </div>
             </form>

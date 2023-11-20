@@ -41,11 +41,12 @@ function Login() {
                 ? "/freelancer-dashboard"
                 : "/employer-dashboard"
             );
+            localStorage.setItem("token", response.data.token);
           } else {
-            if (response.data.Error === "User not found") {
-              setErrors({ ...errors, email: "User not found" });
-            } else if (response.data.Error === "Wrong password") {
-              setErrors({ ...errors, password: "Wrong password" });
+            if (response.data.Error === "Invalid email or password") {
+              setErrors({
+                input: "Invalid email or password",
+              });
             }
           }
         })
@@ -100,13 +101,15 @@ function Login() {
                   <div className="text-danger">{errors.password}</div>
                 )}
               </div>
-
+              {errors.input && (
+                <div className="text-danger mb-2">{errors.input}</div>
+              )}
               <div className="d-flex justify-content-center">
                 <button
                   type="submit"
                   className="btn btn-primary .custom-primary-btn"
                 >
-                  Sign In
+                  Log In
                 </button>
               </div>
 
