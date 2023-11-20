@@ -6,16 +6,53 @@ import Register from "./Register";
 import Login from "./Login";
 import FreelancerHome from "./FreelancerHome";
 import EmployerHome from "./EmployerHome";
+import PublicRoute from "./components/PublicRoute";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/freelancer-dashboard" element={<FreelancerHome />} />
-        <Route path="/employer-dashboard" element={<EmployerHome />} />
+        <Route
+          path="/"
+          element={
+            <PublicRoute>
+              <Home />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/freelancer-dashboard"
+          element={
+            <ProtectedRoute>
+              <FreelancerHome />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/employer-dashboard"
+          element={
+            <ProtectedRoute>
+              <EmployerHome />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

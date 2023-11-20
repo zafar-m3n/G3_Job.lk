@@ -79,7 +79,13 @@ function Register() {
                   : "/employer-dashboard"
               );
             }, 2000);
-            localStorage.setItem("token", response.data.token);
+            localStorage.setItem(
+              "auth",
+              JSON.stringify({
+                token: response.data.token,
+                role: response.data.userRole,
+              })
+            );
           } else {
             // Handle email in use error
             if (response.data.Error === "Email is already in use") {

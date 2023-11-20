@@ -41,7 +41,13 @@ function Login() {
                 ? "/freelancer-dashboard"
                 : "/employer-dashboard"
             );
-            localStorage.setItem("token", response.data.token);
+            localStorage.setItem(
+              "auth",
+              JSON.stringify({
+                token: response.data.token,
+                role: response.data.userRole,
+              })
+            );
           } else {
             if (response.data.Error === "Invalid email or password") {
               setErrors({
