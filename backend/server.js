@@ -1,95 +1,15 @@
 import express from "express";
-import mysql from "mysql";
 import cors from "cors";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
 import cookieParser from "cookie-parser";
-const salt = 10;
+import userRoutes from "./routes/userRoutes.js";
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
 
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "freelancer_system",
-});
-
-app.post("/register", (req, res) => {
-  // First, check if the email already exists
-  const checkEmailQuery = "SELECT * FROM users WHERE email = ?";
-  db.query(checkEmailQuery, [req.body.email], (err, result) => {
-    if (err) {
-      return res.json({ Error: "Database query error" });
-    }
-
-    if (result.length > 0) {
-      // Email already exists
-      return res.json({ Error: "Email is already in use" });
-    }
-
-    // If email does not exist, proceed to insert new user
-    const sql =
-      "INSERT INTO users (first_name, last_name, email, password, district, user_role) VALUES (?)";
-
-    bcrypt.hash(req.body.password.toString(), salt, (err, hash) => {
-      if (err) {
-        return res.json({ Error: "Error for hashing password" });
-      }
-      const values = [
-        req.body.firstName,
-        req.body.lastName,
-        req.body.email,
-        hash,
-        req.body.district,
-        req.body.userRole,
-      ];
-      db.query(sql, [values], (err, result) => {
-        if (err) {
-          return res.json({ Error: err.message });
-        }
-        return res.json({ Status: "Success" });
-      });
-    });
-  });
-});
-
-app.post("/login", (req, res) => {
-  const sql = "SELECT * FROM users WHERE email = ?";
-  db.query(sql, [req.body.email], (err, result) => {
-    if (err) {
-      return res.json({ Error: err.message });
-    }
-    if (result.length === 0) {
-      return res.json({ Error: "Invalid email or password" });
-    }
-    bcrypt.compare(
-      req.body.password.toString(),
-      result[0].password,
-      (err, match) => {
-        if (err) {
-          return res.json({ Error: "Error for comparing password" });
-        }
-        if (match) {
-          // Generate token
-          const token = jwt.sign({ id: result[0].id }, "CCG3ZNARCH", {
-            expiresIn: "1d",
-          });
-          return res.json({
-            Status: "Success",
-            userRole: result[0].user_role,
-            token,
-          });
-        } else {
-          return res.json({ Error: "Invalid email or password" });
-        }
-      }
-    );
-  });
-});
+// Use routes
+app.use(userRoutes);
 
 app.listen(8081, () => {
   console.log("Running server");

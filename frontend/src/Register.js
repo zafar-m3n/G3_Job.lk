@@ -70,10 +70,16 @@ function Register() {
         .post("http://localhost:8081/register", values)
         .then((response) => {
           if (response.data.Status === "Success") {
+            console.log(response.data.user);
             setShowSuccess(true);
             setTimeout(() => {
-              navigate("/login");
-            }, 3000);
+              navigate(
+                response.data.user.user_role === "freelancer"
+                  ? "/freelancer-dashboard"
+                  : "/employer-dashboard"
+              );
+            }, 2000);
+            localStorage.setItem("token", response.data.token);
           } else {
             // Handle email in use error
             if (response.data.Error === "Email is already in use") {
