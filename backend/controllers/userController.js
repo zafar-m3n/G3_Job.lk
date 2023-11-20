@@ -24,7 +24,8 @@ export const register = (req, res) => {
 
       UserModel.insertUser(user, (err, result) => {
         if (err) return res.json({ Error: err.message });
-        const token = jwt.sign({ id: user.id }, "CCG3ZNARCH", {
+        const userId = result.insertId;
+        const token = jwt.sign({ id: userId }, "CCG3ZNARCH", {
           expiresIn: "1d",
         });
         return res.json({
