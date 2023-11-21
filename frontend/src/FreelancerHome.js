@@ -9,6 +9,7 @@ import {
   Col,
   Form,
 } from "react-bootstrap";
+import Sidebar from "./components/Sidebar";
 
 function FreelancerHome() {
   const [userData, setUserData] = useState({ name: "", profileImage: "" });
@@ -63,7 +64,7 @@ function FreelancerHome() {
               <div style={{ display: "flex", alignItems: "center" }}>
                 <span
                   style={{
-                    marginRight: "10px",
+                    marginRight: "5px",
                   }}
                 >
                   {userData.name}
@@ -82,7 +83,19 @@ function FreelancerHome() {
           </Nav>
         </Container>
       </Navbar>
-      <Container fluid className="mt-5 px-5 py-3 fifth-section">
+      <Container fluid className="bg-warning">
+        <Row className="bg-warning">
+          <Col md={3} className="p-0">
+            <Sidebar />
+          </Col>
+
+          {/* Main Content Column */}
+          <Col md={9} className="bg-info">
+            {/* Your main content goes here */}
+          </Col>
+        </Row>
+      </Container>
+      <Container fluid className="px-5 py-3 fifth-section">
         <Row className="bg-transparent">
           {/* First Column - Logo and About */}
           <Col md={5} className="mx-auto mb-3 bg-transparent">
