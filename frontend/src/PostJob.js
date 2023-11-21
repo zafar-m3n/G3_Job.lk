@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./styles/EmployerHomeStyle.css";
 import Sidebar from "./components/Sidebar";
 import axios from "axios";
@@ -12,7 +13,8 @@ import {
   Form,
 } from "react-bootstrap";
 
-function EmployerHome() {
+function PostJob() {
+  const [userData, setUserData] = useState({ name: "", profileImage: "" });
   const [jobTitle, setJobTitle] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [requiredSkills, setRequiredSkills] = useState("");
@@ -31,6 +33,7 @@ function EmployerHome() {
     experienceLevel,
     location,
     additionalInfo,
+    employerName: userData.name,
   };
 
   const handleInputChange = (event, setter) => {
@@ -38,7 +41,7 @@ function EmployerHome() {
   };
   const [errors, setErrors] = useState({});
   const [showSuccess, setShowSuccess] = useState(false);
-
+  const navigate = useNavigate();
   const validateForm = () => {
     let errors = {};
     let formIsValid = true;
@@ -86,12 +89,28 @@ function EmployerHome() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (validateForm()) {
-      console.log("validated");
-      console.log("values", values);
+      try {
+        const res = await axios.post("http://localhost:8081/postJob", values, {
+          headers: {
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("auth"))?.token
+            }`,
+          },
+        });
+        if (res.data.Status === "Success") {
+          console.log(res.data);
+          //timeout of 2 seconds
+          setShowSuccess(true);
+          setTimeout(() => {
+            //navigate to employer dashboard
+            navigate("/employer-dashboard");
+          }, 2000);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
-
-  const [userData, setUserData] = useState({ name: "", profileImage: "" });
   const getUserData = async () => {
     try {
       const res = await axios.get("http://localhost:8081/getUserData", {
@@ -495,4 +514,4 @@ function EmployerHome() {
   );
 }
 
-export default EmployerHome;
+export default PostJob;

@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import * as UserModel from "../models/userModel.js";
+import * as jobModel from "../models/jobModel.js";
 import e from "express";
 
 const saltRounds = 10;
@@ -84,6 +85,33 @@ export const getUserData = async (req, res) => {
       }
       const user = users[0];
       res.json({ Status: "Success", user: user });
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ Error: "Server error" });
+  }
+};
+
+export const postJob = async (req, res) => {
+  try {
+    const job = [
+      req.body.jobTitle,
+      req.body.jobDescription,
+      req.body.requiredSkills,
+      req.body.estimatedBudget,
+      req.body.projectDuration,
+      req.body.experienceLevel,
+      req.body.location,
+      req.body.additionalInfo,
+      req.body.employerName,
+    ];
+    jobModel.insertJob(job, (err, result) => {
+      if (err) return res.json({ Error: err.message });
+      const jobId = result.insertId;
+      return res.json({
+        Status: "Success",
+        job: job,
+      });
     });
   } catch (error) {
     console.log(error);
