@@ -5,44 +5,70 @@ import "../styles/SidebarStyle.css";
 
 const Sidebar = () => {
   const location = useLocation();
+
+  // Retrieve the role from local storage
+  const userRole = JSON.parse(localStorage.getItem("auth"))?.role;
+
   const isActive = (path) => {
     return path === location.pathname;
   };
+
   return (
     <Nav defaultActiveKey="/home" className="flex-column sidebar py-3">
       <Nav.Link
-        href="/freelancer-dashboard"
-        className={isActive("/freelancer-dashboard") ? "active" : ""}
+        href={
+          userRole === "freelancer"
+            ? "/freelancer-dashboard"
+            : "/employer-dashboard"
+        }
+        className={
+          isActive(
+            userRole === "freelancer"
+              ? "/freelancer-dashboard"
+              : "/employer-dashboard"
+          )
+            ? "active"
+            : ""
+        }
       >
-        <i class="fas fa-home"></i>
+        <i className="fas fa-home"></i>
         Dashboard
       </Nav.Link>
       <Nav.Link
-        href="/search-job"
-        className={isActive("/search-job" ? "active" : "")}
+        href={userRole === "freelancer" ? "/search-job" : "/search-freelancer"}
+        className={
+          isActive(
+            userRole === "freelancer" ? "/search-job" : "/search-freelancer"
+          )
+            ? "active"
+            : ""
+        }
       >
-        <i class="fas fa-magnifying-glass"></i>
-        Search Job
+        <i className="fas fa-magnifying-glass"></i>
+        {userRole === "freelancer" ? "Search Jobs" : "Search Freelancers"}
       </Nav.Link>
+
       <Nav.Link
         href="/freelancer-clusters"
-        className={isActive("/freelancer-clusters" ? "active" : "")}
+        className={isActive("/freelancer-clusters") ? "active" : ""}
       >
-        <i class="fas fa-users"></i>
+        <i className="fas fa-users"></i>
         Freelancer Clusters
       </Nav.Link>
+      {userRole === "freelancer" && (
+        <Nav.Link
+          href="/resources"
+          className={isActive("/resources") ? "active" : ""}
+        >
+          <i className="fas fa-book"></i>
+          Resources
+        </Nav.Link>
+      )}
       <Nav.Link
-        href="/resources"
-        className={isActive("/resources" ? "active" : "")}
+        href="/profile"
+        className={isActive("/profile") ? "active" : ""}
       >
-        <i class="fas fa-book"></i>
-        Resources
-      </Nav.Link>
-      <Nav.Link
-        href="/freelancer-profile"
-        className={isActive("/freelancer-profile" ? "active" : "")}
-      >
-        <i class="fas fa-user"></i>
+        <i className="fas fa-user"></i>
         Profile
       </Nav.Link>
     </Nav>

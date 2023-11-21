@@ -83,7 +83,7 @@ function Register() {
               "auth",
               JSON.stringify({
                 token: response.data.token,
-                role: response.data.userRole,
+                role: response.data.user.user_role,
               })
             );
           } else {
