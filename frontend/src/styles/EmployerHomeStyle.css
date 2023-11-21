@@ -10,6 +10,7 @@
   font-weight: lighter;
 }
 .button-custom {
+  padding: 5px 15px;
   background: #0b2447;
   border-radius: 5px;
   color: #fffbfe;
