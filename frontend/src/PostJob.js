@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import "./styles/EmployerHomeStyle.css";
 import Sidebar from "./components/Sidebar";
 import axios from "axios";
@@ -18,11 +17,6 @@ import {
 } from "react-bootstrap";
 
 function EmployerHome() {
-  const navigate = useNavigate();
-  const handlePostJobClick = () => {
-    navigate("/post-job"); // Replace '/postjob' with the path you defined in your routes
-  };
-
   const infoCards = [
     {
       icon: "fas fa-search",
@@ -143,130 +137,7 @@ function EmployerHome() {
 
           {/* Main Content Column */}
           <Col md={9} className="py-3 bg-info">
-            <Col className="align-items-center justify-content-center mb-4">
-              <Row>
-                <Col md={10} className="d-flex align-items-center">
-                  <h2 className="heading">Welcome, {userData.name}</h2>
-                </Col>
-                <Col>
-                  <button
-                    className="button-custom"
-                    onClick={handlePostJobClick}
-                  >
-                    Post a Job
-                  </button>
-                </Col>
-              </Row>
-              <Row>
-                <Col md={9}>
-                  <InputGroup className="mb-3 rounded">
-                    <FormControl
-                      placeholder="Browse freelancers that are tailored to you"
-                      aria-label="Browse freelancers"
-                    />
-                    <Button variant="outline-secondary" id="button-addon2">
-                      <i className="fas fa-search"></i>
-                    </Button>
-                  </InputGroup>
-                </Col>
-              </Row>
-              <Row>
-                {infoCards.map((card, index) => (
-                  <Col key={index} md={4} className="mb-4 pe-3">
-                    <Card>
-                      <Card.Body>
-                        <Card.Title>
-                          <i
-                            className={card.icon}
-                            style={{ fontSize: "24px" }}
-                          ></i>
-                          {card.title}
-                        </Card.Title>
-                        <Card.Text>{card.body}</Card.Text>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                ))}
-              </Row>
-            </Col>
-            <Col className="align-items-center justify-content-center mb-4">
-              <Row>
-                <h2 className="heading">
-                  Your Current Jobs and Recommendations
-                </h2>
-              </Row>
-              <Row>
-                <h4 className="sub-heading">Active Bids</h4>
-              </Row>
-              <Row>
-                <h4 className="sub-heading">Recommended Freelancers</h4>
-              </Row>
-            </Col>
-            <Col className="align-items-center justify-content-center mb-4">
-              <Row>
-                <h2 className="heading">Most Popular Freelance Categories</h2>
-              </Row>
-              <Row>
-                <Carousel
-                  indicators={false}
-                  interval={null}
-                  prevIcon={
-                    <span
-                      aria-hidden="true"
-                      className="carousel-control-prev-icon"
-                      style={{
-                        position: "absolute",
-                        left: "calc(25% - 24px)", // Adjusting for icon size
-                        zIndex: 1,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                      }}
-                    >
-                      <i className="fas fa-arrow-circle-left fa-2x"></i>
-                    </span>
-                  }
-                  nextIcon={
-                    <span
-                      aria-hidden="true"
-                      className="carousel-control-next-icon"
-                      style={{
-                        position: "absolute",
-                        right: "calc(25% - 24px)", // Adjusting for icon size
-                        zIndex: 1,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                      }}
-                    >
-                      <i className="fas fa-arrow-circle-right fa-2x"></i>
-                    </span>
-                  }
-                  className="py-2"
-                >
-                  {serviceGroups.map((group, idx) => (
-                    <Carousel.Item key={idx}>
-                      <Row className="justify-content-center">
-                        {group.map((service, index) => (
-                          <Col
-                            key={index}
-                            md={3}
-                            className="d-flex justify-content-center"
-                          >
-                            <Card>
-                              <Card.Img variant="top" src={service.image} />
-                              <Card.Body>
-                                <Card.Title className="card-title-custom">
-                                  {service.name}
-                                </Card.Title>
-                              </Card.Body>
-                            </Card>
-                          </Col>
-                        ))}
-                      </Row>
-                    </Carousel.Item>
-                  ))}
-                </Carousel>
-              </Row>
-            </Col>
+            Post a Job
           </Col>
         </Row>
       </Container>

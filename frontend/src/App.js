@@ -8,6 +8,7 @@ import FreelancerHome from "./FreelancerHome";
 import EmployerHome from "./EmployerHome";
 import PublicRoute from "./components/PublicRoute";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PostJob from "./PostJob";
 
 function App() {
   return (
@@ -50,6 +51,14 @@ function App() {
           element={
             <ProtectedRoute>
               <EmployerHome />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/post-job"
+          element={
+            <ProtectedRoute>
+              <PostJob />
             </ProtectedRoute>
           }
         />

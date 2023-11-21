@@ -5,6 +5,13 @@
   color: #19376d;
 }
 
-.job-btn {
-  background-color: #0b2447;
+.sub-heading {
+  font-size: 24px;
+  font-weight: lighter;
+}
+.button-custom {
+  background: #0b2447;
+  border-radius: 5px;
+  color: #fffbfe;
+  border: #0b2447;
 }
