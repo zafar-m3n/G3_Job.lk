@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./styles/FreelancerHomeStyle.css";
 import axios from "axios";
 import {
@@ -11,10 +12,12 @@ import {
   Form,
   InputGroup,
   FormControl,
+  Dropdown,
 } from "react-bootstrap";
 import Sidebar from "./components/Sidebar";
 
 function FreelancerHome() {
+  const navigate = useNavigate();
   const [userData, setUserData] = useState({
     name: "",
     profileImage: "",
@@ -37,6 +40,11 @@ function FreelancerHome() {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("auth");
+    navigate("/");
   };
 
   useEffect(() => {
@@ -66,27 +74,35 @@ function FreelancerHome() {
             </Nav>
           </Navbar.Collapse>
           {/* Action Buttons */}
-          <Nav>
-            {/* Display User Name and Profile Image if available */}
+          <Nav className="p-0">
             {userData.name && (
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <span
+              <Dropdown align="end">
+                <Dropdown.Toggle
+                  variant="success"
+                  id="dropdown-basic"
                   style={{
-                    marginRight: "5px",
+                    backgroundColor: "transparent",
+                    borderColor: "transparent",
                   }}
                 >
-                  {userData.name}
-                </span>
-                <img
-                  src={userData.profileImage}
-                  alt="Profile"
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "50%",
-                  }}
-                />
-              </div>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <span style={{ marginRight: "5px" }}>{userData.name}</span>
+                    <img
+                      src={userData.profileImage}
+                      alt="Profile"
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        borderRadius: "50%",
+                      }}
+                    />
+                  </div>
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu className="upward-dropdown">
+                  <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             )}
           </Nav>
         </Container>

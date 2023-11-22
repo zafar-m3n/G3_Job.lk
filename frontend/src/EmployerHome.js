@@ -15,6 +15,7 @@ import {
   InputGroup,
   FormControl,
   Carousel,
+  Dropdown,
 } from "react-bootstrap";
 
 function EmployerHome() {
@@ -110,6 +111,10 @@ function EmployerHome() {
       return [...jobs].reverse();
     }
   };
+  const handleLogout = () => {
+    localStorage.removeItem("auth");
+    navigate("/");
+  };
 
   useEffect(() => {
     getUserData();
@@ -139,27 +144,35 @@ function EmployerHome() {
             </Nav>
           </Navbar.Collapse>
           {/* Action Buttons */}
-          <Nav>
-            {/* Display User Name and Profile Image if available */}
+          <Nav className="p-0">
             {userData.name && (
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <span
+              <Dropdown align="end">
+                <Dropdown.Toggle
+                  variant="success"
+                  id="dropdown-basic"
                   style={{
-                    marginRight: "5px",
+                    backgroundColor: "transparent",
+                    borderColor: "transparent",
                   }}
                 >
-                  {userData.name}
-                </span>
-                <img
-                  src={userData.profileImage}
-                  alt="Profile"
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "50%",
-                  }}
-                />
-              </div>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <span style={{ marginRight: "5px" }}>{userData.name}</span>
+                    <img
+                      src={userData.profileImage}
+                      alt="Profile"
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        borderRadius: "50%",
+                      }}
+                    />
+                  </div>
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu className="upward-dropdown">
+                  <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             )}
           </Nav>
         </Container>
