@@ -187,7 +187,7 @@ function EmployerHome() {
           </Col>
 
           {/* Main Content Column */}
-          <Col md={9} className="py-3 bg-info">
+          <Col md={9} className="py-3">
             <Col className="align-items-center justify-content-center mb-4">
               <Row>
                 <Col md={10} className="d-flex align-items-center">

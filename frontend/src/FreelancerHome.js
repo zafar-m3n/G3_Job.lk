@@ -114,7 +114,7 @@ function FreelancerHome() {
           </Col>
 
           {/* Main Content Column */}
-          <Col md={9} className="py-3 bg-info">
+          <Col md={9} className="py-3">
             {/* Your main content goes here */}
             <Col className="align-items-center justify-content-center mb-4">
               <Row>
