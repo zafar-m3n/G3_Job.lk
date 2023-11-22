@@ -104,10 +104,10 @@ function EmployerHome() {
   };
 
   const getJobsForDisplay = () => {
-    if (jobs.length >= 3) {
-      return jobs.slice(-3);
+    if ([...jobs].reverse() >= 3) {
+      return [...jobs].reverse().slice(-3);
     } else {
-      return jobs;
+      return [...jobs].reverse();
     }
   };
 
@@ -239,10 +239,10 @@ function EmployerHome() {
                           <span
                             className={`badge ${
                               job.experienceLevel === "Beginner"
-                                ? "text-info"
+                                ? "bg-info"
                                 : job.experienceLevel === "Intermediate"
-                                ? "text-primary"
-                                : "text-success"
+                                ? "bg-secondary"
+                                : "bg-success"
                             }`}
                           >
                             {job.experienceLevel}
