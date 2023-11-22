@@ -143,7 +143,7 @@ function FreelancerHome() {
                 </h2>
               </Row>
               <Row>
-                <h4 className="sub-heading">Active Bids</h4>
+                <h4 className="sub-heading">Active Bids and Job Posts</h4>
               </Row>
               <Row>
                 <h4 className="sub-heading">Recommended Jobs For You</h4>
