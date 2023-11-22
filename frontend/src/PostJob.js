@@ -14,7 +14,11 @@ import {
 } from "react-bootstrap";
 
 function PostJob() {
-  const [userData, setUserData] = useState({ name: "", profileImage: "" });
+  const [userData, setUserData] = useState({
+    name: "",
+    profileImage: "",
+    email: "",
+  });
   const [jobTitle, setJobTitle] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [requiredSkills, setRequiredSkills] = useState("");
@@ -33,7 +37,7 @@ function PostJob() {
     experienceLevel,
     location,
     additionalInfo,
-    employerName: userData.name,
+    employer: userData.email,
   };
 
   const handleInputChange = (event, setter) => {
@@ -123,6 +127,7 @@ function PostJob() {
       setUserData({
         name: res.data.user.first_name + " " + res.data.user.last_name,
         profileImage: res.data.user.profile_image,
+        email: res.data.user.email,
       });
     } catch (error) {
       console.log(error);

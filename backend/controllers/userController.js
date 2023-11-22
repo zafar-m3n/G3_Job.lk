@@ -103,14 +103,52 @@ export const postJob = async (req, res) => {
       req.body.experienceLevel,
       req.body.location,
       req.body.additionalInfo,
-      req.body.employerName,
+      req.body.employer,
     ];
     jobModel.insertJob(job, (err, result) => {
       if (err) return res.json({ Error: err.message });
       const jobId = result.insertId;
       return res.json({
         Status: "Success",
-        job: job,
+        job: {
+          job_id: result.insertId,
+          job_title: req.body.jobTitle,
+          job_description: req.body.jobDescription,
+          required_skills: req.body.requiredSkills,
+          estimated_budget: req.body.estimatedBudget,
+          project_duration: req.body.projectDuration,
+          experience_level: req.body.experienceLevel,
+          location: req.body.location,
+          additional_info: req.body.additionalInfo,
+          employer_email: req.body.employer,
+        },
+      });
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ Error: "Server error" });
+  }
+};
+
+export const getJobData = async (req, res) => {
+  try {
+    UserModel.findOne(req.user.id, (err, users) => {
+      if (err) {
+        console.log(err);
+        return res.json({ Error: "Error finding user" });
+      }
+      if (users.length === 0) {
+        return res.json({ Error: "Employer not found" });
+      }
+      const employer = users[0];
+
+      // Use the found employer's email to get jobs
+      jobModel.getJobFromEmployer(employer.email, (err, jobs) => {
+        if (err) {
+          console.log(err);
+          return res.json({ Error: "Error finding jobs" });
+        }
+        res.json({ Status: "Success", Jobs: jobs });
       });
     });
   } catch (error) {

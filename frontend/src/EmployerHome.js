@@ -61,7 +61,11 @@ function EmployerHome() {
       : [arr];
 
   const serviceGroups = chunkServices(services, 3);
-  const [userData, setUserData] = useState({ name: "", profileImage: "" });
+  const [userData, setUserData] = useState({
+    name: "",
+    profileImage: "",
+    email: "",
+  });
   const getUserData = async () => {
     try {
       const res = await axios.get("http://localhost:8081/getUserData", {
@@ -74,7 +78,23 @@ function EmployerHome() {
       setUserData({
         name: res.data.user.first_name + " " + res.data.user.last_name,
         profileImage: res.data.user.profile_image,
+        email: res.data.user.email,
       });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getJobData = async () => {
+    try {
+      const res = await axios.get("http://localhost:8081/getJobData", {
+        headers: {
+          Authorization: `Bearer ${
+            JSON.parse(localStorage.getItem("auth"))?.token
+          }`,
+        },
+      });
+      console.log(res.data);
     } catch (error) {
       console.log(error);
     }
@@ -82,6 +102,7 @@ function EmployerHome() {
 
   useEffect(() => {
     getUserData();
+    getJobData();
   }, []);
   return (
     <>

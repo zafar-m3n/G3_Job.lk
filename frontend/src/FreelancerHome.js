@@ -12,7 +12,11 @@ import {
 import Sidebar from "./components/Sidebar";
 
 function FreelancerHome() {
-  const [userData, setUserData] = useState({ name: "", profileImage: "" });
+  const [userData, setUserData] = useState({
+    name: "",
+    profileImage: "",
+    email: "",
+  });
   const getUserData = async () => {
     try {
       const res = await axios.get("http://localhost:8081/getUserData", {
@@ -25,6 +29,7 @@ function FreelancerHome() {
       setUserData({
         name: res.data.user.first_name + " " + res.data.user.last_name,
         profileImage: res.data.user.profile_image,
+        email: res.data.user.email,
       });
     } catch (error) {
       console.log(error);
