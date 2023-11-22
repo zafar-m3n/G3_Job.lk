@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "./styles/FreelancerHomeStyle.css";
 import axios from "axios";
 import {
   Navbar,
@@ -8,6 +9,8 @@ import {
   Row,
   Col,
   Form,
+  InputGroup,
+  FormControl,
 } from "react-bootstrap";
 import Sidebar from "./components/Sidebar";
 
@@ -95,8 +98,51 @@ function FreelancerHome() {
           </Col>
 
           {/* Main Content Column */}
-          <Col md={9} className="bg-info">
+          <Col md={9} className="py-3 bg-info">
             {/* Your main content goes here */}
+            <Col className="align-items-center justify-content-center mb-4">
+              <Row>
+                <Col md={10} className="d-flex align-items-center">
+                  <h2 className="heading">Welcome, {userData.name}</h2>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={9}>
+                  <InputGroup className="mb-3 rounded">
+                    <FormControl
+                      placeholder="Browse freelancers that are tailored to you"
+                      aria-label="Browse freelancers"
+                    />
+                    <Button variant="outline-secondary" id="button-addon2">
+                      <i className="fas fa-search"></i>
+                    </Button>
+                  </InputGroup>
+                </Col>
+              </Row>
+            </Col>
+            <Col className="align-items-center justify-content-center mb-4">
+              <Row>
+                <h2 className="heading">
+                  Your Current Jobs and Recommendations
+                </h2>
+              </Row>
+              <Row>
+                <h4 className="sub-heading">Active Bids</h4>
+              </Row>
+              <Row>
+                <h4 className="sub-heading">Recommended Jobs For You</h4>
+              </Row>
+            </Col>
+            <Col className="align-items-center justify-content-center mb-4">
+              <Row>
+                <h2 className="heading">Learn with Job.lk</h2>
+              </Row>
+            </Col>
+            <Col className="align-items-center justify-content-center mb-4">
+              <Row>
+                <h2 className="heading">How to get verified?</h2>
+              </Row>
+            </Col>
           </Col>
         </Row>
       </Container>

@@ -1,0 +1,18 @@
+.heading {
+  font-family: "Roboto Serif", serif;
+  font-size: 32px;
+  font-weight: bold;
+  color: #19376d;
+}
+
+.sub-heading {
+  font-size: 24px;
+  font-weight: lighter;
+}
+.button-custom {
+  padding: 5px 15px;
+  background: #0b2447;
+  border-radius: 5px;
+  color: #fffbfe;
+  border: #0b2447;
+}
