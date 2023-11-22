@@ -265,7 +265,7 @@ function EmployerHome() {
                         {/* Budget, Duration, Location */}
                         <div className="d-flex justify-content-start text-secondary mb-3">
                           <div style={{ margin: "auto" }}>
-                            <div>${job.estimatedBudget}</div>
+                            <div>LKR{job.estimatedBudget}</div>
                             <div style={{ fontSize: "0.6em" }}>Budget</div>
                           </div>
                           <div style={{ margin: "auto" }}>
