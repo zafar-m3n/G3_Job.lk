@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./styles/EmployerHomeStyle.css";
 import Sidebar from "./components/Sidebar";
 import axios from "axios";
@@ -10,9 +11,11 @@ import {
   Row,
   Col,
   Form,
+  Dropdown,
 } from "react-bootstrap";
 
 function ProfilePage() {
+  const navigate = useNavigate();
   const [userData, setUserData] = useState({
     name: "",
     profileImage: "",
@@ -135,6 +138,10 @@ function ProfilePage() {
       // Optionally, handle the error (e.g., show a message to the user)
     }
   };
+  const handleLogout = () => {
+    localStorage.removeItem("auth");
+    navigate("/");
+  };
 
   const districts = [
     "Colombo",
@@ -233,34 +240,42 @@ function ProfilePage() {
           >
             {/* Navigation Links */}
             <Nav>
-              <Nav.Link href="/employer-dashboard">Home</Nav.Link>
-              <Nav.Link href="#jobs">Jobs</Nav.Link>
+              <Nav.Link href="/freelancer-dashboard">Home</Nav.Link>
+              <Nav.Link href="/jobs">Jobs</Nav.Link>
               <Nav.Link href="#freelancers">Freelancers</Nav.Link>
               <Nav.Link href="#how-it-works">How it works?</Nav.Link>
             </Nav>
           </Navbar.Collapse>
           {/* Action Buttons */}
-          <Nav>
-            {/* Display User Name and Profile Image if available */}
+          <Nav className="p-0">
             {userData.name && (
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <span
+              <Dropdown align="end">
+                <Dropdown.Toggle
+                  variant="success"
+                  id="dropdown-basic"
                   style={{
-                    marginRight: "5px",
+                    backgroundColor: "transparent",
+                    borderColor: "transparent",
                   }}
                 >
-                  {userData.name}
-                </span>
-                <img
-                  src={userData.profileImage}
-                  alt="Profile"
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "50%",
-                  }}
-                />
-              </div>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <span style={{ marginRight: "5px" }}>{userData.name}</span>
+                    <img
+                      src={userData.profileImage}
+                      alt="Profile"
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        borderRadius: "50%",
+                      }}
+                    />
+                  </div>
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu className="upward-dropdown">
+                  <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             )}
           </Nav>
         </Container>
