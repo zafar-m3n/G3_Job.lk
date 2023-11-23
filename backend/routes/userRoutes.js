@@ -10,6 +10,7 @@ router.post("/login", UserController.login);
 router.get("/getUserData", authMiddleware, UserController.getUserData);
 router.post("/postJob", authMiddleware, UserController.postJob);
 router.get("/getJobData", authMiddleware, UserController.getJobData);
+router.get("/getJobDataFreelancer", authMiddleware, UserController.getJobDataFreelancer);
 router.post(
   "/uploadProfileImage",
   upload.single("file"),

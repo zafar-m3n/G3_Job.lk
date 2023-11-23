@@ -138,7 +138,7 @@ function EmployerHome() {
             {/* Navigation Links */}
             <Nav>
               <Nav.Link href="/employer-dashboard">Home</Nav.Link>
-              <Nav.Link href="#jobs">Jobs</Nav.Link>
+              <Nav.Link href="/jobs">Jobs</Nav.Link>
               <Nav.Link href="#freelancers">Freelancers</Nav.Link>
               <Nav.Link href="#how-it-works">How it works?</Nav.Link>
             </Nav>

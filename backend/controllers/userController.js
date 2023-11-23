@@ -158,6 +158,22 @@ export const getJobData = async (req, res) => {
   }
 };
 
+export const getJobDataFreelancer = async (req, res) => {
+  try {
+    jobModel.getAllJobs((err, jobs) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ Error: "Error finding jobs" });
+      }
+      res.status(200).json({ Status: "Success", Jobs: jobs });
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ Error: "Server error" });
+  }
+};
+
+
 //update user data
 export const updateUserData = async (req, res) => {
   try {

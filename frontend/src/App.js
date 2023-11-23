@@ -10,6 +10,7 @@ import PublicRoute from "./components/PublicRoute";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PostJob from "./PostJob";
 import ProfilePage from "./ProfilePage";
+import JobPage from "./JobPage";
 
 function App() {
   return (
@@ -68,6 +69,14 @@ function App() {
           element={
             <ProtectedRoute>
               <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/jobs"
+          element={
+            <ProtectedRoute>
+              <JobPage />
             </ProtectedRoute>
           }
         />
