@@ -217,7 +217,7 @@ function EmployerHome() {
               </Row>
               <Row>
                 {infoCards.map((card, index) => (
-                  <Col key={index} md={4} className="mb-4 pe-3">
+                  <Col key={index} md={4} className="mb-4 pe-3 ">
                     <Card>
                       <Card.Body>
                         <Card.Title>
@@ -265,7 +265,7 @@ function EmployerHome() {
                         {/* Budget, Duration, Location */}
                         <div className="d-flex justify-content-start text-secondary mb-3">
                           <div style={{ margin: "auto" }}>
-                            <div>LKR{job.estimatedBudget}</div>
+                            <div>LKR {job.estimatedBudget}</div>
                             <div style={{ fontSize: "0.6em" }}>Budget</div>
                           </div>
                           <div style={{ margin: "auto" }}>

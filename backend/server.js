@@ -8,8 +8,9 @@ app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
 
-// Use routes
+// User routes
 app.use(userRoutes);
+app.use("/assets", express.static("assets"));
 
 app.listen(8081, () => {
   console.log("Running server");

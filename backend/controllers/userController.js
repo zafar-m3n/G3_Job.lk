@@ -156,3 +156,45 @@ export const getJobData = async (req, res) => {
     res.json({ Error: "Server error" });
   }
 };
+
+//update user data
+export const updateUserData = async (req, res) => {
+  try {
+    const user = [req.body.profileImage, req.body.location, req.body.email];
+    console.log("Before update: " + user);
+    UserModel.updateUser(user, (err, result) => {
+      if (err) return res.json({ Error: err.message });
+      console.log("After update: " + user);
+      return res.json({
+        Status: "Success",
+        user: {
+          first_name: req.body.firstName,
+          last_name: req.body.lastName,
+          email: req.body.email,
+          district: req.body.district,
+          user_role: req.body.userRole,
+        },
+      });
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ Error: "Server error" });
+  }
+};
+
+export const uploadProfileImage = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).send("No file uploaded.");
+    }
+
+    // The file path where the image is stored
+    const imagePath = req.file.path;
+
+    // Here, you'd typically update the user's profile in the database with the imagePath
+    // For now, just return the file path.
+    res.status(200).json({ imageUrl: imagePath });
+  } catch (error) {
+    res.status(500).send("Server error during image upload.");
+  }
+};

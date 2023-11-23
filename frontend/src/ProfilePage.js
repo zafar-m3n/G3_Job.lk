@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import "./styles/EmployerHomeStyle.css";
 import Sidebar from "./components/Sidebar";
 import axios from "axios";
@@ -14,7 +13,6 @@ import {
 } from "react-bootstrap";
 
 function ProfilePage() {
-  const navigate = useNavigate();
   const [userData, setUserData] = useState({
     name: "",
     profileImage: "",
@@ -22,6 +20,17 @@ function ProfilePage() {
     role: "",
     location: "",
   });
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [originalUserData, setOriginalUserData] = useState({ ...userData });
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const toggleEditMode = () => {
+    if (!isEditMode) {
+      setOriginalUserData({ ...userData });
+    }
+    setIsEditMode(!isEditMode);
+  };
+
   const getUserData = async () => {
     try {
       const res = await axios.get("http://localhost:8081/getUserData", {
@@ -44,35 +53,104 @@ function ProfilePage() {
     }
   };
 
-  const [jobs, setJobs] = useState([]);
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedImage(e.target.files[0]);
+    }
+  };
+  const uploadImage = async () => {
+    const formData = new FormData();
+    formData.append("file", selectedImage);
 
-  const getJobData = async () => {
     try {
-      const res = await axios.get("http://localhost:8081/getJobData", {
-        headers: {
-          Authorization: `Bearer ${
-            JSON.parse(localStorage.getItem("auth"))?.token
-          }`,
-        },
-      });
-      console.log(res.data);
-      setJobs(res.data.Jobs);
+      const response = await axios.post(
+        "http://localhost:8081/uploadProfileImage",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("auth"))?.token
+            }`,
+          },
+        }
+      );
+      console.log("Response:", response.data.imageUrl);
+      return response.data.imageUrl; // Return the URL of the uploaded image
     } catch (error) {
-      console.log(error);
+      console.error("Error uploading image:", error);
+      // Optionally, handle the error (e.g., show a message to the user)
     }
   };
 
-  const getJobsForDisplay = () => {
-    if ([...jobs].reverse() >= 3) {
-      return [...jobs].reverse().slice(-3);
+  const districts = [
+    "Colombo",
+    "Gampaha",
+    "Kalutara",
+    "Kandy",
+    "Matale",
+    "Nuwara Eliya",
+    "Galle",
+    "Matara",
+    "Hambantota",
+    "Jaffna",
+    "Kilinochchi",
+    "Mannar",
+    "Vavuniya",
+    "Mullaitivu",
+    "Batticaloa",
+    "Ampara",
+    "Trincomalee",
+    "Kurunegala",
+    "Puttalam",
+    "Anuradhapura",
+    "Polonnaruwa",
+    "Badulla",
+    "Moneragala",
+    "Ratnapura",
+    "Kegalle",
+  ];
+
+  const saveChanges = async () => {
+    if (selectedImage) {
+      console.log(selectedImage);
+      let imageUrl = await uploadImage();
+      console.log("Image URL:", imageUrl);
+      if (imageUrl) {
+        setUserData({ ...userData, profileImage: imageUrl });
+      }
     } else {
-      return [...jobs].reverse();
+      console.log("No image selected");
     }
+    console.log("New Image URL:", userData.profileImage);
+    try {
+      const response = await axios.post(
+        "http://localhost:8081/updateUserData",
+        userData,
+        {
+          headers: {
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("auth"))?.token
+            }`,
+          },
+        }
+      );
+      console.log("Response:", response);
+
+      setIsEditMode(false); // Exit edit mode after saving
+    } catch (error) {
+      console.error("Error saving data:", error);
+      // Optionally, handle the error (e.g., show a message to the user)
+    }
+  };
+
+  const cancelEdit = () => {
+    setUserData({ ...originalUserData });
+    setIsEditMode(false);
   };
 
   useEffect(() => {
     getUserData();
-    getJobData();
   }, []);
 
   function toTitleCase(str) {
@@ -148,25 +226,86 @@ function ProfilePage() {
                   style={{
                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)",
                     borderRadius: "10px",
+                    padding: "10px",
                   }}
                 >
                   <div className="profile-container d-flex flex-column justify-content-center align-items-center">
-                    <img
-                      src={userData.profileImage}
-                      alt="Profile"
-                      className="profile-image"
-                      style={{
-                        width: "100px",
-                        height: "100px",
-                        borderRadius: "50%",
-                      }}
-                    />
+                    {isEditMode ? (
+                      <div className="profile-container d-flex flex-column justify-content-center align-items-center">
+                        <img
+                          src={userData.profileImage}
+                          alt="Profile"
+                          style={{
+                            width: "100px",
+                            height: "100px",
+                            borderRadius: "50%",
+                          }}
+                        />
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFileChange}
+                        />
+                      </div>
+                    ) : (
+                      <img
+                        src={userData.profileImage}
+                        alt="Profile"
+                        style={{
+                          width: "100px",
+                          height: "100px",
+                          borderRadius: "50%",
+                        }}
+                      />
+                    )}
                     <h3 className="text-center">{userData.name}</h3>
-                    <p className="text-center">{toTitleCase(userData.role)}</p>
-                    <Button variant="outline-primary" className="mb-3">
-                      Edit Profile
-                    </Button>
-                    <p>Location: {userData.location}</p>
+                    <p>Role: {toTitleCase(userData.role)}</p>
+                    {!isEditMode && (
+                      <Button
+                        variant="outline-primary"
+                        className="mb-3"
+                        onClick={toggleEditMode}
+                      >
+                        Edit Profile
+                      </Button>
+                    )}
+
+                    {isEditMode && (
+                      <div className="d-flex justify-content-around p-2">
+                        <Button
+                          variant="outline-danger"
+                          className="mx-2 my-0"
+                          onClick={cancelEdit}
+                        >
+                          Cancel Edit
+                        </Button>
+                        <Button
+                          variant="outline-success"
+                          className="mx-2 my-0"
+                          onClick={saveChanges}
+                        >
+                          Save Changes
+                        </Button>
+                      </div>
+                    )}
+
+                    {isEditMode ? (
+                      <Form.Control
+                        as="select"
+                        value={userData.location}
+                        onChange={(e) =>
+                          setUserData({ ...userData, location: e.target.value })
+                        }
+                      >
+                        {districts.map((district, index) => (
+                          <option key={index} value={district}>
+                            {district}
+                          </option>
+                        ))}
+                      </Form.Control>
+                    ) : (
+                      <p>Location: {userData.location}</p>
+                    )}
                   </div>
                 </Col>
 
