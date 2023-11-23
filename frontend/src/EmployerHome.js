@@ -178,7 +178,11 @@ function EmployerHome() {
         </Container>
       </Navbar>
       <Container fluid>
-        <Row>
+        <Row
+          style={{
+            backgroundColor: "#0B2447",
+          }}
+        >
           <Col
             md={3}
             className="p-0 h-100 d-flex flex-column align-self-stretch"
@@ -292,11 +296,11 @@ function EmployerHome() {
                       </Card.Body>
 
                       {/* See More Button */}
-                      <Card.Footer>
+                      {/* <Card.Footer>
                         <Button variant="primary" block>
                           See More
                         </Button>
-                      </Card.Footer>
+                      </Card.Footer> */}
                     </Card>
                   </Col>
                 ))}

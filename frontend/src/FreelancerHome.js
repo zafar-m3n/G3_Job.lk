@@ -108,8 +108,15 @@ function FreelancerHome() {
         </Container>
       </Navbar>
       <Container fluid className="bg-warning">
-        <Row className="bg-warning">
-          <Col md={3} className="p-0">
+        <Row
+          style={{
+            backgroundColor: "#0B2447",
+          }}
+        >
+          <Col
+            md={3}
+            className="p-0 h-100 d-flex flex-column align-self-stretch"
+          >
             <Sidebar />
           </Col>
 

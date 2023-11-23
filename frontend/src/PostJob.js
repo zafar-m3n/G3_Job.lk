@@ -187,7 +187,11 @@ function PostJob() {
         </Container>
       </Navbar>
       <Container fluid>
-        <Row>
+        <Row
+          style={{
+            backgroundColor: "#0B2447",
+          }}
+        >
           <Col
             md={3}
             className="p-0 h-100 d-flex flex-column align-self-stretch"
@@ -195,7 +199,7 @@ function PostJob() {
             <Sidebar />
           </Col>
           {/* Main Content Column */}
-          <Col md={9} className="py-3 bg-info">
+          <Col md={9} className="py-3">
             <h2 className="heading">Post a Job</h2>
             {showSuccess && (
               <div className="alert alert-success" role="alert">

@@ -165,18 +165,22 @@ function ProfilePage() {
   ];
 
   const saveChanges = async () => {
+    let updatedUserData = { ...userData };
+
     if (selectedImage) {
       console.log(selectedImage);
       let imageUrl = await uploadImage();
       if (imageUrl) {
-        imageUrl = `../backend/${imageUrl}`;
         console.log("Image URL:", imageUrl);
-        setUserData({ ...userData, profileImage: imageUrl });
-        console.log("New Image URL:", userData.profileImage);
+        let modifiedUrl = imageUrl.replace("../frontend/public/", "");
+        updatedUserData.profileImage = modifiedUrl;
+        console.log("New Image URL:", updatedUserData.profileImage);
       }
     } else {
       console.log("No image selected");
     }
+
+    setUserData(updatedUserData); // Update state with the new data
     try {
       const response = await axios.post(
         "http://localhost:8081/updateUserData",
@@ -262,7 +266,11 @@ function ProfilePage() {
         </Container>
       </Navbar>
       <Container fluid>
-        <Row>
+        <Row
+          style={{
+            backgroundColor: "#0B2447",
+          }}
+        >
           <Col
             md={3}
             className="p-0 h-100 d-flex flex-column align-self-stretch"
@@ -295,11 +303,15 @@ function ProfilePage() {
                             borderRadius: "50%",
                           }}
                         />
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleFileChange}
-                        />
+                        <div className="input-group mb-3">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="form-control"
+                            id="inputGroupFile02"
+                            onChange={handleFileChange}
+                          />
+                        </div>
                       </div>
                     ) : (
                       <img
