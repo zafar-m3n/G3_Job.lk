@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import * as UserModel from "../models/userModel.js";
 import * as jobModel from "../models/jobModel.js";
 import e from "express";
+import path from "path";
 
 const saltRounds = 10;
 

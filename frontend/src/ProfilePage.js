@@ -31,6 +31,57 @@ function ProfilePage() {
     setIsEditMode(!isEditMode);
   };
 
+  const [isEditDescription, setIsEditDescription] = useState(false);
+  const [isEditLanguages, setIsEditLanguages] = useState(false);
+  const [isEditWebsite, setIsEditWebsite] = useState(false);
+  const [tempDescription, setTempDescription] = useState("");
+  const [tempLanguages, setTempLanguages] = useState("");
+  const [tempWebsite, setTempWebsite] = useState("");
+
+  const toggleEditDescription = () => {
+    setTempDescription(userData.description);
+    setIsEditDescription(!isEditDescription);
+  };
+
+  const toggleEditLanguages = () => {
+    setTempLanguages(userData.languages);
+    setIsEditLanguages(!isEditLanguages);
+  };
+
+  const toggleEditWebsite = () => {
+    setTempWebsite(userData.website);
+    setIsEditWebsite(!isEditWebsite);
+  };
+
+  // Handle Change Functions
+  const handleDescriptionChange = (e) => {
+    setTempDescription(e.target.value);
+  };
+
+  const handleLanguagesChange = (e) => {
+    setTempLanguages(e.target.value);
+  };
+
+  const handleWebsiteChange = (e) => {
+    setTempWebsite(e.target.value);
+  };
+
+  // Save Functions
+  const saveDescription = () => {
+    setUserData({ ...userData, description: tempDescription });
+    setIsEditDescription(false);
+  };
+
+  const saveLanguages = () => {
+    setUserData({ ...userData, languages: tempLanguages });
+    setIsEditLanguages(false);
+  };
+
+  const saveWebsite = () => {
+    setUserData({ ...userData, website: tempWebsite });
+    setIsEditWebsite(false);
+  };
+
   const getUserData = async () => {
     try {
       const res = await axios.get("http://localhost:8081/getUserData", {
@@ -75,8 +126,10 @@ function ProfilePage() {
           },
         }
       );
-      console.log("Response:", response.data.imageUrl);
-      return response.data.imageUrl; // Return the URL of the uploaded image
+      const imageUrl = response.data.imageUrl.replace(/\\/g, "/");
+      console.log("Modified URL:", imageUrl);
+
+      return imageUrl; // Return the URL of the uploaded image
     } catch (error) {
       console.error("Error uploading image:", error);
       // Optionally, handle the error (e.g., show a message to the user)
@@ -115,14 +168,15 @@ function ProfilePage() {
     if (selectedImage) {
       console.log(selectedImage);
       let imageUrl = await uploadImage();
-      console.log("Image URL:", imageUrl);
       if (imageUrl) {
+        imageUrl = `../backend/${imageUrl}`;
+        console.log("Image URL:", imageUrl);
         setUserData({ ...userData, profileImage: imageUrl });
+        console.log("New Image URL:", userData.profileImage);
       }
     } else {
       console.log("No image selected");
     }
-    console.log("New Image URL:", userData.profileImage);
     try {
       const response = await axios.post(
         "http://localhost:8081/updateUserData",
@@ -341,64 +395,104 @@ function ProfilePage() {
                   <div className="content-placeholder">
                     {/* Description Section */}
                     <div className="mb-3">
-                      <div className="d-flex justify-content-between">
-                        <h5>Description</h5>
-                        <a
-                          href="/edit-description"
-                          className="text-primary text-decoration-none"
-                        >
-                          Edit Description
-                        </a>
-                      </div>
-                      <p>
-                        {userData.description
-                          ? userData.description
-                          : "No description available"}
-                      </p>
+                      <h5>Description</h5>
+                      {isEditDescription ? (
+                        <>
+                          <input
+                            value={tempDescription}
+                            onChange={handleDescriptionChange}
+                            className="form-control mb-2"
+                          />
+                          <button
+                            className="btn btn-primary"
+                            onClick={saveDescription}
+                          >
+                            Save
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <p>
+                            {userData.description || "No description available"}
+                          </p>
+                          <a
+                            className="text-primary text-decoration-none"
+                            onClick={toggleEditDescription}
+                          >
+                            Edit Description
+                          </a>
+                        </>
+                      )}
                     </div>
 
                     {/* Languages Section */}
                     <div className="mb-3">
-                      <div className="d-flex justify-content-between">
-                        <h5>Languages</h5>
-                        <a
-                          href="/edit-languages"
-                          className="text-primary text-decoration-none"
-                        >
-                          Edit Languages
-                        </a>
-                      </div>
-                      <p>
-                        {userData.languages && userData.languages.length > 0
-                          ? userData.languages.join(", ")
-                          : "No languages added"}
-                      </p>
+                      <h5>Languages</h5>
+                      {isEditLanguages ? (
+                        <>
+                          <input
+                            value={tempLanguages}
+                            onChange={handleLanguagesChange}
+                            className="form-control mb-2"
+                          />
+                          <button
+                            className="btn btn-primary"
+                            onClick={saveLanguages}
+                          >
+                            Save
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <p>{userData.languages || "No languages added"}</p>
+                          <a
+                            className="text-primary text-decoration-none"
+                            onClick={toggleEditLanguages}
+                          >
+                            Edit Languages
+                          </a>
+                        </>
+                      )}
                     </div>
 
                     {/* Website Section */}
                     <div className="mb-3">
-                      <div className="d-flex justify-content-between">
-                        <h5>Website</h5>
-                        <a
-                          href="/edit-website"
-                          className="text-primary text-decoration-none"
-                        >
-                          Edit Website
-                        </a>
-                      </div>
-                      <p>
-                        {userData.website ? (
-                          <a
-                            href={userData.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                      <h5>Website</h5>
+                      {isEditWebsite ? (
+                        <>
+                          <input
+                            value={tempWebsite}
+                            onChange={handleWebsiteChange}
+                            className="form-control mb-2"
+                          />
+                          <button
+                            className="btn btn-primary"
+                            onClick={saveWebsite}
                           >
-                            {userData.website}
+                            Save
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          {userData.website ? (
+                            <a
+                              href={userData.website}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {userData.website}
+                            </a>
+                          ) : (
+                            <p>No website added</p>
+                          )}
+                          <a
+                            className="text-primary text-decoration-none"
+                            onClick={toggleEditWebsite}
+                          >
+                            Edit Website
                           </a>
-                        ) : (
-                          "No website link"
-                        )}
-                      </p>
+                        </>
+                      )}
                     </div>
                   </div>
                 </Col>
