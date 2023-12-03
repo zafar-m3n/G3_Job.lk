@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import "./styles/EmployerHomeStyle.css";
-import Sidebar from "./components/Sidebar";
+import "./styles/ProfilePageStyles.css";
 import axios from "axios";
-import {
-  Navbar,
-  Nav,
-  Button,
-  Container,
-  Row,
-  Col,
-  Form,
-  Dropdown,
-} from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
+import Header from "./components/Header";
+import Sidebar from "./components/Sidebar";
+import Footer from "./components/Footer";
+import EmployerDetails from "./components/EmployerDetails";
+import FreelancerDetails from "./components/FreelancerDetails";
 
 function ProfilePage() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [userData, setUserData] = useState({
+    id: "",
     name: "",
     profileImage: "",
     email: "",
@@ -34,57 +31,6 @@ function ProfilePage() {
     setIsEditMode(!isEditMode);
   };
 
-  const [isEditDescription, setIsEditDescription] = useState(false);
-  const [isEditLanguages, setIsEditLanguages] = useState(false);
-  const [isEditWebsite, setIsEditWebsite] = useState(false);
-  const [tempDescription, setTempDescription] = useState("");
-  const [tempLanguages, setTempLanguages] = useState("");
-  const [tempWebsite, setTempWebsite] = useState("");
-
-  const toggleEditDescription = () => {
-    setTempDescription(userData.description);
-    setIsEditDescription(!isEditDescription);
-  };
-
-  const toggleEditLanguages = () => {
-    setTempLanguages(userData.languages);
-    setIsEditLanguages(!isEditLanguages);
-  };
-
-  const toggleEditWebsite = () => {
-    setTempWebsite(userData.website);
-    setIsEditWebsite(!isEditWebsite);
-  };
-
-  // Handle Change Functions
-  const handleDescriptionChange = (e) => {
-    setTempDescription(e.target.value);
-  };
-
-  const handleLanguagesChange = (e) => {
-    setTempLanguages(e.target.value);
-  };
-
-  const handleWebsiteChange = (e) => {
-    setTempWebsite(e.target.value);
-  };
-
-  // Save Functions
-  const saveDescription = () => {
-    setUserData({ ...userData, description: tempDescription });
-    setIsEditDescription(false);
-  };
-
-  const saveLanguages = () => {
-    setUserData({ ...userData, languages: tempLanguages });
-    setIsEditLanguages(false);
-  };
-
-  const saveWebsite = () => {
-    setUserData({ ...userData, website: tempWebsite });
-    setIsEditWebsite(false);
-  };
-
   const getUserData = async () => {
     try {
       const res = await axios.get("http://localhost:8081/getUserData", {
@@ -96,6 +42,7 @@ function ProfilePage() {
       });
       console.log(res.data.user);
       setUserData({
+        id: res.data.user.id,
         name: res.data.user.first_name + " " + res.data.user.last_name,
         profileImage: res.data.user.profile_image,
         email: res.data.user.email,
@@ -111,36 +58,6 @@ function ProfilePage() {
     if (e.target.files && e.target.files[0]) {
       setSelectedImage(e.target.files[0]);
     }
-  };
-  const uploadImage = async () => {
-    const formData = new FormData();
-    formData.append("file", selectedImage);
-
-    try {
-      const response = await axios.post(
-        "http://localhost:8081/uploadProfileImage",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${
-              JSON.parse(localStorage.getItem("auth"))?.token
-            }`,
-          },
-        }
-      );
-      const imageUrl = response.data.imageUrl.replace(/\\/g, "/");
-      console.log("Modified URL:", imageUrl);
-
-      return imageUrl; // Return the URL of the uploaded image
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      // Optionally, handle the error (e.g., show a message to the user)
-    }
-  };
-  const handleLogout = () => {
-    localStorage.removeItem("auth");
-    navigate("/");
   };
 
   const districts = [
@@ -171,6 +88,30 @@ function ProfilePage() {
     "Kegalle",
   ];
 
+  const uploadImage = async () => {
+    const formData = new FormData();
+    formData.append("file", selectedImage);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8081/uploadProfileImage",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("auth"))?.token
+            }`,
+          },
+        }
+      );
+      return response.data.imageUrl;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      // Optionally, handle the error (e.g., show a message to the user)
+    }
+  };
+
   const saveChanges = async () => {
     let updatedUserData = { ...userData };
 
@@ -178,20 +119,17 @@ function ProfilePage() {
       console.log(selectedImage);
       let imageUrl = await uploadImage();
       if (imageUrl) {
-        console.log("Image URL:", imageUrl);
-        let modifiedUrl = imageUrl.replace("../frontend/public/", "");
-        updatedUserData.profileImage = modifiedUrl;
-        console.log("New Image URL:", updatedUserData.profileImage);
+        updatedUserData.profileImage = `http://localhost:8081/images/${imageUrl}`;
+        setUserData(updatedUserData);
       }
     } else {
       console.log("No image selected");
     }
 
-    setUserData(updatedUserData); // Update state with the new data
     try {
       const response = await axios.post(
         "http://localhost:8081/updateUserData",
-        userData,
+        updatedUserData,
         {
           headers: {
             Authorization: `Bearer ${
@@ -201,11 +139,9 @@ function ProfilePage() {
         }
       );
       console.log("Response:", response);
-
-      setIsEditMode(false); // Exit edit mode after saving
+      setIsEditMode(false);
     } catch (error) {
       console.error("Error saving data:", error);
-      // Optionally, handle the error (e.g., show a message to the user)
     }
   };
 
@@ -225,70 +161,15 @@ function ProfilePage() {
   }
   return (
     <>
-      <Navbar className="w-100">
-        <Container fluid>
-          {/* Logo */}
-          <Navbar.Brand href="/" className="fs-3 logo-font">
-            Job.lk
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-
-          {/* Navigation and Action Buttons */}
-          <Navbar.Collapse
-            id="basic-navbar-nav"
-            className="justify-content-center"
-          >
-            {/* Navigation Links */}
-            <Nav>
-              <Nav.Link href="/freelancer-dashboard">Home</Nav.Link>
-              <Nav.Link href="/jobs">Jobs</Nav.Link>
-              <Nav.Link href="#freelancers">Freelancers</Nav.Link>
-              <Nav.Link href="#how-it-works">How it works?</Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-          {/* Action Buttons */}
-          <Nav className="p-0">
-            {userData.name && (
-              <Dropdown align="end">
-                <Dropdown.Toggle
-                  variant="success"
-                  id="dropdown-basic"
-                  style={{
-                    backgroundColor: "transparent",
-                    borderColor: "transparent",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <span style={{ marginRight: "5px" }}>{userData.name}</span>
-                    <img
-                      src={userData.profileImage}
-                      alt="Profile"
-                      style={{
-                        width: "40px",
-                        height: "40px",
-                        borderRadius: "50%",
-                      }}
-                    />
-                  </div>
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu className="upward-dropdown">
-                  <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            )}
-          </Nav>
-        </Container>
-      </Navbar>
+      <Header userData={userData} />
       <Container fluid>
-        <Row
-          style={{
-            backgroundColor: "#0B2447",
-          }}
-        >
+        <Row>
           <Col
             md={3}
-            className="p-0 h-100 d-flex flex-column align-self-stretch"
+            className="p-0"
+            style={{
+              backgroundColor: "#0B2447",
+            }}
           >
             <Sidebar />
           </Col>
@@ -296,27 +177,16 @@ function ProfilePage() {
           {/* Main Content Column */}
           <Col md={9} className="py-3">
             <Container fluid>
-              <Row className="justify-content-between mb-5">
+              <Row className="justify-content-between mb-3">
                 {/* Top Left Container */}
-                <Col
-                  md={4}
-                  style={{
-                    boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)",
-                    borderRadius: "10px",
-                    padding: "10px",
-                  }}
-                >
-                  <div className="profile-container d-flex flex-column justify-content-center align-items-center">
+                <div className="col-md-4 profile-col">
+                  <div className="profile-container">
                     {isEditMode ? (
-                      <div className="profile-container d-flex flex-column justify-content-center align-items-center">
+                      <div className="profile-container">
                         <img
                           src={userData.profileImage}
                           alt="Profile"
-                          style={{
-                            width: "100px",
-                            height: "100px",
-                            borderRadius: "50%",
-                          }}
+                          className="profile-img"
                         />
                         <div className="input-group mb-3">
                           <input
@@ -332,47 +202,40 @@ function ProfilePage() {
                       <img
                         src={userData.profileImage}
                         alt="Profile"
-                        style={{
-                          width: "100px",
-                          height: "100px",
-                          borderRadius: "50%",
-                        }}
+                        className="profile-img"
                       />
                     )}
                     <h3 className="text-center">{userData.name}</h3>
                     <p>Role: {toTitleCase(userData.role)}</p>
                     {!isEditMode && (
-                      <Button
-                        variant="outline-primary"
-                        className="mb-3"
+                      <button
+                        className="btn btn-outline-primary mb-3"
                         onClick={toggleEditMode}
                       >
                         Edit Profile
-                      </Button>
+                      </button>
                     )}
 
                     {isEditMode && (
                       <div className="d-flex justify-content-around p-2">
-                        <Button
-                          variant="outline-danger"
-                          className="mx-2 my-0"
+                        <button
+                          className="btn btn-outline-danger mx-2 my-0"
                           onClick={cancelEdit}
                         >
                           Cancel Edit
-                        </Button>
-                        <Button
-                          variant="outline-success"
-                          className="mx-2 my-0"
+                        </button>
+                        <button
+                          className="btn btn-outline-success mx-2 my-0"
                           onClick={saveChanges}
                         >
                           Save Changes
-                        </Button>
+                        </button>
                       </div>
                     )}
 
                     {isEditMode ? (
-                      <Form.Control
-                        as="select"
+                      <select
+                        className="form-control"
                         value={userData.location}
                         onChange={(e) =>
                           setUserData({ ...userData, location: e.target.value })
@@ -383,211 +246,32 @@ function ProfilePage() {
                             {district}
                           </option>
                         ))}
-                      </Form.Control>
+                      </select>
                     ) : (
                       <p>Location: {userData.location}</p>
                     )}
                   </div>
-                </Col>
-
+                </div>
                 {/* Top Right Container */}
-                <Col
-                  md={7}
-                  style={{
-                    boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)",
-                    borderRadius: "10px",
-                  }}
-                  className="d-flex flex-column align-items-center justify-content-center"
-                >
+                <div className="freelancer-col">
                   <img
                     src="/images/freelancer-icon.jpg"
                     alt="Freelancer Icon"
-                    className="mb-4"
-                    style={{ width: "200px" }}
+                    className="freelancer-icon"
                   />
                   <button className="button-custom">Become a freelancer</button>
-                </Col>
+                </div>
               </Row>
-
-              <Row className="justify-content-between mb-5">
-                {/* Bottom Left Container */}
-                <Col
-                  md={4}
-                  style={{
-                    boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)",
-                    borderRadius: "10px",
-                  }}
-                  className="p-3"
-                >
-                  <div className="content-placeholder">
-                    {/* Description Section */}
-                    <div className="mb-3">
-                      <h5>Description</h5>
-                      {isEditDescription ? (
-                        <>
-                          <input
-                            value={tempDescription}
-                            onChange={handleDescriptionChange}
-                            className="form-control mb-2"
-                          />
-                          <button
-                            className="btn btn-primary"
-                            onClick={saveDescription}
-                          >
-                            Save
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <p>
-                            {userData.description || "No description available"}
-                          </p>
-                          <a
-                            className="text-primary text-decoration-none"
-                            onClick={toggleEditDescription}
-                          >
-                            Edit Description
-                          </a>
-                        </>
-                      )}
-                    </div>
-
-                    {/* Languages Section */}
-                    <div className="mb-3">
-                      <h5>Languages</h5>
-                      {isEditLanguages ? (
-                        <>
-                          <input
-                            value={tempLanguages}
-                            onChange={handleLanguagesChange}
-                            className="form-control mb-2"
-                          />
-                          <button
-                            className="btn btn-primary"
-                            onClick={saveLanguages}
-                          >
-                            Save
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <p>{userData.languages || "No languages added"}</p>
-                          <a
-                            className="text-primary text-decoration-none"
-                            onClick={toggleEditLanguages}
-                          >
-                            Edit Languages
-                          </a>
-                        </>
-                      )}
-                    </div>
-
-                    {/* Website Section */}
-                    <div className="mb-3">
-                      <h5>Website</h5>
-                      {isEditWebsite ? (
-                        <>
-                          <input
-                            value={tempWebsite}
-                            onChange={handleWebsiteChange}
-                            className="form-control mb-2"
-                          />
-                          <button
-                            className="btn btn-primary"
-                            onClick={saveWebsite}
-                          >
-                            Save
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          {userData.website ? (
-                            <a
-                              href={userData.website}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {userData.website}
-                            </a>
-                          ) : (
-                            <p>No website added</p>
-                          )}
-                          <a
-                            className="text-primary text-decoration-none"
-                            onClick={toggleEditWebsite}
-                          >
-                            Edit Website
-                          </a>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </Col>
-              </Row>
+              {userData.role === "employer" ? (
+                <EmployerDetails userData={userData} />
+              ) : (
+                <FreelancerDetails userData={userData} />
+              )}
             </Container>
           </Col>
         </Row>
       </Container>
-
-      <Container fluid className="px-5 py-3 fifth-section">
-        <Row className="bg-transparent">
-          {/* First Column - Logo and About */}
-          <Col md={5} className="mx-auto mb-3 bg-transparent">
-            <Navbar.Brand href="/" className="fs-3 footer-logo bg-transparent">
-              Job.lk
-            </Navbar.Brand>
-            <p className="footer-content">
-              Job.lk is a specialized freelance platform tailored for web
-              developer freelancers in Sri Lanka. Our platform serves as a
-              dynamic marketplace, connecting talented web developers with a
-              diverse range of opportunities. Whether you are a skilled web
-              developer seeking exciting projects or an employer searching for
-              top-notch web development expertise, Job.lk is your go-to
-              destination. Discover the perfect match for your project or
-              showcase your skills to a local and global audience, all on
-              Job.lk, the premier choice for web development freelancers in Sri
-              Lanka.
-            </p>
-          </Col>
-
-          {/* Second Column - Quick Links */}
-          <Col md={3} className="mx-auto mb-3 bg-transparent">
-            <h5 className="footer-content">Quick Links</h5>
-            <Nav className="footer-content">
-              <Col className="footer-content">
-                <Nav.Link href="/">Home</Nav.Link>
-                <Nav.Link href="#jobs">Jobs</Nav.Link>
-                <Nav.Link href="#freelancers">Freelancers</Nav.Link>
-                <Nav.Link href="#how-it-works">How it works?</Nav.Link>
-              </Col>
-            </Nav>
-          </Col>
-
-          {/* Third Column - Contact / Subscription Form */}
-          <Col md={3} className="mx-auto mb-3 bg-transparent">
-            <h5 className="footer-content">Get in touch</h5>
-            <Form className="footer-content">
-              <Form.Group className="mb-3 rounded" controlId="formBasicEmail">
-                <Form.Control type="email" placeholder="Enter email" />
-              </Form.Group>
-              <Form.Group className="mb-3 rounded" controlId="formBasicName">
-                <Form.Control type="text" placeholder="Your Name" />
-              </Form.Group>
-              <Button
-                variant="primary"
-                type="submit"
-                className="custom-primary-btn"
-              >
-                Subscribe
-              </Button>
-            </Form>
-          </Col>
-        </Row>
-
-        <h5 className="footer-content text-center">
-          CCG3 All Rights Reserved.
-        </h5>
-      </Container>
+      <Footer />
     </>
   );
 }

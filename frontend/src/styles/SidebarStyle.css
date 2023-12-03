@@ -1,9 +1,17 @@
 .sidebar {
   background: #0b2447;
+  position: sticky;       /* Make the sidebar sticky */
+  top: 0;                 /* Set the top position */
+  height: 45vh;          /* Optional: Set the height */
+  overflow-y: auto;       /* Optional: Add scroll to the sidebar if content overflows */
 }
+
+/* Rest of your existing styles */
+
 .sidebar .nav-link {
+  padding: 10px 15px;
   color: #fffbfe;
-  font-size: 18px;
+  font-size: 20px;
   display: flex;
   align-items: center;
 }
@@ -11,7 +19,7 @@
 .sidebar .nav-link i {
   color: #fffbfe;
   background-color: transparent;
-  margin-right: 15px;
+  margin-right: 15px
 }
 
 /* Style for the active link */

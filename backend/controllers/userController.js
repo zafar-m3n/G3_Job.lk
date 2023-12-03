@@ -2,6 +2,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import * as UserModel from "../models/userModel.js";
 import * as jobModel from "../models/jobModel.js";
+import * as freelancerModel from "../models/freelancerModel.js";
+import * as employerModel from "../models/employerModel.js";
 import e from "express";
 import path from "path";
 
@@ -173,23 +175,20 @@ export const getJobDataFreelancer = async (req, res) => {
   }
 };
 
-
-//update user data
 export const updateUserData = async (req, res) => {
   try {
     const user = [req.body.profileImage, req.body.location, req.body.email];
-    console.log("Before update: " + user);
     UserModel.updateUser(user, (err, result) => {
       if (err) return res.json({ Error: err.message });
-      console.log("After update: " + user);
       return res.json({
         Status: "Success",
         user: {
-          first_name: req.body.firstName,
-          last_name: req.body.lastName,
+          first_name: req.body.name.split(" ")[0],
+          last_name: req.body.name.split(" ")[1],
           email: req.body.email,
-          district: req.body.district,
-          user_role: req.body.userRole,
+          district: req.body.location,
+          user_role: req.body.role,
+          profile_image: req.body.profileImage,
         },
       });
     });
@@ -204,14 +203,478 @@ export const uploadProfileImage = async (req, res) => {
     if (!req.file) {
       return res.status(400).send("No file uploaded.");
     }
-
-    // The file path where the image is stored
-    const imagePath = req.file.path;
-
-    // Here, you'd typically update the user's profile in the database with the imagePath
-    // For now, just return the file path.
+    const imagePath = req.file.filename;
     res.status(200).json({ imageUrl: imagePath });
   } catch (error) {
     res.status(500).send("Server error during image upload.");
+  }
+};
+
+export const getFreelancerData = async (req, res) => {
+  try {
+    UserModel.findOne(req.user.id, (err, users) => {
+      if (err) {
+        console.log(err);
+        return res.json({ Error: "Error finding user" });
+      }
+      if (users.length === 0) {
+        return res.json({ Error: "Freelancer not found" });
+      }
+      const freelancer = users[0];
+      // Use the found freelancer's email to get the details
+      freelancerModel.findFreelancerById(freelancer.id, (err, freelancer) => {
+        if (err) {
+          console.log(err);
+          return res.json({ Error: "Error finding freelancer" });
+        }
+        if (!freelancer || freelancer.length === 0) {
+          return res.json({ Message: "No profile details" });
+        }
+        res.json({ Status: "Success", freelancer: freelancer });
+      });
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ Error: "Server error" });
+  }
+};
+
+//get employer data
+export const getEmployerData = async (req, res) => {
+  try {
+    UserModel.findOne(req.user.id, (err, users) => {
+      if (err) {
+        console.log(err);
+        return res.json({ Error: "Error finding user" });
+      }
+      if (users.length === 0) {
+        return res.json({ Error: "Employer not found" });
+      }
+      const employer = users[0];
+      employerModel.findEmployerById(employer.id, (err, employer) => {
+        if (err) {
+          console.log(err);
+          return res.json({ Error: "Error finding employer" });
+        }
+        if (!employer || employer.length === 0) {
+          return res.json({ Message: "No profile details" });
+        }
+        res.json({ Status: "Success", employer: employer });
+      });
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ Error: "Server error" });
+  }
+};
+
+//update employer description
+export const updateEmployerDescription = async (req, res) => {
+  try {
+    const employerData = {
+      profileID: req.body.profileID,
+      userID: req.body.userID,
+      description: req.body.description,
+      languages: req.body.languages,
+      website: req.body.website,
+    };
+
+    // Check if employer exists
+    employerModel.findEmployerById(employerData.userID, (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.json({ Error: "Error in database operation" });
+      }
+
+      if (result.length > 0) {
+        // Employer exists, update description
+        employerModel.updateEmployerDescription(
+          employerData,
+          (updateErr, updateResult) => {
+            if (updateErr) {
+              console.error(updateErr);
+              return res.json({ Error: "Error updating employer" });
+            }
+            return res.json({ Status: "Success", Message: "Employer updated" });
+          }
+        );
+      } else {
+        // Employer doesn't exist, insert new record
+        employerModel.insertEmployer(
+          [
+            employerData.profileID,
+            employerData.userID,
+            employerData.description,
+            employerData.languages,
+            employerData.website,
+          ],
+          (insertErr, insertResult) => {
+            if (insertErr) {
+              console.error(insertErr);
+              return res.json({ Error: "Error inserting new employer" });
+            }
+            return res.json({
+              Status: "Success",
+              Message: "New employer created",
+            });
+          }
+        );
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ Error: "Server error" });
+  }
+};
+
+export const updateEmployerLanguages = async (req, res) => {
+  try {
+    const employerData = {
+      profileID: req.body.profileID,
+      userID: req.body.userID,
+      description: req.body.description,
+      languages: req.body.languages,
+      website: req.body.website,
+    };
+
+    // Check if employer exists
+    employerModel.findEmployerById(employerData.userID, (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.json({ Error: "Error in database operation" });
+      }
+
+      if (result.length > 0) {
+        // Employer exists, update description
+        employerModel.updateEmployerLanguages(
+          employerData,
+          (updateErr, updateResult) => {
+            if (updateErr) {
+              console.error(updateErr);
+              return res.json({ Error: "Error updating employer" });
+            }
+            return res.json({ Status: "Success", Message: "Employer updated" });
+          }
+        );
+      } else {
+        // Employer doesn't exist, insert new record
+        employerModel.insertEmployer(
+          [
+            employerData.profileID,
+            employerData.userID,
+            employerData.description,
+            employerData.languages,
+            employerData.website,
+          ],
+          (insertErr, insertResult) => {
+            if (insertErr) {
+              console.error(insertErr);
+              return res.json({ Error: "Error inserting new employer" });
+            }
+            return res.json({
+              Status: "Success",
+              Message: "New employer created",
+            });
+          }
+        );
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ Error: "Server error" });
+  }
+};
+
+export const updateEmployerWebsite = async (req, res) => {
+  try {
+    const employerData = {
+      profileID: req.body.profileID,
+      userID: req.body.userID,
+      description: req.body.description,
+      languages: req.body.languages,
+      website: req.body.website,
+    };
+
+    // Check if employer exists
+    employerModel.findEmployerById(employerData.userID, (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.json({ Error: "Error in database operation" });
+      }
+
+      if (result.length > 0) {
+        // Employer exists, update description
+        employerModel.updateEmployerWebsite(
+          employerData,
+          (updateErr, updateResult) => {
+            if (updateErr) {
+              console.error(updateErr);
+              return res.json({ Error: "Error updating employer" });
+            }
+            return res.json({ Status: "Success", Message: "Employer updated" });
+          }
+        );
+      } else {
+        // Employer doesn't exist, insert new record
+        employerModel.insertEmployer(
+          [
+            employerData.profileID,
+            employerData.userID,
+            employerData.description,
+            employerData.languages,
+            employerData.website,
+          ],
+          (insertErr, insertResult) => {
+            if (insertErr) {
+              console.error(insertErr);
+              return res.json({ Error: "Error inserting new employer" });
+            }
+            return res.json({
+              Status: "Success",
+              Message: "New employer created",
+            });
+          }
+        );
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ Error: "Server error" });
+  }
+};
+
+export const updateFreelancerDescription = async (req, res) => {
+  try {
+    const freelancerData = {
+      profileID: req.body.profileID,
+      userID: req.body.userID,
+      description: req.body.description,
+      languages: req.body.languages,
+      portfolio: req.body.portfolioWebsite,
+      skills: req.body.skills,
+    };
+    freelancerModel.findFreelancerById(freelancerData.userID, (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.json({ Error: "Error in database operation" });
+      }
+
+      if (result.length > 0) {
+        freelancerModel.updateFreelancerDescription(
+          freelancerData,
+          (updateErr, updateResult) => {
+            if (updateErr) {
+              console.error(updateErr);
+              return res.json({ Error: "Error updating freelancer" });
+            }
+            return res.json({
+              Status: "Success",
+              Message: "Freelancer updated",
+            });
+          }
+        );
+      } else {
+        freelancerModel.insertFreelancer(
+          [
+            freelancerData.profileID,
+            freelancerData.userID,
+            freelancerData.description,
+            freelancerData.languages,
+            freelancerData.skills,
+            freelancerData.portfolio,
+          ],
+          (insertErr, insertResult) => {
+            if (insertErr) {
+              console.error(insertErr);
+              return res.json({ Error: "Error inserting new freelancer" });
+            }
+            return res.json({
+              Status: "Success",
+              Message: "New freelancer profile created",
+            });
+          }
+        );
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ Error: "Server error" });
+  }
+};
+
+export const updateFreelancerLanguages = async (req, res) => {
+  try {
+    const freelancerData = {
+      profileID: req.body.profileID,
+      userID: req.body.userID,
+      description: req.body.description,
+      languages: req.body.languages,
+      portfolio: req.body.portfolioWebsite,
+      skills: req.body.skills,
+    };
+    freelancerModel.findFreelancerById(freelancerData.userID, (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.json({ Error: "Error in database operation" });
+      }
+
+      if (result.length > 0) {
+        freelancerModel.updateFreelancerLanguages(
+          freelancerData,
+          (updateErr, updateResult) => {
+            if (updateErr) {
+              console.error(updateErr);
+              return res.json({ Error: "Error updating freelancer" });
+            }
+            return res.json({
+              Status: "Success",
+              Message: "Freelancer updated",
+            });
+          }
+        );
+      } else {
+        freelancerModel.insertFreelancer(
+          [
+            freelancerData.profileID,
+            freelancerData.userID,
+            freelancerData.description,
+            freelancerData.languages,
+            freelancerData.skills,
+            freelancerData.portfolio,
+          ],
+          (insertErr, insertResult) => {
+            if (insertErr) {
+              console.error(insertErr);
+              return res.json({ Error: "Error inserting new freelancer" });
+            }
+            return res.json({
+              Status: "Success",
+              Message: "New freelancer profile created",
+            });
+          }
+        );
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ Error: "Server error" });
+  }
+};
+
+export const updateFreelancerSkills = async (req, res) => {
+  try {
+    const freelancerData = {
+      profileID: req.body.profileID,
+      userID: req.body.userID,
+      description: req.body.description,
+      languages: req.body.languages,
+      portfolio: req.body.portfolioWebsite,
+      skills: req.body.skills,
+    };
+    freelancerModel.findFreelancerById(freelancerData.userID, (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.json({ Error: "Error in database operation" });
+      }
+
+      if (result.length > 0) {
+        freelancerModel.updateFreelancerSkills(
+          freelancerData,
+          (updateErr, updateResult) => {
+            if (updateErr) {
+              console.error(updateErr);
+              return res.json({ Error: "Error updating freelancer" });
+            }
+            return res.json({
+              Status: "Success",
+              Message: "Freelancer updated",
+            });
+          }
+        );
+      } else {
+        freelancerModel.insertFreelancer(
+          [
+            freelancerData.profileID,
+            freelancerData.userID,
+            freelancerData.description,
+            freelancerData.languages,
+            freelancerData.skills,
+            freelancerData.portfolio,
+          ],
+          (insertErr, insertResult) => {
+            if (insertErr) {
+              console.error(insertErr);
+              return res.json({ Error: "Error inserting new freelancer" });
+            }
+            return res.json({
+              Status: "Success",
+              Message: "New freelancer profile created",
+            });
+          }
+        );
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ Error: "Server error" });
+  }
+};
+
+export const updateFreelancerWebsite = async (req, res) => {
+  try {
+    const freelancerData = {
+      profileID: req.body.profileID,
+      userID: req.body.userID,
+      description: req.body.description,
+      languages: req.body.languages,
+      portfolio: req.body.portfolioWebsite,
+      skills: req.body.skills,
+    };
+    freelancerModel.findFreelancerById(freelancerData.userID, (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.json({ Error: "Error in database operation" });
+      }
+
+      if (result.length > 0) {
+        freelancerModel.updateFreelancerWebsite(
+          freelancerData,
+          (updateErr, updateResult) => {
+            if (updateErr) {
+              console.error(updateErr);
+              return res.json({ Error: "Error updating freelancer" });
+            }
+            return res.json({
+              Status: "Success",
+              Message: "Freelancer updated",
+            });
+          }
+        );
+      } else {
+        freelancerModel.insertFreelancer(
+          [
+            freelancerData.profileID,
+            freelancerData.userID,
+            freelancerData.description,
+            freelancerData.languages,
+            freelancerData.skills,
+            freelancerData.portfolio,
+          ],
+          (insertErr, insertResult) => {
+            if (insertErr) {
+              console.error(insertErr);
+              return res.json({ Error: "Error inserting new freelancer" });
+            }
+            return res.json({
+              Status: "Success",
+              Message: "New freelancer profile created",
+            });
+          }
+        );
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ Error: "Server error" });
   }
 };

@@ -1,5 +1,4 @@
 import React from "react";
-import { Nav } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import "../styles/SidebarStyle.css";
 
@@ -14,14 +13,14 @@ const Sidebar = () => {
   };
 
   return (
-    <Nav defaultActiveKey="/home" className="flex-column sidebar py-3">
-      <Nav.Link
+    <div className="flex-column sidebar py-3">
+      <a
         href={
           userRole === "freelancer"
             ? "/freelancer-dashboard"
             : "/employer-dashboard"
         }
-        className={
+        className={`nav-link ${
           isActive(
             userRole === "freelancer"
               ? "/freelancer-dashboard"
@@ -29,49 +28,50 @@ const Sidebar = () => {
           )
             ? "active"
             : ""
-        }
+        }`}
       >
         <i className="fas fa-home"></i>
         Dashboard
-      </Nav.Link>
-      <Nav.Link
+      </a>
+      <a
         href={userRole === "freelancer" ? "/search-job" : "/search-freelancer"}
-        className={
+        className={`nav-link ${
           isActive(
             userRole === "freelancer" ? "/search-job" : "/search-freelancer"
           )
             ? "active"
             : ""
-        }
+        }`}
       >
         <i className="fas fa-magnifying-glass"></i>
         {userRole === "freelancer" ? "Search Jobs" : "Search Freelancers"}
-      </Nav.Link>
-
-      <Nav.Link
+      </a>
+      <a
         href="/freelancer-clusters"
-        className={isActive("/freelancer-clusters") ? "active" : ""}
+        className={`nav-link ${
+          isActive("/freelancer-clusters") ? "active" : ""
+        }`}
       >
         <i className="fas fa-users"></i>
         Freelancer Clusters
-      </Nav.Link>
+      </a>
       {userRole === "freelancer" && (
-        <Nav.Link
+        <a
           href="/resources"
-          className={isActive("/resources") ? "active" : ""}
+          className={`nav-link ${isActive("/resources") ? "active" : ""}`}
         >
           <i className="fas fa-book"></i>
           Resources
-        </Nav.Link>
+        </a>
       )}
-      <Nav.Link
+      <a
         href="/profile"
-        className={isActive("/profile") ? "active" : ""}
+        className={`nav-link ${isActive("/profile") ? "active" : ""}`}
       >
         <i className="fas fa-user"></i>
         Profile
-      </Nav.Link>
-    </Nav>
+      </a>
+    </div>
   );
 };
 

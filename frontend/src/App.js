@@ -1,5 +1,4 @@
 import React from "react";
-import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./Home";
 import Register from "./Register";
@@ -11,6 +10,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PostJob from "./PostJob";
 import ProfilePage from "./ProfilePage";
 import JobPage from "./JobPage";
+import "./App.css";
 
 function App() {
   return (

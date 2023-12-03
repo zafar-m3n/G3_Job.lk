@@ -1,15 +1,9 @@
 import React from "react";
-import {
-  Navbar,
-  Nav,
-  Button,
-  Container,
-  Row,
-  Col,
-  Carousel,
-  Card,
-  Form,
-} from "react-bootstrap";
+import { Button, Container, Row, Col } from "react-bootstrap";
+import Header from "./components/Header";
+import ServiceCarousel from "./components/ServiceCarousel";
+import ReviewCarousel from "./components/ReviewCarousel";
+import Footer from "./components/Footer";
 
 function Home() {
   const services = [
@@ -30,9 +24,16 @@ function Home() {
       ? [arr.slice(0, size), ...chunkServices(arr.slice(size), size)]
       : [arr];
 
-  const serviceGroups = chunkServices(services, 4);
+  const serviceGroups = chunkServices(services, 3);
 
   const reviews = [
+    {
+      name: "Ryan Reynolds",
+      title: "Owner of mintmobile.com",
+      review:
+        "JOB.LK is the Deadpool of freelancing - cheeky, bold, and effective. Finding freelancers is smooth and fun. Don't miss out on this freelancing party. #FreelanceLikeDeadpool",
+      image: "/images/ryan-reynolds.jpg",
+    },
     {
       name: "John Cena",
       title: "Frontend Web Developer",
@@ -48,13 +49,6 @@ function Home() {
       image: "/images/bruce-wayne.jpg",
     },
     {
-      name: "Ryan Reynolds",
-      title: "Owner of mintmobile.com",
-      review:
-        "JOB.LK is the Deadpool of freelancing - cheeky, bold, and effective. Finding freelancers is smooth and fun. Don't miss out on this freelancing party. #FreelanceLikeDeadpool",
-      image: "/images/ryan-reynolds.jpg",
-    },
-    {
       name: "Optimus Prime",
       title: "Leader of Autobots",
       review:
@@ -62,39 +56,10 @@ function Home() {
       image: "/images/optimus.jpg",
     },
   ];
-
+  const userData = {};
   return (
     <>
-      <Navbar className="w-100">
-        <Container fluid>
-          {/* Logo */}
-          <Navbar.Brand href="/" className="fs-3 logo-font">
-            Job.lk
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-
-          {/* Navigation and Action Buttons */}
-          <Navbar.Collapse
-            id="basic-navbar-nav"
-            className="justify-content-center"
-          >
-            {/* Navigation Links */}
-            <Nav>
-              <Nav.Link href="/">Home</Nav.Link>
-              <Nav.Link href="#jobs">Jobs</Nav.Link>
-              <Nav.Link href="#freelancers">Freelancers</Nav.Link>
-              <Nav.Link href="#how-it-works">How it works?</Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-          {/* Action Buttons */}
-          <Nav>
-            <Nav.Link href="/login">Login</Nav.Link>
-            <Nav.Link href="/register">Sign Up</Nav.Link>
-            <Button className="custom-primary-btn">Contact Us</Button>
-          </Nav>
-        </Container>
-      </Navbar>
-
+      <Header userData={userData} />
       <Container fluid className="px-0 mx-0">
         <Row className="align-items-center justify-content-between ps-5">
           <Col md={7}>
@@ -116,44 +81,7 @@ function Home() {
 
       <Container fluid className="my-5 px-5">
         <h1 className="mb-4">Popular Services</h1>
-        <Carousel
-          indicators={false}
-          interval={null}
-          prevIcon={
-            <span aria-hidden="true" className="carousel-control-prev-icon">
-              <i className="fas fa-arrow-circle-left fa-2x"></i>
-            </span>
-          }
-          nextIcon={
-            <span aria-hidden="true" className="carousel-control-next-icon">
-              <i className="fas fa-arrow-circle-right fa-2x"></i>
-            </span>
-          }
-          className="custom-carousel"
-        >
-          {serviceGroups.map((group, idx) => (
-            <Carousel.Item key={idx}>
-              <Row>
-                {group.map((service, index) => (
-                  <Col
-                    key={index}
-                    md={3}
-                    className="d-flex justify-content-center"
-                  >
-                    <Card style={{ width: "250px" }}>
-                      <Card.Img variant="top" src={service.image} />
-                      <Card.Body>
-                        <Card.Title className="card-title-custom">
-                          {service.name}
-                        </Card.Title>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                ))}
-              </Row>
-            </Carousel.Item>
-          ))}
-        </Carousel>
+        <ServiceCarousel serviceGroups={serviceGroups} />
       </Container>
 
       <Container fluid className="my-5 p-5 third-section">
@@ -210,113 +138,11 @@ function Home() {
         <h1 className="mb-4 heading text-center">What our customers say</h1>
         <Row>
           <Col md={6} className="mx-auto">
-            <Carousel
-              indicators={false}
-              interval={null}
-              prevIcon={
-                <span aria-hidden="true" className="carousel-control-prev-icon">
-                  <i className="fas fa-arrow-circle-left fa-2x"></i>
-                </span>
-              }
-              nextIcon={
-                <span aria-hidden="true" className="carousel-control-next-icon">
-                  <i className="fas fa-arrow-circle-right fa-2x"></i>
-                </span>
-              }
-              className="custom-carousel"
-            >
-              {reviews.map((review, index) => (
-                <Carousel.Item>
-                  <Row>
-                    <Col
-                      key={index}
-                      className="d-flex justify-content-center align-items-center"
-                    >
-                      <Card style={{ width: "500px" }} className="text-center">
-                        <Card.Header className="p-2 bg-transparent border-0">
-                          <Card.Img
-                            variant="top"
-                            src={review.image}
-                            className="rounded-circle mx-auto"
-                            style={{ width: "100px", height: "100px" }}
-                          />
-                        </Card.Header>
-                        <Card.Body className="p-2">
-                          <Card.Title>{review.name}</Card.Title>
-                          <Card.Subtitle className="mb-2">
-                            {review.title}
-                          </Card.Subtitle>
-                          <Card.Text>{review.review}</Card.Text>
-                        </Card.Body>
-                      </Card>
-                    </Col>
-                  </Row>
-                </Carousel.Item>
-              ))}
-            </Carousel>
+            <ReviewCarousel reviews={reviews} />
           </Col>
         </Row>
       </Container>
-
-      <Container fluid className="mt-5 px-5 py-3 fifth-section">
-        <Row className="bg-transparent">
-          {/* First Column - Logo and About */}
-          <Col md={5} className="mx-auto mb-3 bg-transparent">
-            <Navbar.Brand href="/" className="fs-3 footer-logo bg-transparent">
-              Job.lk
-            </Navbar.Brand>
-            <p className="footer-content">
-              Job.lk is a specialized freelance platform tailored for web
-              developer freelancers in Sri Lanka. Our platform serves as a
-              dynamic marketplace, connecting talented web developers with a
-              diverse range of opportunities. Whether you are a skilled web
-              developer seeking exciting projects or an employer searching for
-              top-notch web development expertise, Job.lk is your go-to
-              destination. Discover the perfect match for your project or
-              showcase your skills to a local and global audience, all on
-              Job.lk, the premier choice for web development freelancers in Sri
-              Lanka.
-            </p>
-          </Col>
-
-          {/* Second Column - Quick Links */}
-          <Col md={3} className="mx-auto mb-3 bg-transparent">
-            <h5 className="footer-content">Quick Links</h5>
-            <Nav className="footer-content">
-              <Col className="footer-content">
-                <Nav.Link href="/">Home</Nav.Link>
-                <Nav.Link href="#jobs">Jobs</Nav.Link>
-                <Nav.Link href="#freelancers">Freelancers</Nav.Link>
-                <Nav.Link href="#how-it-works">How it works?</Nav.Link>
-              </Col>
-            </Nav>
-          </Col>
-
-          {/* Third Column - Contact / Subscription Form */}
-          <Col md={3} className="mx-auto mb-3 bg-transparent">
-            <h5 className="footer-content">Get in touch</h5>
-            <Form className="footer-content">
-              <Form.Group className="mb-3 rounded" controlId="formBasicEmail">
-                <Form.Control type="email" placeholder="Enter email" />
-              </Form.Group>
-              <Form.Group className="mb-3 rounded" controlId="formBasicName">
-                <Form.Control type="text" placeholder="Your Name" />
-              </Form.Group>
-              <Button
-                variant="primary"
-                type="submit"
-                className="custom-primary-btn"
-              >
-                Subscribe
-              </Button>
-            </Form>
-          </Col>
-        </Row>
-
-        <h5 className="footer-content text-center">
-          CCG3 All Rights Reserved.
-        </h5>
-      </Container>
+      <Footer />
     </>
   );
 }

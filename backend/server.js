@@ -10,7 +10,7 @@ app.use(cookieParser());
 
 // User routes
 app.use(userRoutes);
-app.use("/assets", express.static("assets"));
+app.use(express.static("public"));
 
 app.listen(8081, () => {
   console.log("Running server");

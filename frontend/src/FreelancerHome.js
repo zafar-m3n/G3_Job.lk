@@ -1,27 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import "./styles/FreelancerHomeStyle.css";
 import axios from "axios";
 import {
-  Navbar,
-  Nav,
   Button,
   Container,
   Row,
   Col,
-  Form,
   InputGroup,
   FormControl,
-  Dropdown,
 } from "react-bootstrap";
 import Sidebar from "./components/Sidebar";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 function FreelancerHome() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [userData, setUserData] = useState({
     name: "",
     profileImage: "",
     email: "",
+    role: "",
   });
   const getUserData = async () => {
     try {
@@ -36,86 +35,26 @@ function FreelancerHome() {
         name: res.data.user.first_name + " " + res.data.user.last_name,
         profileImage: res.data.user.profile_image,
         email: res.data.user.email,
+        role: res.data.user.user_role,
       });
     } catch (error) {
       console.log(error);
     }
   };
-
-  const handleLogout = () => {
-    localStorage.removeItem("auth");
-    navigate("/");
-  };
-
   useEffect(() => {
     getUserData();
   }, []);
   return (
     <>
-      <Navbar className="w-100">
-        <Container fluid>
-          {/* Logo */}
-          <Navbar.Brand href="/" className="fs-3 logo-font">
-            Job.lk
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-
-          {/* Navigation and Action Buttons */}
-          <Navbar.Collapse
-            id="basic-navbar-nav"
-            className="justify-content-center"
-          >
-            {/* Navigation Links */}
-            <Nav>
-              <Nav.Link href="/freelancer-dashboard">Home</Nav.Link>
-              <Nav.Link href="/jobs">Jobs</Nav.Link>
-              <Nav.Link href="#freelancers">Freelancers</Nav.Link>
-              <Nav.Link href="#how-it-works">How it works?</Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-          {/* Action Buttons */}
-          <Nav className="p-0">
-            {userData.name && (
-              <Dropdown align="end">
-                <Dropdown.Toggle
-                  variant="success"
-                  id="dropdown-basic"
-                  style={{
-                    backgroundColor: "transparent",
-                    borderColor: "transparent",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <span style={{ marginRight: "5px" }}>{userData.name}</span>
-                    <img
-                      src={userData.profileImage}
-                      alt="Profile"
-                      style={{
-                        width: "40px",
-                        height: "40px",
-                        borderRadius: "50%",
-                      }}
-                    />
-                  </div>
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu className="upward-dropdown">
-                  <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            )}
-          </Nav>
-        </Container>
-      </Navbar>
-      <Container fluid className="bg-warning">
-        <Row
-          style={{
-            backgroundColor: "#0B2447",
-          }}
-        >
+      <Header userData={userData} />
+      <Container fluid>
+        <Row>
           <Col
             md={3}
-            className="p-0 h-100 d-flex flex-column align-self-stretch"
+            className="p-0"
+            style={{
+              backgroundColor: "#0B2447",
+            }}
           >
             <Sidebar />
           </Col>
@@ -169,65 +108,7 @@ function FreelancerHome() {
           </Col>
         </Row>
       </Container>
-      <Container fluid className="px-5 py-3 fifth-section">
-        <Row className="bg-transparent">
-          {/* First Column - Logo and About */}
-          <Col md={5} className="mx-auto mb-3 bg-transparent">
-            <Navbar.Brand href="/" className="fs-3 footer-logo bg-transparent">
-              Job.lk
-            </Navbar.Brand>
-            <p className="footer-content">
-              Job.lk is a specialized freelance platform tailored for web
-              developer freelancers in Sri Lanka. Our platform serves as a
-              dynamic marketplace, connecting talented web developers with a
-              diverse range of opportunities. Whether you are a skilled web
-              developer seeking exciting projects or an employer searching for
-              top-notch web development expertise, Job.lk is your go-to
-              destination. Discover the perfect match for your project or
-              showcase your skills to a local and global audience, all on
-              Job.lk, the premier choice for web development freelancers in Sri
-              Lanka.
-            </p>
-          </Col>
-
-          {/* Second Column - Quick Links */}
-          <Col md={3} className="mx-auto mb-3 bg-transparent">
-            <h5 className="footer-content">Quick Links</h5>
-            <Nav className="footer-content">
-              <Col className="footer-content">
-                <Nav.Link href="/">Home</Nav.Link>
-                <Nav.Link href="#jobs">Jobs</Nav.Link>
-                <Nav.Link href="#freelancers">Freelancers</Nav.Link>
-                <Nav.Link href="#how-it-works">How it works?</Nav.Link>
-              </Col>
-            </Nav>
-          </Col>
-
-          {/* Third Column - Contact / Subscription Form */}
-          <Col md={3} className="mx-auto mb-3 bg-transparent">
-            <h5 className="footer-content">Get in touch</h5>
-            <Form className="footer-content">
-              <Form.Group className="mb-3 rounded" controlId="formBasicEmail">
-                <Form.Control type="email" placeholder="Enter email" />
-              </Form.Group>
-              <Form.Group className="mb-3 rounded" controlId="formBasicName">
-                <Form.Control type="text" placeholder="Your Name" />
-              </Form.Group>
-              <Button
-                variant="primary"
-                type="submit"
-                className="custom-primary-btn"
-              >
-                Subscribe
-              </Button>
-            </Form>
-          </Col>
-        </Row>
-
-        <h5 className="footer-content text-center">
-          CCG3 All Rights Reserved.
-        </h5>
-      </Container>
+      <Footer />
     </>
   );
 }

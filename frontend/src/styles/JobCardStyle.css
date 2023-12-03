@@ -1,0 +1,11 @@
+.button-custom {
+  padding: 5px 15px;
+  background: #0b2447;
+  border-radius: 5px;
+  color: #fffbfe;
+  border: #0b2447;
+}
+
+.card-label {
+  font-size: 0.6em;
+}
