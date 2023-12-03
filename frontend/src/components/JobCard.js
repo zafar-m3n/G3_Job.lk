@@ -1,7 +1,12 @@
 import React from "react";
 import "../styles/JobCardStyle.css";
+import { useNavigate } from "react-router-dom";
 
 function JobCard({ job }) {
+  const navigate = useNavigate();
+  const handleSeeMoreClick = () => {
+    navigate(`/job-details/${job.id}`);
+  }
   return (
     <div className="col-md-4 mb-4">
       <div className="card h-100">
@@ -53,7 +58,9 @@ function JobCard({ job }) {
 
         {/* See More Button */}
         <div className="card-footer">
-          <button className="button-custom w-100">See More</button>
+          <button className="button-custom w-100" onClick={handleSeeMoreClick}>
+            See More
+          </button>
         </div>
       </div>
     </div>
