@@ -2,11 +2,15 @@ import React from "react";
 import "../styles/JobCardStyle.css";
 import { useNavigate } from "react-router-dom";
 
-function JobCard({ job }) {
+function JobCard({ job, userRole }) {
   const navigate = useNavigate();
   const handleSeeMoreClick = () => {
-    navigate(`/job-details/${job.id}`);
-  }
+    if (userRole === "employer") {
+      navigate(`/job-details-employer/${job.id}`);
+    } else if (userRole === "freelancer") {
+      navigate(`/job-details-freelancer/${job.id}`);
+    }
+  };
   return (
     <div className="col-md-4 mb-4">
       <div className="card h-100">

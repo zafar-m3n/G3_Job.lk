@@ -124,7 +124,7 @@ function JobPage() {
             </Row>
             <Row>
               {[...jobs].reverse().map((job, index) => (
-                <JobCard key={index} job={job} />
+                <JobCard key={index} job={job} userRole={userData.role} />
               ))}
             </Row>
             <Row>

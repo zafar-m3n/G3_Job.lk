@@ -4,7 +4,7 @@ import * as UserModel from "../models/userModel.js";
 import * as jobModel from "../models/jobModel.js";
 import * as freelancerModel from "../models/freelancerModel.js";
 import * as employerModel from "../models/employerModel.js";
-import e from "express";
+import e, { json } from "express";
 import path from "path";
 
 const saltRounds = 10;
@@ -676,5 +676,20 @@ export const updateFreelancerWebsite = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.json({ Error: "Server error" });
+  }
+};
+
+export const getSingleJobData = async (req, res) => {
+  try {
+    jobModel.getJobById(req.params.jobId, (err, jobs) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ Error: "Error finding jobs" });
+      }
+      res.status(200).json({ Status: "Success", Jobs: jobs[0] });
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ Error: "Server error" });
   }
 };

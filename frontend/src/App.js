@@ -11,6 +11,8 @@ import PostJob from "./PostJob";
 import ProfilePage from "./ProfilePage";
 import JobPage from "./JobPage";
 import "./App.css";
+import JobDetailsEmployer from "./JobDetailsEmployer";
+import JobDetailsFreelancer from "./JobDetailsFreelancer";
 
 function App() {
   return (
@@ -77,6 +79,22 @@ function App() {
           element={
             <ProtectedRoute>
               <JobPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/job-details-employer/:jobId"
+          element={
+            <ProtectedRoute>
+              <JobDetailsEmployer />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/job-details-freelancer/:jobId"
+          element={
+            <ProtectedRoute>
+              <JobDetailsFreelancer />
             </ProtectedRoute>
           }
         />

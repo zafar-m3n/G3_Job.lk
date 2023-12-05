@@ -23,3 +23,8 @@ export const getAllJobs = (callback) => {
   const query = "SELECT * FROM jobs";
   db.query(query, callback);
 };
+
+export const getJobById = (jobId, callback) => {
+  const query = "SELECT * FROM jobs WHERE id = ?";
+  db.query(query, [jobId], callback);
+};

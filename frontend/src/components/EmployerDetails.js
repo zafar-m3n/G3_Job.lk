@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Row } from "react-bootstrap";
 
@@ -14,6 +15,11 @@ function EmployerDetails({ userData }) {
     languages: "No languages added",
     website: "No website added",
   });
+
+  const navigate = useNavigate();
+  const handlePostJobClick = () => {
+    navigate("/post-job");
+  };
 
   const getEmployersData = async () => {
     try {
@@ -205,7 +211,9 @@ function EmployerDetails({ userData }) {
         </div>
         <div className="freelancer-col">
           <img src="/images/job-icon.jpg" alt="Job Icon" className="job-icon" />
-          <button className="button-custom">Post a Job</button>
+          <button className="button-custom" onClick={handlePostJobClick}>
+            Post a Job
+          </button>
         </div>
       </Row>
     </>

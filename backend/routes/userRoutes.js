@@ -66,4 +66,10 @@ router.post(
   UserController.updateFreelancerWebsite
 );
 
+router.get(
+  "/getJobData/:jobId",
+  authMiddleware,
+  UserController.getSingleJobData
+);
+
 export default router;

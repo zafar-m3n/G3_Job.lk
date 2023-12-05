@@ -177,7 +177,7 @@ function EmployerHome() {
             <div className="row">
               <h4 className="sub-heading">Your Latest Job Posts</h4>
               {getJobsForDisplay().map((job, index) => (
-                <JobCard key={index} job={job} />
+                <JobCard key={index} job={job} userRole={userData.role} />
               ))}
             </div>
 

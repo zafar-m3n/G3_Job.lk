@@ -8,7 +8,6 @@ function Header({ userData }) {
     localStorage.removeItem("auth");
     navigate("/");
   };
-
   return (
     <Navbar className="w-100">
       <Container fluid>
