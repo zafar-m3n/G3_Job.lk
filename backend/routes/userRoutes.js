@@ -72,4 +72,11 @@ router.get(
   UserController.getSingleJobData
 );
 
+router.get(
+  "/getEmployerData/:email",
+  authMiddleware,
+  UserController.getEmployerDataByEmail
+);
+
+
 export default router;

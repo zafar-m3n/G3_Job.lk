@@ -50,6 +50,11 @@ function JobDetailsEmployer() {
       console.log(error);
     }
   };
+  function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function (txt) {
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+  }
 
   useEffect(() => {
     getUserData();
@@ -71,10 +76,13 @@ function JobDetailsEmployer() {
             </div>
             <div className="col">
               <h2 className="m-0 description">{jobs.jobDescription}</h2>
-              <p className="m-0">{jobs.jobTitle}</p>
+              <p className="m-0">{toTitleCase(userData.role)}</p>
             </div>
           </div>
           <ul className="list-unstyled">
+            <li>
+              <strong>Job Title: </strong> {jobs.jobTitle}
+            </li>
             <li>
               <strong>Skills Required:</strong> {jobs.requiredSkills}
             </li>
@@ -97,7 +105,7 @@ function JobDetailsEmployer() {
         </div>
 
         <div>
-          <h3>Bids for this Job</h3>
+          <h3 className="title">Bids for this Job</h3>
           <p>No bids yet.</p>
         </div>
       </div>

@@ -693,3 +693,21 @@ export const getSingleJobData = async (req, res) => {
     res.status(500).json({ Error: "Server error" });
   }
 };
+
+export const getEmployerDataByEmail = async (req, res) => {
+  try {
+    UserModel.findUserByEmail(req.params.email, (err, employer) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ Error: "Error finding employer" });
+      }
+      if (employer.length === 0) {
+        return res.status(404).json({ Message: "Employer not found" });
+      }
+      res.status(200).json({ Status: "Success", Employer: employer });
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ Error: "Server error" });
+  }
+};
