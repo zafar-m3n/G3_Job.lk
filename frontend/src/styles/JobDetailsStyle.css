@@ -3,11 +3,28 @@
   font-size: 32px;
   color: #19376d;
 }
-.image{
-    width: 100px;
-    max-height: 100px;
+.image {
+  width: 150px;
+  max-height: 150px;
 }
 .title {
   font-size: 28px;
+  color: #19376d;
+}
+.button-custom {
+  width: 150px;
+  padding: 5px 15px;
+  background: #0b2447;
+  border-radius: 5px;
+  color: #fffbfe;
+  border: #0b2447;
+}
+.custom-job-details {
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  box-shadow: 3px 3px 5px #555;
+}
+.bgt-clr {
   color: #19376d;
 }

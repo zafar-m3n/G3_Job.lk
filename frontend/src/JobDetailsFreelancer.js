@@ -69,12 +69,13 @@ function JobDetailsFreelancer() {
           },
         }
       );
+      response.data.Employer[0].profile_image = `../${response.data.Employer[0].profile_image}`;
+      console.log("Employer Data:" + JSON.stringify(response, null, 2));
       setEmployerData(response.data.Employer[0]);
     } catch (error) {
       console.error("Error fetching employer data:", error);
     }
   };
-
   useEffect(() => {
     getUserData();
     getSingleJobData();
@@ -85,53 +86,58 @@ function JobDetailsFreelancer() {
       <Header userData={userData} />
       <div className="container my-4">
         <div className="mb-4">
-          <div className="row align-items-center mb-2">
-            <div className="col-1">
-              {employerData.profile_image === "images/profile.jpg" ? (
-                <img
-                  src={`../${employerData.profile_image}`}
-                  alt="profile"
-                  className="img-fluid rounded-circle image"
-                />
-              ) : (
-                <img
-                  src={employerData.profile_image}
-                  alt="profile"
-                  className="img-fluid rounded-circle image"
-                />
-              )}
+          <div className="row mb-2">
+            <h2 className="mb-4 align-items-center description">
+              {jobs.jobDescription}
+            </h2>
+            <div className="col-2">
+              <img
+                src={employerData.profile_image}
+                alt="profile"
+                className="rounded-circle image"
+              />
             </div>
-            <div className="col">
-              <h2 className=" m-0 description">{jobs.jobDescription}</h2>
+            <div className="col-7 d-flex flex-column justify-content-center">
+              <p className="m-1 fs-5 ">
+                {employerData.first_name} {employerData.last_name}
+              </p>
+              <p className="m-1 fs-5">{employerData.district}</p>
+              <button className="bg-info button-custom">Contact Us</button>
+            </div>
+            <div className="col-3">
+              <div className="custom-job-details">
+                <div className="card-body">
+                  <p className="card-text text-secondary">
+                    Job Title: {jobs.jobTitle}
+                  </p>
+                  <p className="card-text bgt-clr">
+                    <i class="fa-solid fa-dollar-sign bgt-clr"></i> Budget: LKR{" "}
+                    {jobs.estimatedBudget}
+                  </p>
+                  <p className="card-text text-secondary">
+                    <i class="fa-regular fa-clock text-secondary"></i> Duration:{" "}
+                    {jobs.projectDuration}
+                  </p>
+                  <div className="d-flex justify-content-center">
+                    <button className="button-custom">Bid for this Job</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <ul className="list-unstyled">
-            <li>
-              <strong>Employer: </strong> {employerData.first_name}{" "}
-              {employerData.last_name}
-            </li>
-            <li>
-              <strong>Job Title: </strong> {jobs.jobTitle}
-            </li>
-            <li>
-              <strong>Skills Required:</strong> {jobs.requiredSkills}
-            </li>
-            <li>
-              <strong>Budget:</strong> LKR {jobs.estimatedBudget}
-            </li>
-            <li>
-              <strong>Duration:</strong> {jobs.projectDuration}
-            </li>
-            <li>
+          <ul className="list-group list-group-flush">
+            <li className="list-group-item border-bottom-0">
               <strong>Experience Level:</strong> {jobs.experienceLevel}
             </li>
-            <li>
-              <strong>Location:</strong> {jobs.location}
-            </li>
-            <li>
+            <li className="list-group-item border-bottom">
               <strong>Additional Information:</strong> {jobs.additionalInfo}
             </li>
           </ul>
+        </div>
+
+        <div>
+          <h3 className="title">More Jobs From This Employer</h3>
+          <p>Not done yet.</p>
         </div>
       </div>
       <Footer />
