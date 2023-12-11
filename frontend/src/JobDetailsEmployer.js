@@ -47,6 +47,7 @@ function JobDetailsEmployer() {
           }`,
         },
       });
+      console.log("Job Data:" + JSON.stringify(res, null, 2));
       setJobs(res.data.Jobs);
     } catch (error) {
       console.log(error);
@@ -72,7 +73,7 @@ function JobDetailsEmployer() {
             <h2 className="mb-4 align-items-center description">
               {jobs.jobDescription}
             </h2>
-            <div className="col-2">
+            <div className="col-2 d-flex flex-column justify-content-center">
               <img
                 src={userData.profileImage}
                 alt="profile"
@@ -86,9 +87,18 @@ function JobDetailsEmployer() {
             </div>
             <div className="col-3">
               <div className="custom-job-details">
+                <div className="card-header text-center">
+                  <div className="card-title fw-bold mb-2">{jobs.jobTitle}</div>
+                </div>
                 <div className="card-body">
                   <p className="card-text text-secondary">
-                    Job Title: {jobs.jobTitle}
+                    {" "}
+                    Date Posted:{" "}
+                    {new Date(jobs.datePosted).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
                   </p>
                   <p className="card-text bgt-clr">
                     <i class="fa-solid fa-dollar-sign bgt-clr"></i> Budget: LKR{" "}

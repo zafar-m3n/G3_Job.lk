@@ -119,7 +119,7 @@ function JobPage() {
 
             <Row>
               <h2 className="heading">
-                {userData.role === "employer" ? "Posted Jobs" : "Applied Jobs"}
+                {userData.role === "employer" ? "Posted Jobs" : "Browse Recommended Jobs"}
               </h2>
             </Row>
             <Row>
@@ -131,9 +131,9 @@ function JobPage() {
               <h2 className="heading">
                 {userData.role === "employer"
                   ? "Browse Recommended Freelancers"
-                  : "Browse Recommended Jobs"}
+                  : "Applied Jobs"}
               </h2>
-              <p>No endorsed jobs yet.</p>
+              <p>No applied jobs yet.</p>
             </Row>
           </Col>
         </Row>

@@ -4,6 +4,7 @@ import * as UserModel from "../models/userModel.js";
 import * as jobModel from "../models/jobModel.js";
 import * as freelancerModel from "../models/freelancerModel.js";
 import * as employerModel from "../models/employerModel.js";
+import * as bidModel from "../models/bidModel.js";
 import e, { json } from "express";
 import path from "path";
 
@@ -710,4 +711,43 @@ export const getEmployerDataByEmail = async (req, res) => {
     console.error(error);
     res.status(500).json({ Error: "Server error" });
   }
+};
+
+//job bid
+export const insertJobBid = (req, res) => {
+  const bid = [
+    req.body.bidAmount,
+    req.body.deadline,
+    req.body.deliverables,
+    req.body.additionalInfo,
+    req.body.phoneNumber,
+    req.body.freelancerName,
+    req.body.freelancerEmail,
+    req.body.freelancerId,
+    req.body.employerName,
+    req.body.employerEmail,
+    req.body.employerId,
+    req.body.jobId,
+  ];
+  bidModel.insertJobBid(bid, (err, result) => {
+    if (err) return res.json({ Error: err.message });
+    return res.json({
+      Status: "Success",
+      bid: {
+        bid_id: result.insertId,
+        bid_amount: req.body.bidAmount,
+        deadline: req.body.deadline,
+        deliverables: req.body.deliverables,
+        additional_info: req.body.additionalInfo,
+        phone_number: req.body.phoneNumber,
+        freelancer_name: req.body.freelancerName,
+        freelancer_email: req.body.freelancerEmail,
+        freelancer_id: req.body.freelancerId,
+        employer_name: req.body.employerName,
+        employer_email: req.body.employerEmail,
+        employer_id: req.body.employerId,
+        job_id: req.body.jobId,
+      },
+    });
+  });
 };

@@ -78,5 +78,7 @@ router.get(
   UserController.getEmployerDataByEmail
 );
 
+//bid routes
+router.post("/submitBid", authMiddleware, UserController.insertJobBid);
 
 export default router;
