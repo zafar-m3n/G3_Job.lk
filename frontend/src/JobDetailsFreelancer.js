@@ -160,16 +160,45 @@ function JobDetailsFreelancer() {
 
       setTimeout(() => {
         setShowSuccessMessage(false);
+        getBidData();
       }, 3000);
     } catch (error) {
       console.error("Error submitting bid:", error);
     }
   };
 
+  const [bidData, setBidData] = useState([]);
+  //getBidData
+  const getBidData = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8081/getJobBids/${jobs.id}/${userData.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("auth"))?.token
+            }`,
+          },
+        }
+      );
+      console.log("Bid Data:" + JSON.stringify(response.data, null, 2));
+      setBidData(response.data.Bids[0]);
+    } catch (error) {
+      console.error("Error fetching bid data:", error);
+    }
+  };
+
+  const hasAlreadyBid = bidData && bidData.jobId === jobs.id;
+  console.log("hasAlreadyBid: " + hasAlreadyBid);
+
   useEffect(() => {
     getUserData();
     getSingleJobData();
   }, []);
+
+  useEffect(() => {
+    getBidData();
+  }, [jobs, userData]);
   return (
     <>
       <Header userData={userData} />
@@ -230,6 +259,7 @@ function JobDetailsFreelancer() {
                       type="button"
                       className="button-custom"
                       onClick={handleShow} // Updated to use handleShow
+                      disabled={hasAlreadyBid}
                     >
                       Bid for this Job
                     </button>
@@ -319,6 +349,40 @@ function JobDetailsFreelancer() {
               <strong>Additional Information:</strong> {jobs.additionalInfo}
             </li>
           </ul>
+        </div>
+        <div>
+          <h3 className="title">Your Job Bid</h3>
+          {hasAlreadyBid ? (
+            <div className="card">
+              <div className="card-body">
+                <p className="card-text">
+                  {" "}
+                  Bid Amount: LKR {bidData.bidAmount}
+                </p>
+                <p className="card-text"> Deadline: {bidData.deadline}</p>
+                <p className="card-text">
+                  {" "}
+                  Deliverables: {bidData.deliverables}
+                </p>
+                <p className="card-text">
+                  {" "}
+                  Additional Information: {bidData.additionalInfo}
+                </p>
+                <p className="card-text">
+                  {" "}
+                  Phone Number: {bidData.phoneNumber}
+                </p>
+                <p className="card-text text-capitalize">
+                  {" "}
+                  Status: {bidData.status}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <p>You have not bid for this job yet.</p>
+            </div>
+          )}
         </div>
         <div>
           <h3 className="title">More Jobs From This Employer</h3>

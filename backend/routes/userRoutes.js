@@ -81,4 +81,11 @@ router.get(
 //bid routes
 router.post("/submitBid", authMiddleware, UserController.insertJobBid);
 
+//get all bids for a job from one freelancer
+router.get(
+  "/getJobBids/:jobId/:freelancerId",
+  authMiddleware,
+  UserController.getJobBids
+);
+
 export default router;
