@@ -31,3 +31,8 @@
 .modal {
   background-color: transparent;
 }
+.bid-image{
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+}

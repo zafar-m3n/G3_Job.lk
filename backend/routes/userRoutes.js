@@ -88,4 +88,11 @@ router.get(
   UserController.getJobBids
 );
 
+//get all bids for a job
+router.get(
+  "/getAllJobBids/:jobId",
+  authMiddleware,
+  UserController.getAllJobBids
+);
+
 export default router;

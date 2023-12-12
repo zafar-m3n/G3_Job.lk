@@ -59,10 +59,36 @@ function JobDetailsEmployer() {
     });
   }
 
+  const [bids, setBids] = useState([]);
+  //getJobBids
+  const getJobBids = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:8081/getAllJobBids/${jobId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("auth"))?.token
+            }`,
+          },
+        }
+      );
+      console.log("Job Bids:" + JSON.stringify(res, null, 2));
+      setBids(res.data.Bids);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const hasBid = bids && bids.length > 0;
+  console.log("Has Bid:" + hasBid);
   useEffect(() => {
     getUserData();
     getSingleJobData();
   }, []);
+
+  useEffect(() => {
+    getJobBids();
+  }, [jobId]);
 
   return (
     <>
@@ -83,7 +109,6 @@ function JobDetailsEmployer() {
             <div className="col-7 d-flex flex-column justify-content-center">
               <p className="m-1 fs-5 ">{toTitleCase(userData.name)}</p>
               <p className="m-1 fs-5">{userData.location}</p>
-              <button className="bg-info button-custom">Contact Us</button>
             </div>
             <div className="col-3">
               <div className="custom-job-details">
@@ -124,7 +149,48 @@ function JobDetailsEmployer() {
 
         <div>
           <h3 className="title">Bids for this Job</h3>
-          <p>No bids yet.</p>
+          {hasBid ? (
+            bids.map((bid) => (
+              <div className="card mb-3">
+                <div className="row g-0 align-items-center">
+                  <div className="col-md-1">
+                    <div className="card-body">
+                      {bid.profile_image === "images/profile.jpg" ? (
+                        <img
+                          src={`../${bid.profile_image}`}
+                          alt="profile"
+                          className="rounded-circle bid-image"
+                        />
+                      ) : (
+                        <img
+                          src={bid.profile_image}
+                          alt="profile"
+                          className="rounded-circle bid-image"
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <div className="col-md-9">
+                    <div className="card-body">
+                      <h5 className="card-title">{bid.freelancerName}</h5>
+                      <p className="card-text">
+                        Bid Amount: LKR {bid.bidAmount}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="col-md-2">
+                    <div className="card-body d-flex justify-content-end">
+                      <button className="btn btn-info text-white">
+                        View Bid
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No Bids Yet</p>
+          )}
         </div>
       </div>
       <Footer />

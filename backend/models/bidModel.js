@@ -19,3 +19,10 @@ export const getJobBids = (jobId, freelancerId, callback) => {
     "SELECT * FROM bids WHERE jobId = ? AND freelancerId = ? ORDER BY bidID DESC";
   db.query(query, [jobId, freelancerId], callback);
 };
+
+//get all bids for a job
+export const getAllJobBids = (jobId, callback) => {
+  const query =
+    "SELECT bidAmount, deadline, deliverables, additionalInfo, phoneNumber, freelancerId, freelancerName, jobId, profile_image FROM bids, users WHERE bids.freelancerId = users.id && jobId = ? ORDER BY bidID DESC";
+  db.query(query, [jobId], callback);
+};

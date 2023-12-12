@@ -771,3 +771,19 @@ export const getJobBids = (req, res) => {
     res.status(500).json({ Error: "Server error" });
   }
 };
+
+//get all bids for a job
+export const getAllJobBids = (req, res) => {
+  try {
+    bidModel.getAllJobBids(req.params.jobId, (err, bids) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ Error: "Error finding bids" });
+      }
+      res.status(200).json({ Status: "Success", Bids: bids });
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ Error: "Server error" });
+  }
+};
