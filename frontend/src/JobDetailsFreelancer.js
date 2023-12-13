@@ -155,6 +155,7 @@ function JobDetailsFreelancer() {
           },
         }
       );
+      console.log("Bid Submitted Successfully: " + response.data);
       setShowModal(false);
       setShowSuccessMessage(true);
 
@@ -258,8 +259,7 @@ function JobDetailsFreelancer() {
                     <button
                       type="button"
                       className="button-custom"
-                      onClick={handleShow} // Updated to use handleShow
-                      disabled={hasAlreadyBid}
+                      onClick={handleShow} 
                     >
                       Bid for this Job
                     </button>
@@ -351,7 +351,7 @@ function JobDetailsFreelancer() {
           </ul>
         </div>
         <div>
-          <h3 className="title">Your Job Bid</h3>
+          <h3 className="title">Your Latest Job Bid</h3>
           {hasAlreadyBid ? (
             <div className="card">
               <div className="card-body">

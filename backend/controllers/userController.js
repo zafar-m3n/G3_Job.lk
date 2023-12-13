@@ -787,3 +787,19 @@ export const getAllJobBids = (req, res) => {
     res.status(500).json({ Error: "Server error" });
   }
 };
+
+//get single bid
+export const getSingleBid = (req, res) => {
+  try {
+    bidModel.getSingleBid(req.params.bidId, (err, bid) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ Error: "Error finding bid" });
+      }
+      res.status(200).json({ Status: "Success", Bids: bid[0] });
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ Error: "Server error" });
+  }
+};

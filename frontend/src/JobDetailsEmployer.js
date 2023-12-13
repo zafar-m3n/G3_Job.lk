@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Header from "./components/Header";
@@ -6,6 +7,7 @@ import Footer from "./components/Footer";
 import "./styles/JobDetailsStyle.css";
 
 function JobDetailsEmployer() {
+  const navigate = useNavigate();
   const { jobId } = useParams();
   const [userData, setUserData] = useState({
     name: "",
@@ -60,7 +62,6 @@ function JobDetailsEmployer() {
   }
 
   const [bids, setBids] = useState([]);
-  //getJobBids
   const getJobBids = async () => {
     try {
       const res = await axios.get(
@@ -85,6 +86,12 @@ function JobDetailsEmployer() {
     getUserData();
     getSingleJobData();
   }, []);
+
+  //view bid function navigate to bid details
+  const viewBid = (bidId) => {
+    console.log("View Bid Clicked");
+    navigate(`/bid-details/${bidId}`);
+  };
 
   useEffect(() => {
     getJobBids();
@@ -180,7 +187,10 @@ function JobDetailsEmployer() {
                   </div>
                   <div className="col-md-2">
                     <div className="card-body d-flex justify-content-end">
-                      <button className="btn btn-info text-white">
+                      <button
+                        className="btn btn-info text-white"
+                        onClick={() => viewBid(bid.bidId)}
+                      >
                         View Bid
                       </button>
                     </div>

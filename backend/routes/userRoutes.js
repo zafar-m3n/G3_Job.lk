@@ -95,4 +95,7 @@ router.get(
   UserController.getAllJobBids
 );
 
+//get a single bid details
+router.get("/getBidData/:bidId", authMiddleware, UserController.getSingleBid);
+
 export default router;
