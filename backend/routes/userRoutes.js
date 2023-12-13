@@ -99,6 +99,9 @@ router.get(
 router.get("/getBidData/:bidId", authMiddleware, UserController.getSingleBid);
 
 //accept bid
-router.post("/updateBidStatus", authMiddleware, UserController.acceptBid);
+router.post("/acceptBid", authMiddleware, UserController.acceptBid);
+
+//decline bid
+router.post("/declineBid", authMiddleware, UserController.declineBid);
 
 export default router;

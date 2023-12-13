@@ -45,3 +45,9 @@ export const acceptBid = (bidId, jobId, callback) => {
     db.query(queryDeclined, [jobId], callback);
   });
 };
+
+//decline bid
+export const declineBid = (bidId, callback) => {
+  const query = "UPDATE bids SET status = 'declined' WHERE bidId = ?";
+  db.query(query, [bidId], callback);
+};

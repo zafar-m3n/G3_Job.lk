@@ -823,3 +823,21 @@ export const acceptBid = (req, res) => {
     res.status(500).json({ Error: "Server error" });
   }
 };
+
+//decline bid
+export const declineBid = (req, res) => {
+  try {
+    bidModel.declineBid(req.body.bidId, (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ Error: "Error declining bid" });
+      }
+      return res
+        .status(200)
+        .json({ Status: "Success", Message: "Bid has been declined" });
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ Error: "Server error" });
+  }
+};
