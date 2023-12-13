@@ -804,3 +804,22 @@ export const getSingleBid = (req, res) => {
     res.status(500).json({ Error: "Server error" });
   }
 };
+
+//accept bid
+export const acceptBid = (req, res) => {
+  try {
+    bidModel.acceptBid(req.body.bidId, req.body.jobId, (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ Error: "Error accepting bid" });
+      }
+      return res.status(200).json({
+        Status: "Success",
+        Message: `Job has been awarded to ${req.body.freelancerName}`,
+      });
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ Error: "Server error" });
+  }
+};

@@ -32,7 +32,7 @@ function JobDetailsEmployer() {
         location: res.data.user.district,
         role: res.data.user.user_role,
       };
-      console.log("User Data:" + JSON.stringify(res, null, 2));
+      console.log("User Data:" + JSON.stringify(res.data.user, null, 2));
       setUserData(userData);
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -49,7 +49,7 @@ function JobDetailsEmployer() {
           }`,
         },
       });
-      console.log("Job Data:" + JSON.stringify(res, null, 2));
+      console.log("Job Data:" + JSON.stringify(res.data.Jobs, null, 2));
       setJobs(res.data.Jobs);
     } catch (error) {
       console.log(error);
@@ -74,7 +74,7 @@ function JobDetailsEmployer() {
           },
         }
       );
-      console.log("Job Bids:" + JSON.stringify(res, null, 2));
+      console.log("Job Bids:" + JSON.stringify(res.data.Bids, null, 2));
       setBids(res.data.Bids);
     } catch (error) {
       console.log(error);
@@ -87,9 +87,7 @@ function JobDetailsEmployer() {
     getSingleJobData();
   }, []);
 
-  //view bid function navigate to bid details
   const viewBid = (bidId) => {
-    console.log("View Bid Clicked");
     navigate(`/bid-details/${bidId}`);
   };
 
@@ -119,8 +117,15 @@ function JobDetailsEmployer() {
             </div>
             <div className="col-3">
               <div className="custom-job-details">
-                <div className="card-header text-center">
-                  <div className="card-title fw-bold mb-2">{jobs.jobTitle}</div>
+                <div className="card-header d-flex justify-content-between fw-bold">
+                  <div className="card-title mb-2">{jobs.jobTitle}</div>
+                  <p
+                    className={`card-text text-capitalize ${
+                      jobs.status === "open" ? "text-success" : "text-danger"
+                    }`}
+                  >
+                    {jobs.status}
+                  </p>
                 </div>
                 <div className="card-body">
                   <p className="card-text text-secondary">
@@ -177,11 +182,27 @@ function JobDetailsEmployer() {
                       )}
                     </div>
                   </div>
-                  <div className="col-md-9">
+                  <div className="col-md-7">
                     <div className="card-body">
                       <h5 className="card-title">{bid.freelancerName}</h5>
                       <p className="card-text">
                         Bid Amount: LKR {bid.bidAmount}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="col-md-2">
+                    <div className="card-body">
+                      <p
+                        className={`card-text text-capitalize fw-bold ${
+                          bid.status === "awarded"
+                            ? "text-success"
+                            : bid.status === "pending"
+                            ? "text-warning"
+                            : "text-danger"
+                        }
+                      }`}
+                      >
+                        {bid.status}
                       </p>
                     </div>
                   </div>

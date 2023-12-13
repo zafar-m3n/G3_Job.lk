@@ -98,4 +98,7 @@ router.get(
 //get a single bid details
 router.get("/getBidData/:bidId", authMiddleware, UserController.getSingleBid);
 
+//accept bid
+router.post("/updateBidStatus", authMiddleware, UserController.acceptBid);
+
 export default router;

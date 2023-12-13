@@ -234,8 +234,15 @@ function JobDetailsFreelancer() {
             </div>
             <div className="col-3">
               <div className="custom-job-details">
-                <div className="card-header text-center">
-                  <div className="card-title fw-bold mb-2">{jobs.jobTitle}</div>
+                <div className="card-header d-flex justify-content-between fw-bold">
+                  <div className="card-title mb-2">{jobs.jobTitle}</div>
+                  <p
+                    className={`card-text text-capitalize ${
+                      jobs.status === "open" ? "text-success" : "text-danger"
+                    }`}
+                  >
+                    {jobs.status}
+                  </p>
                 </div>
                 <div className="card-body">
                   <p className="card-text text-secondary">
@@ -259,7 +266,7 @@ function JobDetailsFreelancer() {
                     <button
                       type="button"
                       className="button-custom"
-                      onClick={handleShow} 
+                      onClick={handleShow}
                     >
                       Bid for this Job
                     </button>

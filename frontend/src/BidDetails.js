@@ -7,8 +7,8 @@ import Footer from "./components/Footer";
 import "./styles/BidDetailsStyle.css";
 
 function BidDetails() {
-  const navigate = useNavigate();
   const { bidId } = useParams();
+  const navigate = useNavigate();
   const [userData, setUserData] = useState({
     name: "",
     profileImage: "",
@@ -46,8 +46,11 @@ function BidDetails() {
     deliverables: "",
     additionalInfo: "",
     phoneNumber: "",
+    freelancerId: "",
     freelancerName: "",
     freelancerPfp: "",
+    jobId: "",
+    status: "",
   });
 
   const getSingleBidData = async () => {
@@ -67,10 +70,45 @@ function BidDetails() {
         deliverables: res.data.Bids.deliverables,
         additionalInfo: res.data.Bids.additionalInfo,
         phoneNumber: res.data.Bids.phoneNumber,
+        freelancerId: res.data.Bids.freelancerId,
         freelancerName: res.data.Bids.freelancerName,
         freelancerPfp: res.data.Bids.profile_image,
+        jobId: res.data.Bids.jobId,
+        status: res.data.Bids.status,
       };
       setBids(bidData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [successMessage, setSuccessMessage] = useState("");
+  const acceptBid = async () => {
+    console.log("Accept Bid clicked");
+    try {
+      const res = await axios.post(
+        "http://localhost:8081/updateBidStatus",
+        {
+          bidId: bidId,
+          jobId: bids.jobId,
+          freelancerName: bids.freelancerName,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("auth"))?.token
+            }`,
+          },
+        }
+      );
+      console.log(res);
+      setSuccessMessage(`${res.data.Message}`);
+      setBids({ ...bids, status: "awarded" });
+
+      setTimeout(() => {
+        setSuccessMessage("");
+        navigate(`/job-details-employer/${bids.jobId}`);
+      }, 3000);
     } catch (error) {
       console.log(error);
     }
@@ -80,6 +118,7 @@ function BidDetails() {
     getUserData();
     getSingleBidData();
   }, []);
+
   return (
     <>
       <Header userData={userData} />
@@ -88,10 +127,29 @@ function BidDetails() {
           <div className="col-md-8 d-flex p-2">
             <h3 className="title m-0">Bid Details</h3>
           </div>
-          <div className="col-md-4 d-flex justify-content-end align-items-end p-2">
-            <button className="btn btn-success mx-2">Accept Bid</button>
-            <button className="btn btn-danger mx-2">Decline Bid</button>
-          </div>
+          {bids.status === "pending" ? (
+            <div className="col-md-4 d-flex justify-content-end align-items-end p-2">
+              <button className="btn btn-success mx-2" onClick={acceptBid}>
+                Accept Bid
+              </button>
+              <button className="btn btn-danger mx-2">Decline Bid</button>
+            </div>
+          ) : (
+            <div className="col-md-4 d-flex justify-content-end align-items-end p-2">
+              <p
+                className={`card-text text-capitalize fw-bold ${
+                  bids.status === "awarded" ? "text-success" : "text-danger"
+                }`}
+              >
+                {bids.status}
+              </p>
+            </div>
+          )}
+          {successMessage && (
+            <div className="alert alert-success" role="alert">
+              {successMessage}
+            </div>
+          )}
           <hr />
         </div>
         <div className="row mb-3">
@@ -102,7 +160,7 @@ function BidDetails() {
                   <div className="col-md-2">
                     <img
                       src={`/${bids.freelancerPfp}`}
-                      alt="Profile Picture"
+                      alt="profile"
                       className="img-fluid rounded-circle"
                     />
                   </div>

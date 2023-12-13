@@ -23,13 +23,25 @@ export const getJobBids = (jobId, freelancerId, callback) => {
 //get all bids for a job
 export const getAllJobBids = (jobId, callback) => {
   const query =
-    "SELECT bidId, bidAmount, deadline, deliverables, additionalInfo, phoneNumber, freelancerId, freelancerName, jobId, profile_image FROM bids, users WHERE bids.freelancerId = users.id && jobId = ? ORDER BY bidID DESC";
+    "SELECT bidId, bidAmount, deadline, deliverables, additionalInfo, phoneNumber, freelancerId, freelancerName, jobId, status, profile_image FROM bids, users WHERE bids.freelancerId = users.id && jobId = ? ORDER BY status ASC, bidID DESC";
   db.query(query, [jobId], callback);
 };
 
 //get a single bid details
 export const getSingleBid = (bidId, callback) => {
   const query =
-    "SELECT bidId, bidAmount, deadline, deliverables, additionalInfo, phoneNumber, freelancerId, freelancerName, profile_image FROM bids, users WHERE bids.freelancerId = users.id && bidId = ?";
+    "SELECT bidId, bidAmount, deadline, deliverables, additionalInfo, phoneNumber, freelancerId, freelancerName, jobId, profile_image, status FROM bids, users WHERE bids.freelancerId = users.id && bidId = ?";
   db.query(query, [bidId], callback);
+};
+
+export const acceptBid = (bidId, jobId, callback) => {
+  const queryAwarded = "UPDATE bids SET status = 'awarded' WHERE bidId = ?";
+  db.query(queryAwarded, [bidId], (err, result) => {
+    if (err) {
+      return callback(err);
+    }
+    const queryDeclined =
+      "UPDATE bids SET status = 'declined' WHERE jobId = ? AND status != 'awarded'";
+    db.query(queryDeclined, [jobId], callback);
+  });
 };
