@@ -95,13 +95,10 @@ router.get(
   UserController.getAllJobBids
 );
 
-//get a single bid details
 router.get("/getBidData/:bidId", authMiddleware, UserController.getSingleBid);
 
-//accept bid
 router.post("/acceptBid", authMiddleware, UserController.acceptBid);
 
-//decline bid
 router.post("/declineBid", authMiddleware, UserController.declineBid);
 
 export default router;

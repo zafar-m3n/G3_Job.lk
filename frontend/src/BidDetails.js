@@ -87,7 +87,7 @@ function BidDetails() {
     console.log("Accept Bid clicked");
     try {
       const res = await axios.post(
-        "http://localhost:8081/updateBidStatus",
+        "http://localhost:8081/acceptBid",
         {
           bidId: bidId,
           jobId: bids.jobId,
@@ -104,6 +104,35 @@ function BidDetails() {
       console.log(res);
       setSuccessMessage(`${res.data.Message}`);
       setBids({ ...bids, status: "awarded" });
+
+      setTimeout(() => {
+        setSuccessMessage("");
+        navigate(`/job-details-employer/${bids.jobId}`);
+      }, 3000);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const declineBid = async () => {
+    console.log("Decline Bid clicked");
+    try {
+      const res = await axios.post(
+        "http://localhost:8081/declineBid",
+        {
+          bidId: bidId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("auth"))?.token
+            }`,
+          },
+        }
+      );
+      console.log(res);
+      setSuccessMessage(`${res.data.Message}`);
+      setBids({ ...bids, status: "declined" });
 
       setTimeout(() => {
         setSuccessMessage("");
@@ -132,7 +161,9 @@ function BidDetails() {
               <button className="btn btn-success mx-2" onClick={acceptBid}>
                 Accept Bid
               </button>
-              <button className="btn btn-danger mx-2">Decline Bid</button>
+              <button className="btn btn-danger mx-2" onClick={declineBid}>
+                Decline Bid
+              </button>
             </div>
           ) : (
             <div className="col-md-4 d-flex justify-content-end align-items-end p-2">
