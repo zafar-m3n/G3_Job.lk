@@ -94,9 +94,47 @@ function BidDetails() {
           </div>
           <hr />
         </div>
-        <div className="row">
+        <div className="row mb-3">
           <div className="col-md-12">
-            
+            <div className="card">
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-md-2">
+                    <img
+                      src={`/${bids.freelancerPfp}`}
+                      alt="Profile Picture"
+                      className="img-fluid rounded-circle"
+                    />
+                  </div>
+                  <div className="col-md-10">
+                    <div className="row">
+                      <div className="col-md-6">
+                        <h5 className="card-title">{bids.freelancerName}</h5>
+                      </div>
+                      <div className="col-md-6">
+                        <h5 className="card-title text-right">
+                          Bid Amount: Rs. {bids.bidAmount}
+                        </h5>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-md-6">
+                        <h6 className="card-subtitle mb-2 text-muted">
+                          Deadline: {bids.deadline}
+                        </h6>
+                      </div>
+                      <div className="col-md-6">
+                        <h6 className="card-subtitle mb-2 text-muted text-right">
+                          Phone Number: {bids.phoneNumber}
+                        </h6>
+                      </div>
+                    </div>
+                    <p className="card-text">{bids.additionalInfo}</p>
+                    <p className="card-text">{bids.deliverables}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -796,6 +796,7 @@ export const getSingleBid = (req, res) => {
         console.error(err);
         return res.status(500).json({ Error: "Error finding bid" });
       }
+      console.log("Bid Data:" + JSON.stringify(bid[0], null, 2));
       res.status(200).json({ Status: "Success", Bids: bid[0] });
     });
   } catch (error) {
