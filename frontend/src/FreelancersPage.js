@@ -4,6 +4,7 @@ import axios from "axios";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
+import "./styles/FreelancersPage.css";
 
 function FreelancersPage() {
   const [userData, setUserData] = useState({
@@ -48,7 +49,7 @@ function FreelancersPage() {
         },
       });
       console.log("Freelancers Data:" + JSON.stringify(res.data, null, 2));
-      setFreelancersData(res.data);
+      setFreelancersData(res.data.freelancers);
     } catch (error) {
       console.error("Error fetching freelancers data:", error);
     }
@@ -63,7 +64,7 @@ function FreelancersPage() {
       <Header userData={userData} />
       <div>
         <div className="row">
-          <div className="col-md-3">
+          <div className="col-md-3 sidebarbkg">
             <Sidebar userData={userData} />
           </div>
           <div className="col-md-9">
@@ -91,6 +92,37 @@ function FreelancersPage() {
               <div className="col-md-12">
                 <h2 className="heading">Available Freelancers</h2>
               </div>
+            </div>
+            <div className="row">
+              {freelancersData.map((freelancer) => (
+                <div className="col-3 mb-4">
+                  <div className="card">
+                    <img
+                      src={freelancer.profile_image}
+                      className="card-img-top"
+                      alt="..."
+                    />
+                    <div className="card-body text-center">
+                      <h5 className="card-title">
+                        {freelancer.first_name} {freelancer.last_name}
+                      </h5>
+                      {freelancer.description === "No description added" ? (
+                        <p className="card-text">
+                          <br />
+                        </p>
+                      ) : (
+                        <p className="card-text">{freelancer.description}</p>
+                      )}
+                      <a
+                        href={`/freelancer/${freelancer.id}`}
+                        className="btn btn-primary"
+                      >
+                        View Profile
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
