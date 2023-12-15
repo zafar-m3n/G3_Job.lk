@@ -14,6 +14,7 @@ import "./App.css";
 import JobDetailsEmployer from "./JobDetailsEmployer";
 import JobDetailsFreelancer from "./JobDetailsFreelancer";
 import BidDetails from "./BidDetails";
+import FreelancersPage from "./FreelancersPage";
 
 function App() {
   return (
@@ -104,6 +105,14 @@ function App() {
           element={
             <ProtectedRoute>
               <BidDetails />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/freelancers"
+          element={
+            <ProtectedRoute>
+              <FreelancersPage />
             </ProtectedRoute>
           }
         />

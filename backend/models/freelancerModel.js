@@ -36,3 +36,16 @@ export const updateFreelancerWebsite = (freelancer, callback) => {
   const query = "UPDATE freelancers SET portfolioWebsite = ? WHERE userId = ?";
   db.query(query, [freelancer.portfolio, freelancer.userID], callback);
 };
+
+export const findFreelancerByUserId = (userId) => {
+  return new Promise((resolve, reject) => {
+    const query = "SELECT * FROM freelancers WHERE userID = ?";
+    db.query(query, [userId], (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+};

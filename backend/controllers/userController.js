@@ -240,7 +240,6 @@ export const getFreelancerData = async (req, res) => {
   }
 };
 
-//get employer data
 export const getEmployerData = async (req, res) => {
   try {
     UserModel.findOne(req.user.id, (err, users) => {
@@ -269,7 +268,6 @@ export const getEmployerData = async (req, res) => {
   }
 };
 
-//update employer description
 export const updateEmployerDescription = async (req, res) => {
   try {
     const employerData = {
@@ -713,7 +711,6 @@ export const getEmployerDataByEmail = async (req, res) => {
   }
 };
 
-//job bid
 export const insertJobBid = (req, res) => {
   const bid = [
     req.body.bidAmount,
@@ -752,7 +749,6 @@ export const insertJobBid = (req, res) => {
   });
 };
 
-//get all bids for a job from one freelancer
 export const getJobBids = (req, res) => {
   try {
     bidModel.getJobBids(
@@ -772,7 +768,6 @@ export const getJobBids = (req, res) => {
   }
 };
 
-//get all bids for a job
 export const getAllJobBids = (req, res) => {
   try {
     bidModel.getAllJobBids(req.params.jobId, (err, bids) => {
@@ -788,7 +783,6 @@ export const getAllJobBids = (req, res) => {
   }
 };
 
-//get single bid
 export const getSingleBid = (req, res) => {
   try {
     bidModel.getSingleBid(req.params.bidId, (err, bid) => {
@@ -805,7 +799,6 @@ export const getSingleBid = (req, res) => {
   }
 };
 
-//accept bid
 export const acceptBid = (req, res) => {
   try {
     bidModel.acceptBid(req.body.bidId, req.body.jobId, (err, result) => {
@@ -824,7 +817,6 @@ export const acceptBid = (req, res) => {
   }
 };
 
-//decline bid
 export const declineBid = (req, res) => {
   try {
     bidModel.declineBid(req.body.bidId, (err, result) => {
@@ -839,5 +831,61 @@ export const declineBid = (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ Error: "Server error" });
+  }
+};
+
+//get all freelancers data
+export const getFreelancersData = async (req, res) => {
+  try {
+    UserModel.findFreelancers(async (err, freelancers) => {
+      if (err) {
+        console.log(err);
+        return res.json({ Error: "Database query error" });
+      }
+      if (freelancers.length === 0) {
+        return res.json({ Error: "No freelancers found" });
+      }
+
+      const freelancersData = await Promise.all(
+        freelancers.map(async (freelancer) => {
+          try {
+            const additionalData = await freelancerModel.findFreelancerByUserId(
+              freelancer.id
+            );
+            return {
+              ...freelancer,
+              description: additionalData.length
+                ? additionalData[0].description
+                : null,
+              languages: additionalData.length
+                ? additionalData[0].languages
+                : null,
+              skills: additionalData.length ? additionalData[0].skills : null,
+              experienceLevel: additionalData.length
+                ? additionalData[0].experienceLevel
+                : null,
+              portfolioWebsite: additionalData.length
+                ? additionalData[0].portfolioWebsite
+                : null,
+            };
+          } catch (error) {
+            console.error(error);
+            return {
+              ...freelancer,
+              description: null,
+              languages: null,
+              skills: null,
+              experienceLevel: null,
+              portfolioWebsite: null,
+            };
+          }
+        })
+      );
+
+      res.json({ Status: "Success", freelancers: freelancersData });
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ Error: "Server error" });
   }
 };

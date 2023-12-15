@@ -28,7 +28,7 @@ function Header({ userData }) {
               <>
                 <Nav.Link href={`/${userData.role}-dashboard`}>Home</Nav.Link>
                 <Nav.Link href="/jobs">Jobs</Nav.Link>
-                <Nav.Link href="#freelancers">Freelancers</Nav.Link>
+                <Nav.Link href="/freelancers">Freelancers</Nav.Link>
                 <Nav.Link href="#how-it-works">How it works?</Nav.Link>
               </>
             ) : (

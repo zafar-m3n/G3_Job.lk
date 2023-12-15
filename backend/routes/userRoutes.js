@@ -101,4 +101,11 @@ router.post("/acceptBid", authMiddleware, UserController.acceptBid);
 
 router.post("/declineBid", authMiddleware, UserController.declineBid);
 
+//get freelancers
+router.get(
+  "/getFreelancersData",
+  authMiddleware,
+  UserController.getFreelancersData
+);
+
 export default router;

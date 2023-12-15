@@ -28,3 +28,8 @@ export const updateUser = (user, callback) => {
     "UPDATE users SET profile_image = ?, district = ? WHERE email = ?";
   db.query(query, user, callback);
 };
+
+export const findFreelancers = (callback) => {
+  const query = "SELECT * FROM users WHERE user_role = 'freelancer'";
+  db.query(query, callback);
+};
