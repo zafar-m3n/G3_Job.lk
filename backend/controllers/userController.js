@@ -891,3 +891,63 @@ export const getFreelancersData = async (req, res) => {
     res.json({ Error: "Server error" });
   }
 };
+
+//get freelancer data from id
+export const getFreelancerDataById = async (req, res) => {
+  try {
+    UserModel.findOne(req.params.freelancerId, (err, freelancerUser) => {
+      if (err) {
+        console.log(err);
+        return res.json({ Error: "Database query error" });
+      }
+      if (freelancerUser.length === 0) {
+        return res.json({ Error: "Freelancer not found" });
+      }
+
+      freelancerModel.findFreelancerById(
+        req.params.freelancerId,
+        (err, freelancerDetails) => {
+          if (err) {
+            console.log(err);
+            return res.json({
+              Error: "Database query error in FreelancerModel",
+            });
+          }
+          
+          const freelancerData = {
+            ...freelancerUser[0],
+            description: freelancerDetails.length
+              ? freelancerDetails[0].description
+              : null,
+            languages: freelancerDetails.length
+              ? freelancerDetails[0].languages
+              : null,
+            skills: freelancerDetails.length
+              ? freelancerDetails[0].skills
+              : null,
+            experienceLevel: freelancerDetails.length
+              ? freelancerDetails[0].experienceLevel
+              : null,
+            portfolioWebsite: freelancerDetails.length
+              ? freelancerDetails[0].portfolioWebsite
+              : null,
+            rating: freelancerDetails.length
+              ? freelancerDetails[0].rating
+              : "0",
+          };
+
+          console.log(
+            "Freelancer Info:" + JSON.stringify(freelancerData, null, 2)
+          );
+          res.json({
+            Status: "Success",
+            freelancer: freelancerData,
+          });
+        }
+      );
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ Error: "Server error" });
+  }
+};

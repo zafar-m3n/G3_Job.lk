@@ -108,4 +108,11 @@ router.get(
   UserController.getFreelancersData
 );
 
+//get freelancer data from id
+router.get(
+  "/getFreelancerData/:freelancerId",
+  authMiddleware,
+  UserController.getFreelancerDataById
+);
+
 export default router;

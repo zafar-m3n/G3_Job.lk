@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
 function Freelancer() {
+  const { freelancerId } = useParams();
   const [userData, setUserData] = useState({
     name: "",
     profileImage: "",
@@ -34,8 +36,30 @@ function Freelancer() {
     }
   };
 
+  //get individual freelancer data
+  const [freelancerData, setFreelancerData] = useState({});
+  const getFreelancerData = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:8081/getFreelancerData/${freelancerId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("auth"))?.token
+            }`,
+          },
+        }
+      );
+      console.log("Freelancer Data:" + JSON.stringify(res.data, null, 2));
+      setFreelancerData(res.data);
+    } catch (error) {
+      console.error("Error fetching freelancer data:", error);
+    }
+  };
+
   useEffect(() => {
     getUserData();
+    getFreelancerData();
   }, []);
 
   return (
