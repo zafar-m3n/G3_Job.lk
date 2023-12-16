@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
+import FreelancerCard from "./components/FreelancerCard";
 import "./styles/FreelancersPage.css";
 
 function FreelancersPage() {
@@ -95,33 +95,7 @@ function FreelancersPage() {
             </div>
             <div className="row">
               {freelancersData.map((freelancer) => (
-                <div className="col-3 mb-4">
-                  <div className="card">
-                    <img
-                      src={freelancer.profile_image}
-                      className="card-img-top"
-                      alt="..."
-                    />
-                    <div className="card-body text-center">
-                      <h5 className="card-title">
-                        {freelancer.first_name} {freelancer.last_name}
-                      </h5>
-                      {freelancer.description === "No description added" ? (
-                        <p className="card-text">
-                          <br />
-                        </p>
-                      ) : (
-                        <p className="card-text">{freelancer.description}</p>
-                      )}
-                      <a
-                        href={`/freelancer/${freelancer.id}`}
-                        className="btn btn-primary"
-                      >
-                        View Profile
-                      </a>
-                    </div>
-                  </div>
-                </div>
+                <FreelancerCard key={freelancer.id} freelancer={freelancer} />
               ))}
             </div>
           </div>

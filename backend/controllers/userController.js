@@ -867,6 +867,7 @@ export const getFreelancersData = async (req, res) => {
               portfolioWebsite: additionalData.length
                 ? additionalData[0].portfolioWebsite
                 : null,
+              rating: additionalData.length ? additionalData[0].rating : "0",
             };
           } catch (error) {
             console.error(error);
@@ -877,6 +878,7 @@ export const getFreelancersData = async (req, res) => {
               skills: null,
               experienceLevel: null,
               portfolioWebsite: null,
+              rating: "0",
             };
           }
         })
