@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import Sidebar from "./components/Sidebar";
+import "./styles/FreelancersPage.css";
 
 function Freelancer() {
   const { freelancerId } = useParams();
@@ -51,7 +53,7 @@ function Freelancer() {
         }
       );
       console.log("Freelancer Data:" + JSON.stringify(res.data, null, 2));
-      setFreelancerData(res.data);
+      setFreelancerData(res.data.freelancer);
     } catch (error) {
       console.error("Error fetching freelancer data:", error);
     }
@@ -59,12 +61,79 @@ function Freelancer() {
 
   useEffect(() => {
     getUserData();
-    getFreelancerData();
   }, []);
+
+  useEffect(() => {
+    getFreelancerData();
+  }, [freelancerId]);
 
   return (
     <>
       <Header userData={userData} />
+      <div className="row">
+        <div className="col-md-3 sidebarbkg">
+          <Sidebar />
+        </div>
+        <div className="col-md-9">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-4 text-center">
+                <img
+                  src={`/${freelancerData.profile_image}`}
+                  alt="Profile"
+                  className="img-fluid rounded-circle mb-3 w-50"
+                />
+                <h3>
+                  {freelancerData.first_name} {freelancerData.last_name}
+                </h3>
+                <p className="text-muted text-capitalize">
+                  <i className="fas fa-star me-2"></i>
+                  {freelancerData.rating}/5 rating
+                </p>
+                <button className="btn btn-outline-primary mb-2">
+                  Rate Freelancer
+                </button>
+              </div>
+              <div className="col-md-8">
+                <h4>About</h4>
+                <p>{freelancerData.description || "No description added"}</p>
+                <hr />
+                <div className="row bg-warning">
+                  <div className="col-6 d-flex align-items-center">
+                    <h4 className="m-0">Skills</h4>
+                  </div>
+                  <div className="col-6 d-flex align-items-center justify-content-end">
+                    <button className="btn btn-secondary">
+                      Endorse Skills
+                    </button>
+                  </div>
+                </div>
+                <p>{freelancerData.skills || "No skills added"}</p>
+                <hr />
+                <h4>Experience Level</h4>
+                <p>{freelancerData.experienceLevel || "Not specified"}</p>
+                <hr />
+                <h4>Languages</h4>
+                <p>{freelancerData.languages || "Not specified"}</p>
+                <hr />
+                <h4>Contact</h4>
+                <p>Email: {freelancerData.email}</p>
+                <p>Location: {freelancerData.district}</p>
+                <p>
+                  Portfolio:{" "}
+                  <a
+                    href={freelancerData.portfolioWebsite}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {freelancerData.portfolioWebsite}
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <Footer />
     </>
   );
