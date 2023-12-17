@@ -5,10 +5,12 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
 import "./styles/FreelancersPage.css";
+import RatingModal from "./components/RatingModal";
 
 function Freelancer() {
   const { freelancerId } = useParams();
   const [userData, setUserData] = useState({
+    id: "",
     name: "",
     profileImage: "",
     email: "",
@@ -25,6 +27,7 @@ function Freelancer() {
         },
       });
       const userData = {
+        id: res.data.user.id,
         name: res.data.user.first_name + " " + res.data.user.last_name,
         profileImage: `../${res.data.user.profile_image}`,
         email: res.data.user.email,
@@ -87,12 +90,13 @@ function Freelancer() {
                   {freelancerData.first_name} {freelancerData.last_name}
                 </h3>
                 <p className="text-muted text-capitalize">
-                  <i className="fas fa-star me-2"></i>
+                  <i className="fas fa-star me-2 text-warning"></i>
                   {freelancerData.rating}/5 rating
                 </p>
-                <button className="btn btn-outline-primary mb-2">
-                  Rate Freelancer
-                </button>
+                <RatingModal
+                  freelancerId={freelancerId}
+                  employerId={userData.id}
+                />
               </div>
               <div className="col-md-8">
                 <h4>About</h4>

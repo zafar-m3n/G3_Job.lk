@@ -1,0 +1,9 @@
+.star {
+  color: #e4e5e9; /* Default color */
+  font-size: 30px; /* Adjust size as needed */
+}
+
+.star.active,
+.star:hover {
+  color: #ffc107; /* Color on hover or active */
+}
