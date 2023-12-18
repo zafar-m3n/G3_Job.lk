@@ -16,6 +16,7 @@ import JobDetailsFreelancer from "./JobDetailsFreelancer";
 import BidDetails from "./BidDetails";
 import FreelancersPage from "./FreelancersPage";
 import Freelancer from "./Freelancer";
+import Resources from "./Resources";
 
 function App() {
   return (
@@ -122,6 +123,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Freelancer />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/resources"
+          element={
+            <ProtectedRoute>
+              <Resources />
             </ProtectedRoute>
           }
         />
