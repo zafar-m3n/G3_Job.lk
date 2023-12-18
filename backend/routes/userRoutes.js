@@ -101,21 +101,20 @@ router.post("/acceptBid", authMiddleware, UserController.acceptBid);
 
 router.post("/declineBid", authMiddleware, UserController.declineBid);
 
-//get freelancers
 router.get(
   "/getFreelancersData",
   authMiddleware,
   UserController.getFreelancersData
 );
 
-//get freelancer data from id
 router.get(
   "/getFreelancerData/:freelancerId",
   authMiddleware,
   UserController.getFreelancerDataById
 );
 
-//insert rating
 router.post("/submitRating", authMiddleware, UserController.submitRating);
+
+router.get("/getResources", authMiddleware, UserController.getResources);
 
 export default router;

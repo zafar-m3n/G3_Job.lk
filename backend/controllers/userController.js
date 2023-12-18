@@ -6,6 +6,7 @@ import * as freelancerModel from "../models/freelancerModel.js";
 import * as employerModel from "../models/employerModel.js";
 import * as bidModel from "../models/bidModel.js";
 import * as ratingModel from "../models/ratingModel.js";
+import * as resourceModel from "../models/resourceModel.js";
 import e, { json } from "express";
 import path from "path";
 
@@ -835,7 +836,6 @@ export const declineBid = (req, res) => {
   }
 };
 
-//get all freelancers data
 export const getFreelancersData = async (req, res) => {
   try {
     UserModel.findFreelancers(async (err, freelancers) => {
@@ -893,7 +893,6 @@ export const getFreelancersData = async (req, res) => {
   }
 };
 
-//get freelancer data from id
 export const getFreelancerDataById = async (req, res) => {
   try {
     UserModel.findOne(req.params.freelancerId, (err, freelancerUser) => {
@@ -953,7 +952,6 @@ export const getFreelancerDataById = async (req, res) => {
   }
 };
 
-//submitRating
 export const submitRating = async (req, res) => {
   try {
     const rating = [
@@ -973,6 +971,25 @@ export const submitRating = async (req, res) => {
           review: req.body.review,
         },
       });
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ Error: "Server error" });
+  }
+};
+
+export const getResources = (req, res) => {
+  try {
+    resourceModel.getAllResources((err, resources) => {
+      if (err) {
+        console.log(err);
+        return res.json({ Error: "Database query error" });
+      }
+      if (resources.length === 0) {
+        return res.json({ Error: "No resources found" });
+      }
+      console.log("Resources Data:" + JSON.stringify(resources, null, 2));
+      res.json({ Status: "Success", resources: resources });
     });
   } catch (error) {
     console.log(error);
