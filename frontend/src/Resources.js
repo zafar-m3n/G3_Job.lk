@@ -4,6 +4,7 @@ import { Col, Container } from "react-bootstrap";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
+import ResourceCard from "./components/ResourceCard";
 import "./styles/FreelancersPage.css";
 
 function Resources() {
@@ -92,6 +93,16 @@ function Resources() {
                   </button>
                 </div>
               </div>
+            </div>
+            <div className="row">
+              <div className="col-md-12">
+                <h2 className="heading">Available Resources</h2>
+              </div>
+            </div>
+            <div className="row">
+              {resources.map((resource) => (
+                <ResourceCard key={resource.id} resource={resource} />
+              ))}
             </div>
           </div>
         </div>
