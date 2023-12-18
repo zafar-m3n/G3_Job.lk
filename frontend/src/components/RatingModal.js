@@ -1,7 +1,8 @@
 import { useState } from "react";
+import axios from "axios";
 import "../styles/RatingModal.css";
 
-function RatingModal({ freelancerId, employerId }) {
+function RatingModal({ freelancerId, employerId, onRatingSubmit }) {
   const [show, setShow] = useState(false);
   const [rating, setRating] = useState(null);
   const [review, setReview] = useState("");
@@ -9,21 +10,37 @@ function RatingModal({ freelancerId, employerId }) {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(
-      "Freelancer ID:",
-      freelancerId,
-      "Employer ID:",
-      employerId,
-      "Rating:",
-      rating,
-      "Review:",
-      review
-    );
-    setRating(null);
-    setReview("");
-    setShow(false);
+    const reviewData = {
+      freelancerId: freelancerId,
+      employerId: employerId,
+      rating: rating,
+      review: review,
+    };
+
+    try {
+      const res = await axios.post(
+        "http://localhost:8081/submitRating",
+        reviewData,
+        {
+          headers: {
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("auth"))?.token
+            }`,
+          },
+        }
+      );
+      setRating(null);
+      setReview("");
+      setShow(false);
+      if (onRatingSubmit) {
+        onRatingSubmit();
+      }
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

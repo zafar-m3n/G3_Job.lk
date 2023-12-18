@@ -5,6 +5,7 @@ import * as jobModel from "../models/jobModel.js";
 import * as freelancerModel from "../models/freelancerModel.js";
 import * as employerModel from "../models/employerModel.js";
 import * as bidModel from "../models/bidModel.js";
+import * as ratingModel from "../models/ratingModel.js";
 import e, { json } from "express";
 import path from "path";
 
@@ -913,7 +914,7 @@ export const getFreelancerDataById = async (req, res) => {
               Error: "Database query error in FreelancerModel",
             });
           }
-          
+
           const freelancerData = {
             ...freelancerUser[0],
             description: freelancerDetails.length
@@ -945,6 +946,33 @@ export const getFreelancerDataById = async (req, res) => {
           });
         }
       );
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ Error: "Server error" });
+  }
+};
+
+//submitRating
+export const submitRating = async (req, res) => {
+  try {
+    const rating = [
+      req.body.freelancerId,
+      req.body.employerId,
+      req.body.rating,
+      req.body.review,
+    ];
+    ratingModel.insertRating(rating, (err, result) => {
+      if (err) return res.json({ Error: err.message });
+      return res.json({
+        Status: "Success",
+        rating: {
+          freelancerId: req.body.freelancerId,
+          employerId: req.body.employerId,
+          rating: req.body.rating,
+          review: req.body.review,
+        },
+      });
     });
   } catch (error) {
     console.log(error);

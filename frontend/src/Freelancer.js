@@ -62,6 +62,7 @@ function Freelancer() {
     }
   };
 
+  const [ratingSubmitted, setRatingSubmitted] = useState(false);
   useEffect(() => {
     getUserData();
   }, []);
@@ -69,6 +70,13 @@ function Freelancer() {
   useEffect(() => {
     getFreelancerData();
   }, [freelancerId]);
+
+  useEffect(() => {
+    if (ratingSubmitted) {
+      getFreelancerData();
+      setRatingSubmitted(false);
+    }
+  }, [ratingSubmitted, freelancerId]);
 
   return (
     <>
@@ -96,6 +104,7 @@ function Freelancer() {
                 <RatingModal
                   freelancerId={freelancerId}
                   employerId={userData.id}
+                  onRatingSubmit={() => setRatingSubmitted(true)}
                 />
               </div>
               <div className="col-md-8">

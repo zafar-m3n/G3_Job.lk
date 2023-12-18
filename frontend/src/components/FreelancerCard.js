@@ -21,8 +21,8 @@ function FreelancerCard({ freelancer }) {
           ) : (
             <p className="card-text">{freelancer.description}</p>
           )}
-          <p className="card-text">
-            <i className="fas fa-star me-2"></i>
+          <p className="card-text text-muted">
+            <i className="fas fa-star me-2 text-warning"></i>
             {freelancer.rating}/5
           </p>
           <a href={`/freelancer/${freelancer.id}`} className="btn btn-primary">

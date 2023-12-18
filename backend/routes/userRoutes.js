@@ -115,4 +115,7 @@ router.get(
   UserController.getFreelancerDataById
 );
 
+//insert rating
+router.post("/submitRating", authMiddleware, UserController.submitRating);
+
 export default router;
