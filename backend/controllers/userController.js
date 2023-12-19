@@ -14,7 +14,7 @@ const saltRounds = 10;
 
 export const register = (req, res) => {
   UserModel.findUserByEmail(req.body.email, (err, users) => {
-    if (err) return res.json({ Error: "Database query error" });
+    if (err) return res.json({ Error: "Database query error" + err });
     if (users.length > 0) return res.json({ Error: "Email is already in use" });
 
     bcrypt.hash(req.body.password.toString(), saltRounds, (err, hash) => {
