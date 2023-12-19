@@ -67,7 +67,7 @@ function Register() {
     event.preventDefault();
     if (validateForm()) {
       axios
-        .post("http://localhost:8081/register", values)
+        .post("https://g3-job-lk.onrender.com/register", values)
         .then((response) => {
           if (response.data.Status === "Success") {
             console.log(response.data.user);

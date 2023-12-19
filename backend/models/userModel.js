@@ -1,9 +1,15 @@
 import mysql from "mysql";
 
+// const db = mysql.createConnection({
+//   host: "localhost",
+//   user: "root",
+//   password: "",
+//   database: "freelancer_system",
+// });
 const db = mysql.createConnection({
-  host: "localhost",
+  host: "34.87.87.40",
   user: "root",
-  password: "",
+  password: "123456789",
   database: "freelancer_system",
 });
 

@@ -61,13 +61,16 @@ function EmployerHome() {
   });
   const getUserData = async () => {
     try {
-      const res = await axios.get("http://localhost:8081/getUserData", {
-        headers: {
-          Authorization: `Bearer ${
-            JSON.parse(localStorage.getItem("auth"))?.token
-          }`,
-        },
-      });
+      const res = await axios.get(
+        "https://g3-job-lk.onrender.com/getUserData",
+        {
+          headers: {
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("auth"))?.token
+            }`,
+          },
+        }
+      );
       const userData = {
         name: res.data.user.first_name + " " + res.data.user.last_name,
         profileImage: res.data.user.profile_image,
@@ -83,7 +86,7 @@ function EmployerHome() {
   const [jobs, setJobs] = useState([]);
   const getJobData = async () => {
     try {
-      const res = await axios.get("http://localhost:8081/getJobData", {
+      const res = await axios.get("https://g3-job-lk.onrender.com/getJobData", {
         headers: {
           Authorization: `Bearer ${
             JSON.parse(localStorage.getItem("auth"))?.token
