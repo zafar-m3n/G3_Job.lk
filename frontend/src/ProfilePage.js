@@ -33,7 +33,7 @@ function ProfilePage() {
 
   const getUserData = async () => {
     try {
-      const res = await axios.get("http://localhost:8081/getUserData", {
+      const res = await axios.get("https://g3-job-lk.onrender.com/getUserData", {
         headers: {
           Authorization: `Bearer ${
             JSON.parse(localStorage.getItem("auth"))?.token
@@ -94,7 +94,7 @@ function ProfilePage() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8081/uploadProfileImage",
+        "https://g3-job-lk.onrender.com/uploadProfileImage",
         formData,
         {
           headers: {
@@ -119,7 +119,7 @@ function ProfilePage() {
       console.log(selectedImage);
       let imageUrl = await uploadImage();
       if (imageUrl) {
-        updatedUserData.profileImage = `http://localhost:8081/images/${imageUrl}`;
+        updatedUserData.profileImage = `https://g3-job-lk.onrender.com/images/${imageUrl}`;
         setUserData(updatedUserData);
       }
     } else {
@@ -128,7 +128,7 @@ function ProfilePage() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8081/updateUserData",
+        "https://g3-job-lk.onrender.com/updateUserData",
         updatedUserData,
         {
           headers: {
