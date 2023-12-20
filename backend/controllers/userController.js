@@ -100,6 +100,21 @@ export const getUserData = async (req, res) => {
 
 export const postJob = async (req, res) => {
   try {
+    const requiredFields = [
+      "jobTitle",
+      "jobDescription",
+      "requiredSkills",
+      "estimatedBudget",
+      "projectDuration",
+      "experienceLevel",
+      "location",
+      "employer",
+    ];
+    for (let field of requiredFields) {
+      if (!req.body[field]) {
+        return res.json({ Error: "Incomplete job data" });
+      }
+    }
     const job = [
       req.body.jobTitle,
       req.body.jobDescription,
