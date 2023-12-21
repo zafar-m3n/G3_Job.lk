@@ -17,13 +17,16 @@ function BidDetails() {
   });
   const getUserData = async () => {
     try {
-      const res = await axios.get("https://g3-job-lk.onrender.com/getUserData", {
-        headers: {
-          Authorization: `Bearer ${
-            JSON.parse(localStorage.getItem("auth"))?.token
-          }`,
-        },
-      });
+      const res = await axios.get(
+        "https://g3-job-lk.onrender.com/getUserData",
+        {
+          headers: {
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("auth"))?.token
+            }`,
+          },
+        }
+      );
       const userData = {
         name: res.data.user.first_name + " " + res.data.user.last_name,
         profileImage: `../${res.data.user.profile_image}`,
@@ -54,13 +57,16 @@ function BidDetails() {
 
   const getSingleBidData = async () => {
     try {
-      const res = await axios.get(`https://g3-job-lk.onrender.com/getBidData/${bidId}`, {
-        headers: {
-          Authorization: `Bearer ${
-            JSON.parse(localStorage.getItem("auth"))?.token
-          }`,
-        },
-      });
+      const res = await axios.get(
+        `https://g3-job-lk.onrender.com/getBidData/${bidId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("auth"))?.token
+            }`,
+          },
+        }
+      );
       console.log("Bid Data:" + JSON.stringify(res.data.Bids, null, 2));
       const bidData = {
         bidId: res.data.Bids.bidId,
@@ -189,7 +195,7 @@ function BidDetails() {
                 <div className="row">
                   <div className="col-md-2">
                     <img
-                      src={`/${bids.freelancerPfp}`}
+                      src={bids.freelancerPfp}
                       alt="profile"
                       className="img-fluid rounded-circle"
                     />

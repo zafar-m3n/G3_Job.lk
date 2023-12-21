@@ -117,4 +117,6 @@ router.post("/submitRating", authMiddleware, UserController.submitRating);
 
 router.get("/getResources", authMiddleware, UserController.getResources);
 
+router.post("/endorseSkills", authMiddleware, UserController.endorseSkills);
+
 export default router;

@@ -17,15 +17,19 @@ function Freelancer() {
     location: "",
     role: "",
   });
+
   const getUserData = async () => {
     try {
-      const res = await axios.get("https://g3-job-lk.onrender.com/getUserData", {
-        headers: {
-          Authorization: `Bearer ${
-            JSON.parse(localStorage.getItem("auth"))?.token
-          }`,
-        },
-      });
+      const res = await axios.get(
+        "https://g3-job-lk.onrender.com/getUserData",
+        {
+          headers: {
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("auth"))?.token
+            }`,
+          },
+        }
+      );
       const userData = {
         id: res.data.user.id,
         name: res.data.user.first_name + " " + res.data.user.last_name,
@@ -63,6 +67,44 @@ function Freelancer() {
   };
 
   const [ratingSubmitted, setRatingSubmitted] = useState(false);
+  const [isEndorsed, setIsEndorsed] = useState(false);
+
+  const endorseSkills = async () => {
+    try {
+      console.log("clicked endorse button");
+      await axios.post(
+        "http://localhost:8081/endorseSkills",
+        {
+          endorserId: userData.id,
+          freelancerId,
+          skills: freelancerData.skills,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("auth"))?.token
+            }`,
+          },
+        }
+      );
+      setIsEndorsed(true);
+    } catch (error) {
+      console.error("Error endorsing skills:", error);
+    }
+  };
+
+  // const getEndorsement = async () => {
+  //   try {
+  //     const res = await axios.get(
+  //       `http://localhost:8081/getEndorsement/${freelancerId}/${userData.id}`
+  //     );
+  //     console.log("Endorsement Data:" + JSON.stringify(res.data, null, 2));
+  //     setIsEndorsed(res.data.isEndorsed);
+  //   } catch (error) {
+  //     console.error("Error fetching endorsement data:", error);
+  //   }
+  // };
+
   useEffect(() => {
     getUserData();
   }, []);
@@ -70,6 +112,10 @@ function Freelancer() {
   useEffect(() => {
     getFreelancerData();
   }, [freelancerId]);
+
+  // useEffect(() => {
+  //   getEndorsement();
+  // }, [isEndorsed, freelancerId]);
 
   useEffect(() => {
     if (ratingSubmitted) {
@@ -90,7 +136,7 @@ function Freelancer() {
             <div className="row">
               <div className="col-md-4 text-center">
                 <img
-                  src={`/${freelancerData.profile_image}`}
+                  src={freelancerData.profile_image}
                   alt="Profile"
                   className="img-fluid rounded-circle mb-3 w-50"
                 />
@@ -116,8 +162,14 @@ function Freelancer() {
                     <h4 className="m-0">Skills</h4>
                   </div>
                   <div className="col-6 d-flex align-items-center justify-content-end">
-                    <button className="btn btn-secondary">
-                      Endorse Skills
+                    <button
+                      className={`btn ${
+                        isEndorsed ? "btn-success" : "btn-secondary"
+                      }`}
+                      onClick={endorseSkills}
+                      disabled={isEndorsed}
+                    >
+                      {isEndorsed ? "Endorsed" : "Endorse Skills"}
                     </button>
                   </div>
                 </div>

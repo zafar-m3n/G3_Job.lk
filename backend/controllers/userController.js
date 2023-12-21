@@ -7,6 +7,7 @@ import * as employerModel from "../models/employerModel.js";
 import * as bidModel from "../models/bidModel.js";
 import * as ratingModel from "../models/ratingModel.js";
 import * as resourceModel from "../models/resourceModel.js";
+import * as endorsementModel from "../models/endorsementModel.js";
 import e, { json } from "express";
 import path from "path";
 
@@ -1009,5 +1010,32 @@ export const getResources = (req, res) => {
   } catch (error) {
     console.log(error);
     res.json({ Error: "Server error" });
+  }
+};
+
+//endorse skills
+export const endorseSkills = (req, res) => {
+  try {
+    console.log("In the controller" + JSON.stringify(req.body, null, 2));
+    const { endorserId, freelancerId, skills } = req.body;
+    endorsementModel.endorseSkills(
+      endorserId,
+      freelancerId,
+      skills,
+      (err, result) => {
+        if (err) return res.json({ Error: err.message });
+        return res.json({
+          Status: "Success",
+          Message: "Freelancer Skills endorsed",
+          endorsement: {
+            endorserId: endorserId,
+            freelancerId: freelancerId,
+            skills: skills,
+          },
+        });
+      }
+    );
+  } catch (error) {
+    console.log("Server error", error);
   }
 };
