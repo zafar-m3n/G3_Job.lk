@@ -62,7 +62,7 @@ function EmployerHome() {
   const getUserData = async () => {
     try {
       const res = await axios.get(
-        "https://g3-job-lk.onrender.com/getUserData",
+        "http://localhost:8081/getUserData",
         {
           headers: {
             Authorization: `Bearer ${
@@ -86,7 +86,7 @@ function EmployerHome() {
   const [jobs, setJobs] = useState([]);
   const getJobData = async () => {
     try {
-      const res = await axios.get("https://g3-job-lk.onrender.com/getJobData", {
+      const res = await axios.get("http://localhost:8081/getJobData", {
         headers: {
           Authorization: `Bearer ${
             JSON.parse(localStorage.getItem("auth"))?.token

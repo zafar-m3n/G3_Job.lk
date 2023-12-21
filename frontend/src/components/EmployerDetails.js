@@ -24,7 +24,7 @@ function EmployerDetails({ userData }) {
   const getEmployersData = async () => {
     try {
       const res = await axios.get(
-        "https://g3-job-lk.onrender.com/getEmployerData",
+        "http://localhost:8081/getEmployerData",
         {
           headers: {
             Authorization: `Bearer ${
@@ -52,7 +52,7 @@ function EmployerDetails({ userData }) {
     console.log("Employer Data:", JSON.stringify(employerData, null, 2));
     try {
       const res = await axios.post(
-        "https://g3-job-lk.onrender.com/updateEmployerDescription",
+        "http://localhost:8081/updateEmployerDescription",
         employerData,
         {
           headers: {
@@ -74,7 +74,7 @@ function EmployerDetails({ userData }) {
     console.log("Employer Data:", JSON.stringify(employerData, null, 2));
     try {
       const res = await axios.post(
-        "https://g3-job-lk.onrender.com/updateEmployerLanguages",
+        "http://localhost:8081/updateEmployerLanguages",
         employerData,
         {
           headers: {
@@ -96,7 +96,7 @@ function EmployerDetails({ userData }) {
     console.log("Employer Data:", JSON.stringify(employerData, null, 2));
     try {
       const res = await axios.post(
-        "https://g3-job-lk.onrender.com/updateEmployerWebsite",
+        "http://localhost:8081/updateEmployerWebsite",
         employerData,
         {
           headers: {

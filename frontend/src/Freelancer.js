@@ -21,7 +21,7 @@ function Freelancer() {
   const getUserData = async () => {
     try {
       const res = await axios.get(
-        "https://g3-job-lk.onrender.com/getUserData",
+        "http://localhost:8081/getUserData",
         {
           headers: {
             Authorization: `Bearer ${
@@ -50,7 +50,7 @@ function Freelancer() {
   const getFreelancerData = async () => {
     try {
       const res = await axios.get(
-        `https://g3-job-lk.onrender.com/getFreelancerData/${freelancerId}`,
+        `http://localhost:8081/getFreelancerData/${freelancerId}`,
         {
           headers: {
             Authorization: `Bearer ${
