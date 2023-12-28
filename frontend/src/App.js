@@ -17,6 +17,7 @@ import BidDetails from "./BidDetails";
 import FreelancersPage from "./FreelancersPage";
 import Freelancer from "./Freelancer";
 import Resources from "./Resources";
+import AdminHome from "./AdminHome";
 
 function App() {
   return (
@@ -51,6 +52,14 @@ function App() {
           element={
             <ProtectedRoute>
               <FreelancerHome />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin-dashboard"
+          element={
+            <ProtectedRoute>
+              <AdminHome />
             </ProtectedRoute>
           }
         />

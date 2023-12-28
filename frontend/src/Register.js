@@ -74,10 +74,13 @@ function Register() {
             setShowSuccess(true);
             setTimeout(() => {
               navigate(
-                response.data.user.user_role === "freelancer"
+                response.data.user.user_role === "admin"
+                  ? "/admin-dashboard"
+                  : response.data.user.user_role === "freelancer"
                   ? "/freelancer-dashboard"
                   : "/employer-dashboard"
               );
+
             }, 2000);
             localStorage.setItem(
               "auth",

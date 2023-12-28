@@ -35,9 +35,12 @@ function Login() {
       axios
         .post("http://localhost:8081/login", values)
         .then((response) => {
+          console.log("User:" + JSON.stringify(response.data, null, 2));
           if (response.data.Status === "Success") {
             navigate(
-              response.data.userRole === "freelancer"
+              response.data.userRole === "admin"
+                ? "/admin-dashboard"
+                : response.data.userRole === "freelancer"
                 ? "/freelancer-dashboard"
                 : "/employer-dashboard"
             );
