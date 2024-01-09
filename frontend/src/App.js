@@ -18,6 +18,10 @@ import FreelancersPage from "./FreelancersPage";
 import Freelancer from "./Freelancer";
 import Resources from "./Resources";
 import AdminHome from "./AdminHome";
+import AdminFreelancers from "./AdminFreelancers";
+import AdminEmployers from "./AdminEmployers";
+import AdminResources from "./AdminResources";
+import AdminClusters from "./AdminClusters";
 
 function App() {
   return (
@@ -60,6 +64,38 @@ function App() {
           element={
             <ProtectedRoute>
               <AdminHome />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin-freelancers"
+          element={
+            <ProtectedRoute>
+              <AdminFreelancers />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin-employers"
+          element={
+            <ProtectedRoute>
+              <AdminEmployers />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/educational-resources"
+          element={
+            <ProtectedRoute>
+              <AdminResources />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin-freelancer-clusters"
+          element={
+            <ProtectedRoute>
+              <AdminClusters />
             </ProtectedRoute>
           }
         />

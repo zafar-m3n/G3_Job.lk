@@ -26,14 +26,14 @@ const Sidebar = () => {
             Dashboard
           </a>
           <a
-            href="/freelancers"
+            href="/admin-freelancers"
             className={`nav-link ${isActive("/freelancers") ? "active" : ""}`}
           >
             <i className="fas fa-user-tie"></i>
             Freelancers
           </a>
           <a
-            href="/employers"
+            href="/admin-employers"
             className={`nav-link ${isActive("/employers") ? "active" : ""}`}
           >
             <i className="fas fa-building"></i>
@@ -49,7 +49,7 @@ const Sidebar = () => {
             Educational Resources
           </a>
           <a
-            href="/freelancer-clusters"
+            href="/admin-freelancer-clusters"
             className={`nav-link ${
               isActive("/freelancer-clusters") ? "active" : ""
             }`}
