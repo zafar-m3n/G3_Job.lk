@@ -6,6 +6,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import ResourcesTable from "./components/ResourcesTable";
 
 function AdminResources() {
   const [userData, setUserData] = useState({
@@ -57,6 +58,14 @@ function AdminResources() {
               <Row>
                 <Col md={10} className="d-flex align-items-center">
                   <h2 className="heading">Available Educational Resources</h2>
+                </Col>
+                <Col md={2} className="d-flex align-items-center justify-content-end">
+                  <button className="btn btn-outline-primary mx-2">Add New</button>
+                </Col>
+              </Row>
+              <Row>
+                <Col className="d-flex align-items-center">
+                  <ResourcesTable />
                 </Col>
               </Row>
             </Col>
