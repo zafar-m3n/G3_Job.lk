@@ -1039,3 +1039,50 @@ export const endorseSkills = (req, res) => {
     console.log("Server error", error);
   }
 };
+
+export const getEmployersData = async (req, res) => {
+  try {
+    UserModel.findEmployers(async (err, employers) => {
+      if (err) {
+        console.log(err);
+        return res.json({ Error: "Database query error" });
+      }
+      if (employers.length === 0) {
+        return res.json({ Error: "No employers found" });
+      }
+
+      const employersData = await Promise.all(
+        employers.map(async (employer) => {
+          try {
+            const additionalData = await employerModel.findEmployerByUserId(
+              employer.id
+            );
+            return {
+              ...employer,
+              description: additionalData.length
+                ? additionalData[0].description
+                : null,
+              languages: additionalData.length
+                ? additionalData[0].languages
+                : null,
+              website: additionalData.length ? additionalData[0].website : null,
+            };
+          } catch (error) {
+            console.error(error);
+            return {
+              ...employer,
+              description: null,
+              languages: null,
+              website: null,
+            };
+          }
+        })
+      );
+
+      res.json({ Status: "Success", employers: employersData });
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ Error: "Server error" });
+  }
+};

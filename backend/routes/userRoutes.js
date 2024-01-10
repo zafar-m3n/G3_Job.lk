@@ -119,4 +119,5 @@ router.get("/getResources", authMiddleware, UserController.getResources);
 
 router.post("/endorseSkills", authMiddleware, UserController.endorseSkills);
 
+router.get("/getEmployersData", authMiddleware, UserController.getEmployersData);
 export default router;

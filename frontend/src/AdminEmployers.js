@@ -6,6 +6,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import EmployerTable from "./components/EmployerTable";
 
 function AdminEmployers() {
   const [userData, setUserData] = useState({
@@ -57,6 +58,11 @@ function AdminEmployers() {
               <Row>
                 <Col md={10} className="d-flex align-items-center">
                   <h2 className="heading">Available Employers</h2>
+                </Col>
+              </Row>
+              <Row>
+                <Col className="d-flex align-items-center">
+                  <EmployerTable />
                 </Col>
               </Row>
             </Col>

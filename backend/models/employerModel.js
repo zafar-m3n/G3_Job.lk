@@ -39,3 +39,15 @@ export const updateEmployerWebsite = (employer, callback) => {
   const query = "UPDATE employers SET website = ? WHERE userId = ?";
   db.query(query, [employer.website, employer.userID], callback);
 };
+export const findEmployerByUserId = (userId) => {
+  return new Promise((resolve, reject) => {
+    const query = "SELECT * FROM employers WHERE userID = ?";
+    db.query(query, [userId], (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+};

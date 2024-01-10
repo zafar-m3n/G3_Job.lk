@@ -39,3 +39,8 @@ export const findFreelancers = (callback) => {
   const query = "SELECT * FROM users WHERE user_role = 'freelancer'";
   db.query(query, callback);
 };
+
+export const findEmployers = (callback) => {
+  const query = "SELECT * FROM users WHERE user_role = 'employer'";
+  db.query(query, callback);
+};
