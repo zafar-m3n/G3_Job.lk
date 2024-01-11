@@ -8,6 +8,7 @@ import * as bidModel from "../models/bidModel.js";
 import * as ratingModel from "../models/ratingModel.js";
 import * as resourceModel from "../models/resourceModel.js";
 import * as endorsementModel from "../models/endorsementModel.js";
+import * as clusterModel from "../models/clusterModel.js";
 import e, { json } from "express";
 import path from "path";
 
@@ -1084,5 +1085,23 @@ export const getEmployersData = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.json({ Error: "Server error" });
+  }
+};
+
+//get clusters
+export const getClusters = (req, res) => {
+  try {
+    console.log("In the controller" + JSON.stringify(req.body, null, 2));
+    const { userId } = req.body;
+    clusterModel.getAllClusters((err, clusters) => {
+      if (err) return res.json({ Error: err.message });
+      return res.json({
+        Status: "Success",
+        Message: "Clusters found",
+        clusters: clusters,
+      });
+    });
+  } catch (error) {
+    console.log("Server error", error);
   }
 };
