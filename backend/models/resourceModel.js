@@ -18,3 +18,10 @@ export const getAllResources = (callback) => {
   const query = "SELECT * FROM resources";
   db.query(query, callback);
 };
+export const updateResource = (resourceId, newData, callback) => {
+  let sql = "UPDATE resources SET ? WHERE id = ?";
+  db.query(sql, [newData, resourceId], (err, result) => {
+    if (err) return callback(err, null);
+    callback(null, result);
+  });
+};

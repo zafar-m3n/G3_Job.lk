@@ -131,4 +131,7 @@ router.get(
   UserController.getEmployerDataById
 );
 router.get("/getClusters", authMiddleware, UserController.getClusters);
+
+//update resource
+router.post("/updateResource", authMiddleware, UserController.updateResource);
 export default router;

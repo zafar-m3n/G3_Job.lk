@@ -1151,3 +1151,27 @@ export const getClusters = (req, res) => {
     console.log("Server error", error);
   }
 };
+
+export const updateResource = async (req, res) => {
+  try {
+    console.log("In the controller" + JSON.stringify(req.body, null, 2));
+    const resourceId = req.body.id; // Ensure the ID is sent in the request body
+    const newData = {
+      title: req.body.title,
+      category: req.body.category,
+      description: req.body.description,
+      url: req.body.url,
+    };
+
+    resourceModel.updateResource(resourceId, newData, (err, result) => {
+      if (err) {
+        res.status(500).send("Error updating resource");
+      } else {
+        res.status(200).send("Resource updated successfully!");
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ Error: "Server error" });
+  }
+};

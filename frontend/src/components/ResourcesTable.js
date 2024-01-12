@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import EditResourceModal from "../components/EditResourceModal";
 
 const ResourcesTable = () => {
   const [resourcesData, setResourcesData] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
   const getResourcesData = async () => {
     try {
       const res = await axios.get("http://localhost:8081/getResources", {
@@ -20,12 +22,24 @@ const ResourcesTable = () => {
     }
   };
 
+  const handleSuccess = (message) => {
+    setSuccessMessage(message);
+    setTimeout(() => setSuccessMessage(""), 3000); // Hide the message after 3 seconds
+    getResourcesData();
+  };
+
   useEffect(() => {
     getResourcesData();
   }, []);
 
   return (
     <div className="table-responsive w-100">
+      {successMessage && (
+        <div className="alert alert-success" role="alert">
+          {successMessage}
+        </div>
+      )}
+
       <table className="table table-striped align-middle w-100">
         <thead>
           <tr>
@@ -42,7 +56,10 @@ const ResourcesTable = () => {
               <td className="col-2">{resource.category}</td>
               <td className="col-4">{resource.description}</td>
               <td className="col-3">
-                <button className="btn btn-outline-primary mx-1">Edit</button>
+                <EditResourceModal
+                  resource={resource}
+                  onSuccess={handleSuccess}
+                />
                 <button className="btn btn-outline-danger mx-1">Remove</button>
               </td>
             </tr>
