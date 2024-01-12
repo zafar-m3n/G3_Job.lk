@@ -47,8 +47,13 @@ const EmployerTable = () => {
               <td>{employer.description}</td>
               <td>
                 {/* Place action buttons or links here */}
-                <button className="btn btn-outline-primary mx-2">View</button>
-                <button className="btn btn-outline-danger mx-2">Remove</button>
+                <a
+                  href={`/employer/${employer.id}`}
+                  className="btn btn-outline-primary"
+                >
+                  View
+                </a>
+                {/* <button className="btn btn-outline-danger mx-2">Remove</button> */}
               </td>
             </tr>
           ))}

@@ -119,7 +119,16 @@ router.get("/getResources", authMiddleware, UserController.getResources);
 
 router.post("/endorseSkills", authMiddleware, UserController.endorseSkills);
 
-router.get("/getEmployersData", authMiddleware, UserController.getEmployersData);
+router.get(
+  "/getEmployersData",
+  authMiddleware,
+  UserController.getEmployersData
+);
 //get clusters with member count
+router.get(
+  "/getSingleEmployerData/:employerId",
+  authMiddleware,
+  UserController.getEmployerDataById
+);
 router.get("/getClusters", authMiddleware, UserController.getClusters);
 export default router;

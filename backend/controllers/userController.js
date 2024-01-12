@@ -1088,6 +1088,52 @@ export const getEmployersData = async (req, res) => {
   }
 };
 
+export const getEmployerDataById = async (req, res) => {
+  try {
+    console.log("In the controller");
+    UserModel.findOne(req.params.employerId, (err, employerUser) => {
+      if (err) {
+        console.log(err);
+        return res.json({ Error: "Database query error" });
+      }
+      if (employerUser.length === 0) {
+        return res.json({ Error: "Employer not found" });
+      }
+
+      employerModel.findEmployerById(
+        req.params.employerId,
+        (err, employerDetails) => {
+          if (err) {
+            console.log(err);
+            return res.json({
+              Error: "Database query error in EmployerModel",
+            });
+          }
+
+          const employerData = {
+            ...employerUser[0],
+            description: employerDetails.length
+              ? employerDetails[0].description
+              : null,
+            languages: employerDetails.length
+              ? employerDetails[0].languages
+              : null,
+            website: employerDetails.length ? employerDetails[0].website : null,
+          };
+
+          console.log("Employer Info:" + JSON.stringify(employerData, null, 2));
+          res.json({
+            Status: "Success",
+            employer: employerData,
+          });
+        }
+      );
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ Error: "Server error" });
+  }
+};
 //get clusters
 export const getClusters = (req, res) => {
   try {

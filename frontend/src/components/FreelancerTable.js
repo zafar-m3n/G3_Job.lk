@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import RemoveFreelancerModal from "../components/RemoveFreelancerModal";
 
 const FreelancersTable = () => {
   const [freelancersData, setFreelancersData] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
   const getFreelancersData = async () => {
     try {
       const res = await axios.get("http://localhost:8081/getFreelancersData", {
@@ -14,7 +16,7 @@ const FreelancersTable = () => {
       });
       console.log("Freelancers Data:" + JSON.stringify(res.data, null, 2));
       setFreelancersData(res.data.freelancers);
-      console.log("Freelancers Data:" + JSON.stringify(res.data, null, 2)); 
+      console.log("Freelancers Data:" + JSON.stringify(res.data, null, 2));
     } catch (error) {
       console.error("Error fetching freelancers data:", error);
     }
@@ -26,6 +28,9 @@ const FreelancersTable = () => {
 
   return (
     <div className="table-responsive w-100">
+      {successMessage && (
+        <div className="alert alert-success">{successMessage}</div>
+      )}
       <table className="table table-striped align-middle">
         <thead>
           <tr>
@@ -46,9 +51,13 @@ const FreelancersTable = () => {
               <td>{freelancer.district}</td>
               <td>{freelancer.skills}</td>
               <td>
-                {/* Place action buttons or links here */}
-                <button className="btn btn-outline-primary mx-2">View</button>
-                <button className="btn btn-outline-danger mx-2">Remove</button>
+                <a
+                  href={`/freelancer/${freelancer.id}`}
+                  className="btn btn-outline-primary"
+                >
+                  View
+                </a>
+                {/* <RemoveFreelancerModal /> */}
               </td>
             </tr>
           ))}
