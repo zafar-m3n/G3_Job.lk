@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import EditResourceModal from "../components/EditResourceModal";
+import DeleteResourceModal from "../components/DeleteResourceModal";
 
 const ResourcesTable = () => {
   const [resourcesData, setResourcesData] = useState([]);
@@ -60,7 +61,10 @@ const ResourcesTable = () => {
                   resource={resource}
                   onSuccess={handleSuccess}
                 />
-                <button className="btn btn-outline-danger mx-1">Remove</button>
+                <DeleteResourceModal
+                  resource={resource}
+                  onSuccess={handleSuccess}
+                />
               </td>
             </tr>
           ))}

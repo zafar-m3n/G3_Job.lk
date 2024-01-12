@@ -1005,7 +1005,6 @@ export const getResources = (req, res) => {
       if (resources.length === 0) {
         return res.json({ Error: "No resources found" });
       }
-      console.log("Resources Data:" + JSON.stringify(resources, null, 2));
       res.json({ Status: "Success", resources: resources });
     });
   } catch (error) {
@@ -1168,6 +1167,24 @@ export const updateResource = async (req, res) => {
         res.status(500).send("Error updating resource");
       } else {
         res.status(200).send("Resource updated successfully!");
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ Error: "Server error" });
+  }
+};
+
+export const deleteResource = async (req, res) => {
+  try {
+    console.log("In the controller" + JSON.stringify(req.body, null, 2));
+    const resourceId = req.body.resourceId; // Ensure the ID is sent in the request body
+
+    resourceModel.deleteResource(resourceId, (err, result) => {
+      if (err) {
+        res.status(500).send("Error deleting resource");
+      } else {
+        res.status(200).send("Resource deleted successfully!");
       }
     });
   } catch (error) {

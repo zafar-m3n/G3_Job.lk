@@ -134,4 +134,7 @@ router.get("/getClusters", authMiddleware, UserController.getClusters);
 
 //update resource
 router.post("/updateResource", authMiddleware, UserController.updateResource);
+
+//delete resource
+router.post("/deleteResource", authMiddleware, UserController.deleteResource);
 export default router;

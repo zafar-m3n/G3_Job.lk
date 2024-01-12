@@ -25,3 +25,9 @@ export const updateResource = (resourceId, newData, callback) => {
     callback(null, result);
   });
 };
+
+//delete resource
+export const deleteResource = (resourceId, callback) => {
+  const query = "DELETE FROM resources WHERE id = ?";
+  db.query(query, [resourceId], callback);
+};
