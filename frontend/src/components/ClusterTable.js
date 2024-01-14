@@ -1,5 +1,5 @@
 import React from "react";
-const ClusterTable = ({ clusters, onClusterChange }) => {
+const ClusterTable = ({ clusters, onClusterChange, role }) => {
   return (
     <div className="table-responsive w-100">
       <table className="table table-striped align-middle w-100">
@@ -24,8 +24,16 @@ const ClusterTable = ({ clusters, onClusterChange }) => {
                 >
                   View
                 </a>
-                <button className="btn btn-outline-primary mx-1">Edit</button>
-                <button className="btn btn-outline-danger mx-1">Remove</button>
+                {role === "admin" && (
+                  <>
+                    <button className="btn btn-outline-primary mx-1">
+                      Edit
+                    </button>
+                    <button className="btn btn-outline-danger mx-1">
+                      Remove
+                    </button>
+                  </>
+                )}
               </td>
             </tr>
           ))}

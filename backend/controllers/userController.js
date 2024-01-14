@@ -1229,13 +1229,29 @@ export const addCluster = (req, res) => {
 export const getClusterDataById = (req, res) => {
   try {
     console.log("In the controller" + JSON.stringify(req.params, null, 2));
-    const { clusterId } = req.params; 
+    const { clusterId } = req.params;
     clusterModel.getClusterDataById(clusterId, (err, cluster) => {
       if (err) return res.json({ Error: err.message });
       return res.json({
         Status: "Success",
         Message: "Cluster found",
         cluster: cluster,
+      });
+    });
+  } catch (error) {
+    console.log("Server error", error);
+  }
+};
+export const getClustersEmployer = (req, res) => {
+  try {
+    console.log("In the controller" + JSON.stringify(req.body, null, 2));
+    const { userId } = req.body;
+    clusterModel.getClustersEmployer((err, clusters) => {
+      if (err) return res.json({ Error: err.message });
+      return res.json({
+        Status: "Success",
+        Message: "Clusters found",
+        clusters: clusters,
       });
     });
   } catch (error) {

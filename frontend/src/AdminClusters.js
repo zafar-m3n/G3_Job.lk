@@ -91,6 +91,7 @@ function AdminClusters() {
                   <ClusterTable
                     clusters={clusterData}
                     onClusterChange={getClusterData}
+                    role={userData.role}
                   />
                 </Col>
               </Row>

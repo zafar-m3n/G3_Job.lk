@@ -21,6 +21,19 @@ export const getAllClusters = (callback) => {
   db.query(query, callback);
 };
 
+//get all clusters with member count for employers
+export const getClustersEmployer = (callback) => {
+  const query = `
+    SELECT c.cluster_id, c.cluster_name, c.cluster_description, COUNT(m.member_id) as member_count 
+    FROM freelancer_clusters c 
+    INNER JOIN cluster_members m ON c.cluster_id = m.cluster_id 
+    GROUP BY c.cluster_id
+    HAVING COUNT(m.member_id) > 0;`;
+
+  db.query(query, callback);
+};
+
+
 //add new cluster
 export const addCluster = (cluster, callback) => {
   const query = "INSERT INTO freelancer_clusters SET ?";

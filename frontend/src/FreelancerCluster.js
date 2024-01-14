@@ -16,7 +16,7 @@ function FreelancerCluster() {
     location: "",
     role: "",
   });
-  const [clusterData, setClusterData] = useState([]);
+  const [clusterData, setClusterData] = useState([{}]);
 
   const getUserData = async () => {
     try {
@@ -77,8 +77,11 @@ function FreelancerCluster() {
 
   useEffect(() => {
     getUserData();
-    getClusterData();
   }, []);
+
+  useEffect(() => {
+    getClusterData();
+  }, [clusterId]);
 
   return (
     <>
@@ -91,10 +94,27 @@ function FreelancerCluster() {
           <div className="container">
             <div className="row">
               <div>
-                <h2 className="heading">{clusterData[0].cluster_name}</h2>
-                <p className="sub-heading">
-                  {clusterData[0].cluster_description}
-                </p>
+                <div className="row">
+                  <div className="col-md-9">
+                    <h2 className="heading">{clusterData[0].cluster_name}</h2>
+                    <p>
+                      <b>Members:</b> {clusterData.length} <br />
+                      {clusterData[0].cluster_description}
+                    </p>
+                  </div>
+                  <div className="col-md-3 d-flex align-items-center justify-content-end px-5">
+                    {userData.role === "freelancer" && (
+                      <button className="btn btn-outline-primary mx-1">
+                        Join Cluster
+                      </button>
+                    )}
+                    {userData.role === "employer" && (
+                      <button className="btn btn-outline-primary mx-1">
+                        Hire Cluster
+                      </button>
+                    )}
+                  </div>
+                </div>
 
                 <div className="table-responsive">
                   <table className="table table-striped">
@@ -104,6 +124,7 @@ function FreelancerCluster() {
                         <th>Email</th>
                         <th>District</th>
                         <th>Date Joined</th>
+                        <th>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -115,6 +136,14 @@ function FreelancerCluster() {
                           <td>{cluster.email}</td>
                           <td>{cluster.district}</td>
                           <td>{formatDate(cluster.joined_at)}</td>
+                          <td>
+                            <a
+                              href={`/freelancer/${cluster.id}`}
+                              className="btn btn-outline-primary"
+                            >
+                              View
+                            </a>
+                          </td>
                         </tr>
                       ))}
                     </tbody>

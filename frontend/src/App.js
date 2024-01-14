@@ -24,6 +24,7 @@ import AdminResources from "./AdminResources";
 import AdminClusters from "./AdminClusters";
 import Employer from "./Employer";
 import FreelancerCluster from "./FreelancerCluster";
+import FreelancerClusters from "./FreelancerClusters";
 
 function App() {
   return (
@@ -178,6 +179,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Employer />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/freelancer-clusters"
+          element={
+            <ProtectedRoute>
+              <FreelancerClusters />
             </ProtectedRoute>
           }
         />

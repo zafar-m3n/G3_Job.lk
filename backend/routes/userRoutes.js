@@ -131,6 +131,11 @@ router.get(
   UserController.getEmployerDataById
 );
 router.get("/getClusters", authMiddleware, UserController.getClusters);
+router.get(
+  "/getClustersEmployer",
+  authMiddleware,
+  UserController.getClustersEmployer
+);
 
 //update resource
 router.post("/updateResource", authMiddleware, UserController.updateResource);
