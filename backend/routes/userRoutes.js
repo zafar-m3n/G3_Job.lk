@@ -140,4 +140,7 @@ router.post("/deleteResource", authMiddleware, UserController.deleteResource);
 
 //add new resource
 router.post("/addResource", authMiddleware, UserController.addResource);
+
+//add cluster
+router.post("/addCluster", authMiddleware, UserController.addCluster);
 export default router;

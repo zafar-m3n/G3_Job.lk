@@ -7,6 +7,7 @@ import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ClusterTable from "./components/ClusterTable";
+import AddClusterModal from "./components/AddClusterModal";
 
 function AdminClusters() {
   const [userData, setUserData] = useState({
@@ -15,6 +16,8 @@ function AdminClusters() {
     email: "",
     role: "",
   });
+  const [clusterData, setClusterData] = useState([]);
+
   const getUserData = async () => {
     try {
       const res = await axios.get("http://localhost:8081/getUserData", {
@@ -34,8 +37,25 @@ function AdminClusters() {
       console.log(error);
     }
   };
+
+  const getClusterData = async () => {
+    try {
+      const res = await axios.get("http://localhost:8081/getClusters", {
+        headers: {
+          Authorization: `Bearer ${
+            JSON.parse(localStorage.getItem("auth"))?.token
+          }`,
+        },
+      });
+      console.log("Cluster Data:" + JSON.stringify(res.data, null, 2));
+      setClusterData(res.data.clusters);
+    } catch (error) {
+      console.error("Error fetching resources data:", error);
+    }
+  };
   useEffect(() => {
     getUserData();
+    getClusterData();
   }, []);
   return (
     <>
@@ -56,21 +76,22 @@ function AdminClusters() {
           <Col md={9} className="py-3">
             <Col className="align-items-center justify-content-center mb-4">
               <Row>
-                <Col md={10} className="d-flex align-items-center">
+                <Col md={9} className="d-flex align-items-center">
                   <h2 className="heading">Available Freelancer Clusters</h2>
                 </Col>
                 <Col
-                  md={2}
+                  md={3}
                   className="d-flex align-items-center justify-content-end"
                 >
-                  <button className="btn btn-outline-primary mx-2">
-                    Add New
-                  </button>
+                  <AddClusterModal onClusterAdded={getClusterData} />
                 </Col>
               </Row>
               <Row>
                 <Col className="d-flex align-items-center">
-                  <ClusterTable />
+                  <ClusterTable
+                    clusters={clusterData}
+                    onClusterChange={getClusterData}
+                  />
                 </Col>
               </Row>
             </Col>

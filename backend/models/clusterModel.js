@@ -20,3 +20,9 @@ export const getAllClusters = (callback) => {
     "SELECT c.cluster_id, c.cluster_name, c.cluster_description, COUNT(m.member_id) as member_count FROM freelancer_clusters c LEFT JOIN cluster_members m ON c.cluster_id = m.cluster_id GROUP BY c.cluster_id;";
   db.query(query, callback);
 };
+
+//add new cluster
+export const addCluster = (cluster, callback) => {
+  const query = "INSERT INTO freelancer_clusters SET ?";
+  db.query(query, cluster, callback);
+};

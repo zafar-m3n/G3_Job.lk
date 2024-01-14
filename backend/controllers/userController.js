@@ -1206,3 +1206,21 @@ export const addResource = (req, res) => {
       .json({ message: "Resource added successfully", data: results });
   });
 };
+
+//add cluster
+export const addCluster = (req, res) => {
+  const clusterData = {
+    cluster_name: req.body.name,
+    cluster_description: req.body.description,
+  };
+  console.log("In the controller" + JSON.stringify(clusterData, null, 2));
+  clusterModel.addCluster(clusterData, (err, results) => {
+    if (err) {
+      console.error("Error adding cluster:", err);
+      return res.status(500).send(err);
+    }
+    res
+      .status(200)
+      .json({ message: "Cluster added successfully", data: results });
+  });
+};
