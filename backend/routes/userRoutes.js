@@ -143,4 +143,11 @@ router.post("/addResource", authMiddleware, UserController.addResource);
 
 //add cluster
 router.post("/addCluster", authMiddleware, UserController.addCluster);
+
+//get cluster data by id
+router.get(
+  "/getClusterData/:clusterId",
+  authMiddleware,
+  UserController.getClusterDataById
+);
 export default router;

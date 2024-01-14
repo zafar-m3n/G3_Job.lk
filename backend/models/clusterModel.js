@@ -26,3 +26,16 @@ export const addCluster = (cluster, callback) => {
   const query = "INSERT INTO freelancer_clusters SET ?";
   db.query(query, cluster, callback);
 };
+
+//get cluster data by id
+export const getClusterDataById = (clusterId, callback) => {
+  const query = `
+    SELECT f.cluster_id, f.cluster_name, f.cluster_description, u.id,
+           u.first_name, u.last_name, u.email, u.district, c.joined_at
+    FROM freelancer_clusters f
+    JOIN cluster_members c ON f.cluster_id = c.cluster_id
+    JOIN users u ON c.freelancer_id = u.id
+    WHERE f.cluster_id = ?`;
+
+  db.query(query, [clusterId], callback);
+};

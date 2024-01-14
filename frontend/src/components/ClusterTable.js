@@ -1,5 +1,5 @@
 import React from "react";
-const ResourcesTable = ({ clusters, onClusterChange }) => {
+const ClusterTable = ({ clusters, onClusterChange }) => {
   return (
     <div className="table-responsive w-100">
       <table className="table table-striped align-middle w-100">
@@ -18,7 +18,12 @@ const ResourcesTable = ({ clusters, onClusterChange }) => {
               <td className="col-5">{cluster.cluster_description}</td>
               <td className="col-2">{cluster.member_count}</td>
               <td className="col-3">
-                <button className="btn btn-outline-info mx-1">View</button>
+                <a
+                  className="btn btn-outline-info mx-1"
+                  href={`/freelancer-clusters/${cluster.cluster_id}`}
+                >
+                  View
+                </a>
                 <button className="btn btn-outline-primary mx-1">Edit</button>
                 <button className="btn btn-outline-danger mx-1">Remove</button>
               </td>
@@ -30,4 +35,4 @@ const ResourcesTable = ({ clusters, onClusterChange }) => {
   );
 };
 
-export default ResourcesTable;
+export default ClusterTable;

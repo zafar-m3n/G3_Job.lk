@@ -1224,3 +1224,21 @@ export const addCluster = (req, res) => {
       .json({ message: "Cluster added successfully", data: results });
   });
 };
+
+//get cluster by id
+export const getClusterDataById = (req, res) => {
+  try {
+    console.log("In the controller" + JSON.stringify(req.params, null, 2));
+    const { clusterId } = req.params; 
+    clusterModel.getClusterDataById(clusterId, (err, cluster) => {
+      if (err) return res.json({ Error: err.message });
+      return res.json({
+        Status: "Success",
+        Message: "Cluster found",
+        cluster: cluster,
+      });
+    });
+  } catch (error) {
+    console.log("Server error", error);
+  }
+};
