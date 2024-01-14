@@ -1192,3 +1192,17 @@ export const deleteResource = async (req, res) => {
     res.json({ Error: "Server error" });
   }
 };
+
+export const addResource = (req, res) => {
+  const resourceData = req.body;
+  console.log("In the controller" + JSON.stringify(resourceData, null, 2));
+  resourceModel.addResource(resourceData, (err, results) => {
+    if (err) {
+      console.error("Error adding resource:", err);
+      return res.status(500).send(err);
+    }
+    res
+      .status(200)
+      .json({ message: "Resource added successfully", data: results });
+  });
+};

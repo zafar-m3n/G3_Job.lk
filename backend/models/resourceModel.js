@@ -31,3 +31,12 @@ export const deleteResource = (resourceId, callback) => {
   const query = "DELETE FROM resources WHERE id = ?";
   db.query(query, [resourceId], callback);
 };
+
+//add new resource
+export const addResource = (resourceData, callback) => {
+  const query = "INSERT INTO resources SET ?";
+  db.query(query, resourceData, (err, results) => {
+    if (err) return callback(err, null);
+    callback(null, results);
+  });
+};

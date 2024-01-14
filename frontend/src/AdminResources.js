@@ -7,6 +7,7 @@ import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ResourcesTable from "./components/ResourcesTable";
+import AddResourceModal from "./components/AddResourceModal";
 
 function AdminResources() {
   const [userData, setUserData] = useState({
@@ -15,6 +16,7 @@ function AdminResources() {
     email: "",
     role: "",
   });
+  const [resourcesData, setResourcesData] = useState([]);
   const getUserData = async () => {
     try {
       const res = await axios.get("http://localhost:8081/getUserData", {
@@ -34,8 +36,25 @@ function AdminResources() {
       console.log(error);
     }
   };
+  const getResourcesData = async () => {
+    try {
+      const res = await axios.get("http://localhost:8081/getResources", {
+        headers: {
+          Authorization: `Bearer ${
+            JSON.parse(localStorage.getItem("auth"))?.token
+          }`,
+        },
+      });
+      console.log("Resources Data:" + JSON.stringify(res.data, null, 2));
+      setResourcesData(res.data.resources);
+      console.log("Resources Data:" + JSON.stringify(res.data, null, 2));
+    } catch (error) {
+      console.error("Error fetching resources data:", error);
+    }
+  };
   useEffect(() => {
     getUserData();
+    getResourcesData();
   }, []);
   return (
     <>
@@ -56,16 +75,22 @@ function AdminResources() {
           <Col md={9} className="py-3">
             <Col className="align-items-center justify-content-center mb-4">
               <Row>
-                <Col md={10} className="d-flex align-items-center">
+                <Col md={9} className="d-flex align-items-center">
                   <h2 className="heading">Available Educational Resources</h2>
                 </Col>
-                <Col md={2} className="d-flex align-items-center justify-content-end">
-                  <button className="btn btn-outline-primary mx-2">Add New</button>
+                <Col
+                  md={3}
+                  className="d-flex align-items-center justify-content-end"
+                >
+                  <AddResourceModal onResourceAdded={getResourcesData} />
                 </Col>
               </Row>
               <Row>
                 <Col className="d-flex align-items-center">
-                  <ResourcesTable />
+                  <ResourcesTable
+                    resources={resourcesData}
+                    onResourcesChange={getResourcesData}
+                  />
                 </Col>
               </Row>
             </Col>
