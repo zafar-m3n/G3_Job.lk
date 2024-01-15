@@ -26,7 +26,7 @@ function AddResourceModal({ onResourceAdded }) {
 
     try {
       const response = await axios.post(
-        "http://localhost:8081/addResource",
+        "https://g3-job-lk.onrender.com/addResource",
         resourcesData,
         {
           headers: {

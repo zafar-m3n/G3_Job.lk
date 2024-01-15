@@ -20,7 +20,7 @@ function AdminClusters() {
 
   const getUserData = async () => {
     try {
-      const res = await axios.get("http://localhost:8081/getUserData", {
+      const res = await axios.get("https://g3-job-lk.onrender.com/getUserData", {
         headers: {
           Authorization: `Bearer ${
             JSON.parse(localStorage.getItem("auth"))?.token
@@ -40,7 +40,7 @@ function AdminClusters() {
 
   const getClusterData = async () => {
     try {
-      const res = await axios.get("http://localhost:8081/getClusters", {
+      const res = await axios.get("https://g3-job-lk.onrender.com/getClusters", {
         headers: {
           Authorization: `Bearer ${
             JSON.parse(localStorage.getItem("auth"))?.token

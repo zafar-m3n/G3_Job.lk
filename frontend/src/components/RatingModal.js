@@ -21,7 +21,7 @@ function RatingModal({ freelancerId, employerId, onRatingSubmit }) {
 
     try {
       const res = await axios.post(
-        "http://localhost:8081/submitRating",
+        "https://g3-job-lk.onrender.com/submitRating",
         reviewData,
         {
           headers: {

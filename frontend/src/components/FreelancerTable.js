@@ -7,7 +7,7 @@ const FreelancersTable = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const getFreelancersData = async () => {
     try {
-      const res = await axios.get("http://localhost:8081/getFreelancersData", {
+      const res = await axios.get("https://g3-job-lk.onrender.com/getFreelancersData", {
         headers: {
           Authorization: `Bearer ${
             JSON.parse(localStorage.getItem("auth"))?.token
