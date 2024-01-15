@@ -1,18 +1,18 @@
 import mysql from "mysql";
 
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "freelancer_system",
-});
-
 // const db = mysql.createConnection({
-//   host: "34.87.87.40",
+//   host: "localhost",
 //   user: "root",
-//   password: "123456789",
+//   password: "",
 //   database: "freelancer_system",
 // });
+
+const db = mysql.createConnection({
+  host: "34.87.87.40",
+  user: "root",
+  password: "123456789",
+  database: "freelancer_system",
+});
 
 export const findEmployerById = (userId, callback) => {
   const query = "SELECT * FROM employers WHERE userId = ?";
