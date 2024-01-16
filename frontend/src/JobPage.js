@@ -1,29 +1,74 @@
 import React, { useEffect, useState } from "react";
-// import { useNavigate } from "react-router-dom";
-import "./styles/EmployerHomeStyle.css";
 import axios from "axios";
 import {
-  Button,
   Container,
   Row,
   Col,
-  InputGroup,
   FormControl,
+  Form,
+  Accordion,
 } from "react-bootstrap";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
 import JobCard from "./components/JobCard";
+import "./styles/EmployerHomeStyle.css";
 
 function JobPage() {
-  // const navigate = useNavigate();
   const [userData, setUserData] = useState({
     name: "",
     profileImage: "",
     email: "",
     role: "",
   });
+  const [jobs, setJobs] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [filterLocation, setFilterLocation] = useState("");
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [maxBudget, setMaxBudget] = useState(50000); // Example initial value
+
+  const districts = [
+    "Ampara",
+    "Anuradhapura",
+    "Badulla",
+    "Batticaloa",
+    "Colombo",
+    "Galle",
+    "Gampaha",
+    "Hambantota",
+    "Jaffna",
+    "Kalutara",
+    "Kandy",
+    "Kegalle",
+    "Kilinochchi",
+    "Kurunegala",
+    "Mannar",
+    "Matale",
+    "Matara",
+    "Monaragala",
+    "Mullaitivu",
+    "Nuwara Eliya",
+    "Polonnaruwa",
+    "Puttalam",
+    "Ratnapura",
+    "Trincomalee",
+    "Vavuniya",
+  ];
+
+  const webDevSkills = [
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "React",
+    "Angular",
+    "Node.js",
+    "Python",
+    "PHP",
+    "Java",
+    "TypeScript",
+    "SQL",
+    "MongoDB",
+  ];
 
   const getUserData = async () => {
     try {
@@ -44,8 +89,6 @@ function JobPage() {
       console.log(error);
     }
   };
-
-  const [jobs, setJobs] = useState([]);
 
   const getJobData = async () => {
     if (userData.role === "employer") {
@@ -73,6 +116,7 @@ function JobPage() {
             },
           }
         );
+        console.log(res.data.Jobs);
         setJobs(res.data.Jobs);
       } catch (error) {
         console.log(error);
@@ -84,12 +128,38 @@ function JobPage() {
     setSearchQuery(event.target.value);
   };
 
-  const filteredJobs = jobs.filter(
-    (job) =>
-      job.jobTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.jobDescription.toLowerCase().includes(searchQuery.toLowerCase())
-    // Add other fields if necessary
-  );
+  const handleSkillChange = (event, skill) => {
+    setSelectedSkills(
+      event.target.checked
+        ? [...selectedSkills, skill]
+        : selectedSkills.filter((s) => s !== skill)
+    );
+  };
+
+  const filteredJobs = jobs.filter((job) => {
+    const titleMatch = job.jobTitle
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const descriptionMatch = job.jobDescription
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const priceMatch = job.estimatedBudget <= parseFloat(maxBudget);
+    const locationMatch = filterLocation
+      ? job.location === filterLocation
+      : true;
+    const skillsMatch =
+      selectedSkills.length === 0 ||
+      selectedSkills.some((skill) =>
+        job.requiredSkills.toLowerCase().includes(skill.toLowerCase())
+      );
+
+    return (
+      (titleMatch || descriptionMatch) &&
+      priceMatch &&
+      locationMatch &&
+      skillsMatch
+    );
+  });
 
   useEffect(() => {
     getUserData();
@@ -106,53 +176,79 @@ function JobPage() {
       <Header userData={userData} />
       <Container fluid>
         <Row>
-          <Col
-            md={3}
-            className="p-0"
-            style={{
-              backgroundColor: "#0B2447",
-            }}
-          >
+          <Col md={3} className="p-0" style={{ backgroundColor: "#0B2447" }}>
             <Sidebar />
           </Col>
           <Col md={9}>
             <Row>
-              <Col md={9}>
-                <InputGroup className="mb-3 rounded">
-                  <FormControl
-                    placeholder="Browse jobs"
-                    aria-label="Browse jobs"
-                    onChange={handleSearchChange}
-                  />
-                  <Button variant="outline-secondary" id="button-addon2">
-                    <i className="fas fa-search"></i>
-                  </Button>
-                </InputGroup>
+              <Col md={12}>
+                <Accordion flush>
+                  <Accordion.Item eventKey="0">
+                    <Accordion.Header>
+                      <Col md={11}>
+                        <FormControl
+                          placeholder="Browse jobs"
+                          aria-label="Browse jobs"
+                          onChange={handleSearchChange}
+                        />
+                      </Col>
+                    </Accordion.Header>
+                    <Accordion.Body>
+                      <Row>
+                        <Col md={3}>
+                          <Form.Label>Price: Up to LKR {maxBudget}</Form.Label>
+                          <Form.Range
+                            min={0}
+                            max={50000} // Example max value
+                            value={maxBudget}
+                            onChange={(e) => setMaxBudget(e.target.value)}
+                          />
+                        </Col>
+                        <Col md={3}>
+                          {/* Location Filter */}
+                          <Form.Select
+                            aria-label="Filter by location"
+                            onChange={(e) => setFilterLocation(e.target.value)}
+                          >
+                            <option value="">Select a district</option>
+                            {districts.map((district, index) => (
+                              <option key={index} value={district}>
+                                {district}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </Col>
+                        <Col md={6}>
+                          {/* Skills Filter */}
+                          <Row>
+                            {webDevSkills.map((skill, index) => (
+                              <Col md={4} key={index}>
+                                <Form.Check
+                                  type="checkbox"
+                                  label={skill}
+                                  onChange={(e) => handleSkillChange(e, skill)}
+                                />
+                              </Col>
+                            ))}
+                          </Row>
+                        </Col>
+                      </Row>
+                    </Accordion.Body>
+                  </Accordion.Item>
+                </Accordion>
               </Col>
             </Row>
-
             <Row>
               <h2 className="heading">
                 {userData.role === "employer"
                   ? "Posted Jobs"
-                  : "Browse Recommended Jobs"}
+                  : "Browse Available Jobs"}
               </h2>
             </Row>
             <Row>
-              {/* {[...jobs].reverse().map((job, index) => (
-                <JobCard key={index} job={job} userRole={userData.role} />
-              ))} */}
               {filteredJobs.map((job, index) => (
                 <JobCard key={index} job={job} userRole={userData.role} />
               ))}
-            </Row>
-            <Row>
-              <h2 className="heading">
-                {userData.role === "employer"
-                  ? "Browse Recommended Freelancers"
-                  : "Applied Jobs"}
-              </h2>
-              <p>No applied jobs yet.</p>
             </Row>
           </Col>
         </Row>
