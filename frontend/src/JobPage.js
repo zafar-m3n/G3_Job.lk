@@ -23,6 +23,8 @@ function JobPage() {
     email: "",
     role: "",
   });
+  const [searchQuery, setSearchQuery] = useState("");
+
   const getUserData = async () => {
     try {
       const res = await axios.get("http://localhost:8081/getUserData", {
@@ -78,6 +80,17 @@ function JobPage() {
     }
   };
 
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredJobs = jobs.filter(
+    (job) =>
+      job.jobTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.jobDescription.toLowerCase().includes(searchQuery.toLowerCase())
+    // Add other fields if necessary
+  );
+
   useEffect(() => {
     getUserData();
   }, []);
@@ -109,6 +122,7 @@ function JobPage() {
                   <FormControl
                     placeholder="Browse jobs"
                     aria-label="Browse jobs"
+                    onChange={handleSearchChange}
                   />
                   <Button variant="outline-secondary" id="button-addon2">
                     <i className="fas fa-search"></i>
@@ -119,11 +133,16 @@ function JobPage() {
 
             <Row>
               <h2 className="heading">
-                {userData.role === "employer" ? "Posted Jobs" : "Browse Recommended Jobs"}
+                {userData.role === "employer"
+                  ? "Posted Jobs"
+                  : "Browse Recommended Jobs"}
               </h2>
             </Row>
             <Row>
-              {[...jobs].reverse().map((job, index) => (
+              {/* {[...jobs].reverse().map((job, index) => (
+                <JobCard key={index} job={job} userRole={userData.role} />
+              ))} */}
+              {filteredJobs.map((job, index) => (
                 <JobCard key={index} job={job} userRole={userData.role} />
               ))}
             </Row>
