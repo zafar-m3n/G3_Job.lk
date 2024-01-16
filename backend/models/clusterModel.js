@@ -1,18 +1,18 @@
 import mysql from "mysql";
 
-// const db = mysql.createConnection({
-//   host: "localhost",
-//   user: "root",
-//   password: "",
-//   database: "freelancer_system",
-// });
-
 const db = mysql.createConnection({
-  host: "34.87.87.40",
+  host: "localhost",
   user: "root",
-  password: "123456789",
+  password: "",
   database: "freelancer_system",
 });
+
+// const db = mysql.createConnection({
+//   host: "34.87.87.40",
+//   user: "root",
+//   password: "123456789",
+//   database: "freelancer_system",
+// });
 
 //get all clusters with member count
 export const getAllClusters = (callback) => {
@@ -33,7 +33,6 @@ export const getClustersEmployer = (callback) => {
   db.query(query, callback);
 };
 
-
 //add new cluster
 export const addCluster = (cluster, callback) => {
   const query = "INSERT INTO freelancer_clusters SET ?";
@@ -51,4 +50,21 @@ export const getClusterDataById = (clusterId, callback) => {
     WHERE f.cluster_id = ?`;
 
   db.query(query, [clusterId], callback);
+};
+
+//join cluster
+export const joinCluster = (clusterMember, callback) => {
+  const query = "INSERT INTO cluster_members SET ?";
+  db.query(query, clusterMember, callback);
+};
+
+//leave cluster
+export const leaveCluster = (clusterMember, callback) => {
+  const query =
+    "DELETE FROM cluster_members WHERE cluster_id = ? AND freelancer_id = ?";
+  db.query(
+    query,
+    [clusterMember.cluster_id, clusterMember.freelancer_id],
+    callback
+  );
 };

@@ -155,4 +155,10 @@ router.get(
   authMiddleware,
   UserController.getClusterDataById
 );
+
+//join cluster
+router.post("/joinCluster", authMiddleware, UserController.joinCluster);
+
+//leave cluster
+router.post("/leaveCluster", authMiddleware, UserController.leaveCluster);
 export default router;

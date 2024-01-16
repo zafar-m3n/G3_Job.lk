@@ -10,7 +10,7 @@ function EditResourceModal({ resource, onSuccess }) {
   const saveResource = async () => {
     try {
       const response = await axios.post(
-        "https://g3-job-lk.onrender.com/updateResource",
+        "http://localhost:8081/updateResource",
         resourcesData,
         {
           headers: {

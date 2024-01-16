@@ -88,7 +88,7 @@ function PostJob() {
     event.preventDefault();
     if (validateForm()) {
       try {
-        const res = await axios.post("https://g3-job-lk.onrender.com/postJob", values, {
+        const res = await axios.post("http://localhost:8081/postJob", values, {
           headers: {
             Authorization: `Bearer ${
               JSON.parse(localStorage.getItem("auth"))?.token
@@ -111,7 +111,7 @@ function PostJob() {
   };
   const getUserData = async () => {
     try {
-      const res = await axios.get("https://g3-job-lk.onrender.com/getUserData", {
+      const res = await axios.get("http://localhost:8081/getUserData", {
         headers: {
           Authorization: `Bearer ${
             JSON.parse(localStorage.getItem("auth"))?.token

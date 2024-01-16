@@ -21,7 +21,7 @@ function Freelancer() {
   const getUserData = async () => {
     try {
       const res = await axios.get(
-        "https://g3-job-lk.onrender.com/getUserData",
+        "http://localhost:8081/getUserData",
         {
           headers: {
             Authorization: `Bearer ${
@@ -50,7 +50,7 @@ function Freelancer() {
   const getFreelancerData = async () => {
     try {
       const res = await axios.get(
-        `https://g3-job-lk.onrender.com/getFreelancerData/${freelancerId}`,
+        `http://localhost:8081/getFreelancerData/${freelancerId}`,
         {
           headers: {
             Authorization: `Bearer ${
@@ -73,7 +73,7 @@ function Freelancer() {
     try {
       console.log("clicked endorse button");
       await axios.post(
-        "https://g3-job-lk.onrender.com/endorseSkills",
+        "http://localhost:8081/endorseSkills",
         {
           endorserId: userData.id,
           freelancerId,
@@ -96,7 +96,7 @@ function Freelancer() {
   // const getEndorsement = async () => {
   //   try {
   //     const res = await axios.get(
-  //       `https://g3-job-lk.onrender.com/getEndorsement/${freelancerId}/${userData.id}`
+  //       `http://localhost:8081/getEndorsement/${freelancerId}/${userData.id}`
   //     );
   //     console.log("Endorsement Data:" + JSON.stringify(res.data, null, 2));
   //     setIsEndorsed(res.data.isEndorsed);

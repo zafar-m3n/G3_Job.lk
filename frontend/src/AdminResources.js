@@ -19,7 +19,7 @@ function AdminResources() {
   const [resourcesData, setResourcesData] = useState([]);
   const getUserData = async () => {
     try {
-      const res = await axios.get("https://g3-job-lk.onrender.com/getUserData", {
+      const res = await axios.get("http://localhost:8081/getUserData", {
         headers: {
           Authorization: `Bearer ${
             JSON.parse(localStorage.getItem("auth"))?.token
@@ -38,7 +38,7 @@ function AdminResources() {
   };
   const getResourcesData = async () => {
     try {
-      const res = await axios.get("https://g3-job-lk.onrender.com/getResources", {
+      const res = await axios.get("http://localhost:8081/getResources", {
         headers: {
           Authorization: `Bearer ${
             JSON.parse(localStorage.getItem("auth"))?.token

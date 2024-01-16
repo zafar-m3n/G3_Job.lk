@@ -17,10 +17,12 @@ function FreelancerCluster() {
     role: "",
   });
   const [clusterData, setClusterData] = useState([{}]);
+  const [isMember, setIsMember] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const getUserData = async () => {
     try {
-      const res = await axios.get("https://g3-job-lk.onrender.com/getUserData", {
+      const res = await axios.get("http://localhost:8081/getUserData", {
         headers: {
           Authorization: `Bearer ${
             JSON.parse(localStorage.getItem("auth"))?.token
@@ -46,7 +48,7 @@ function FreelancerCluster() {
     try {
       console.log("Cluster ID:" + clusterId);
       const res = await axios.get(
-        `https://g3-job-lk.onrender.com/getClusterData/${clusterId}`,
+        `http://localhost:8081/getClusterData/${clusterId}`,
         {
           headers: {
             Authorization: `Bearer ${
@@ -57,6 +59,8 @@ function FreelancerCluster() {
       );
       console.log("Cluster Data:" + JSON.stringify(res.data.cluster, null, 2));
       setClusterData(res.data.cluster);
+      const memberIds = res.data.cluster.map((member) => member.id);
+      setIsMember(memberIds.includes(userData.id));
     } catch (error) {
       console.error("Error fetching cluster data:", error);
     }
@@ -75,6 +79,63 @@ function FreelancerCluster() {
     return `${day}-${month}-${year}`;
   }
 
+  const handleJoinCluster = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:8081/joinCluster",
+        {
+          clusterId: clusterId,
+          freelancerId: userData.id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("auth"))?.token
+            }`,
+          },
+        }
+      );
+      console.log("Join Cluster Response:" + JSON.stringify(res.data, null, 2));
+      setSuccessMessage(res.data.Message);
+      setTimeout(() => {
+        setSuccessMessage("");
+        setIsMember(false);
+        getClusterData();
+      }, 3000);
+    } catch (error) {
+      console.error("Error joining cluster:", error);
+    }
+  };
+
+  const handleLeaveCluster = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:8081/leaveCluster",
+        {
+          clusterId: clusterId,
+          freelancerId: userData.id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("auth"))?.token
+            }`,
+          },
+        }
+      );
+      console.log(
+        "Leave Cluster Response:" + JSON.stringify(res.data, null, 2)
+      );
+      setSuccessMessage(res.data.Message);
+      setTimeout(() => {
+        setSuccessMessage("");
+        setIsMember(false);
+        getClusterData();
+      }, 3000);
+    } catch (error) {
+      console.error("Error leaving cluster:", error);
+    }
+  };
   useEffect(() => {
     getUserData();
   }, []);
@@ -104,16 +165,29 @@ function FreelancerCluster() {
                   </div>
                   <div className="col-md-3 d-flex align-items-center justify-content-end px-5">
                     {userData.role === "freelancer" && (
-                      <button className="btn btn-outline-primary mx-1">
-                        Join Cluster
+                      <button
+                        className={`btn ${
+                          isMember
+                            ? "btn-outline-danger"
+                            : "btn-outline-primary"
+                        } mx-1`}
+                        onClick={
+                          isMember ? handleLeaveCluster : handleJoinCluster
+                        }
+                      >
+                        {isMember ? "Leave Cluster" : "Join Cluster"}
                       </button>
                     )}
+
                     {userData.role === "employer" && (
                       <button className="btn btn-outline-primary mx-1">
                         Hire Cluster
                       </button>
                     )}
                   </div>
+                  {successMessage && (
+                    <div className="alert alert-success">{successMessage}</div>
+                  )}
                 </div>
 
                 <div className="table-responsive">

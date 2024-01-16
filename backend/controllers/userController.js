@@ -1258,3 +1258,43 @@ export const getClustersEmployer = (req, res) => {
     console.log("Server error", error);
   }
 };
+
+//join cluster
+export const joinCluster = (req, res) => {
+  try {
+    console.log("In the controller" + JSON.stringify(req.body, null, 2));
+    const clusterMember = {
+      cluster_id: req.body.clusterId,
+      freelancer_id: req.body.freelancerId,
+    };
+    clusterModel.joinCluster(clusterMember, (err, result) => {
+      if (err) return res.json({ Error: err.message });
+      return res.json({
+        Status: "Success",
+        Message: "Joined cluster successfully!",
+      });
+    });
+  } catch (error) {
+    console.log("Server error", error);
+  }
+};
+
+//leave cluster
+export const leaveCluster = (req, res) => {
+  try {
+    console.log("In the controller" + JSON.stringify(req.body, null, 2));
+    const clusterMember = {
+      cluster_id: req.body.clusterId,
+      freelancer_id: req.body.freelancerId,
+    };
+    clusterModel.leaveCluster(clusterMember, (err, result) => {
+      if (err) return res.json({ Error: err.message });
+      return res.json({
+        Status: "Success",
+        Message: "Left cluster successfully!",
+      });
+    });
+  } catch (error) {
+    console.log("Server error", error);
+  }
+};

@@ -25,7 +25,7 @@ function JobPage() {
   });
   const getUserData = async () => {
     try {
-      const res = await axios.get("https://g3-job-lk.onrender.com/getUserData", {
+      const res = await axios.get("http://localhost:8081/getUserData", {
         headers: {
           Authorization: `Bearer ${
             JSON.parse(localStorage.getItem("auth"))?.token
@@ -48,7 +48,7 @@ function JobPage() {
   const getJobData = async () => {
     if (userData.role === "employer") {
       try {
-        const res = await axios.get("https://g3-job-lk.onrender.com/getJobData", {
+        const res = await axios.get("http://localhost:8081/getJobData", {
           headers: {
             Authorization: `Bearer ${
               JSON.parse(localStorage.getItem("auth"))?.token
@@ -62,7 +62,7 @@ function JobPage() {
     } else {
       try {
         const res = await axios.get(
-          "https://g3-job-lk.onrender.com/getJobDataFreelancer",
+          "http://localhost:8081/getJobDataFreelancer",
           {
             headers: {
               Authorization: `Bearer ${
