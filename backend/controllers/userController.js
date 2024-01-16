@@ -1298,3 +1298,20 @@ export const leaveCluster = (req, res) => {
     console.log("Server error", error);
   }
 };
+
+export const hireCluster = (req, res) => {
+  const hireDetails = {
+    employer_id: req.body.employerId,
+    cluster_id: req.body.clusterId,
+    hire_date: new Date(),
+  };
+
+  clusterModel.hireCluster(hireDetails, (err, result) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ message: "Error hiring cluster", error: err });
+    }
+    res.json({ message: "Cluster hired successfully!", result: result });
+  });
+};

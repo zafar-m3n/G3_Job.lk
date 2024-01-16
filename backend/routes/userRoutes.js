@@ -161,4 +161,7 @@ router.post("/joinCluster", authMiddleware, UserController.joinCluster);
 
 //leave cluster
 router.post("/leaveCluster", authMiddleware, UserController.leaveCluster);
+
+router.post("/hireCluster", authMiddleware, UserController.hireCluster);
+
 export default router;

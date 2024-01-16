@@ -68,3 +68,8 @@ export const leaveCluster = (clusterMember, callback) => {
     callback
   );
 };
+
+export const hireCluster = (hireDetails, callback) => {
+  const query = "INSERT INTO hired_clusters SET ?";
+  db.query(query, hireDetails, callback);
+};

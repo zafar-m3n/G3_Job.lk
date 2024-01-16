@@ -136,6 +136,31 @@ function FreelancerCluster() {
       console.error("Error leaving cluster:", error);
     }
   };
+
+  const handleHireCluster = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:8081/hireCluster",
+        {
+          clusterId: clusterId,
+          employerId: userData.id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("auth"))?.token
+            }`,
+          },
+        }
+      );
+      console.log("Hire Cluster Response:", res.data);
+      setSuccessMessage(res.data.message);
+      setTimeout(() => setSuccessMessage(""), 3000);
+    } catch (error) {
+      console.error("Error hiring cluster:", error);
+    }
+  };
+
   useEffect(() => {
     getUserData();
   }, []);
@@ -180,7 +205,10 @@ function FreelancerCluster() {
                     )}
 
                     {userData.role === "employer" && (
-                      <button className="btn btn-outline-primary mx-1">
+                      <button
+                        className="btn btn-outline-primary mx-1"
+                        onClick={handleHireCluster}
+                      >
                         Hire Cluster
                       </button>
                     )}
