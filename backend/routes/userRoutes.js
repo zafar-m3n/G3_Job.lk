@@ -164,4 +164,9 @@ router.post("/leaveCluster", authMiddleware, UserController.leaveCluster);
 
 router.post("/hireCluster", authMiddleware, UserController.hireCluster);
 
+router.get(
+  "/recommendedJobs/:userId",
+  authMiddleware,
+  UserController.getRecommendedJobs
+);
 export default router;

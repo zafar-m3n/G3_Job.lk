@@ -1315,3 +1315,35 @@ export const hireCluster = (req, res) => {
     res.json({ message: "Cluster hired successfully!", result: result });
   });
 };
+
+export const getRecommendedJobs = (req, res) => {
+  const userId = req.user.id; // Assuming you're getting the user ID from the URL parameters
+
+  freelancerModel.getFreelancerSkills(userId, (err, freelancerData) => {
+    if (err) {
+      return res
+        .status(500)
+        .send({ message: "Error retrieving freelancer data", error: err });
+    }
+    // Check if the freelancer has skills listed
+    if (!freelancerData[0] || !freelancerData[0].skills) {
+      return res
+        .status(200)
+        .send({ message: "No skills found for this freelancer", data: [] });
+    }
+
+    const skillsArray = freelancerData[0].skills.split(",");
+    jobModel.getJobsBySkills(skillsArray, (err, jobsData) => {
+      if (err) {
+        return res
+          .status(500)
+          .send({ message: "Error retrieving jobs data", error: err });
+      }
+      // Sort jobs by date and return the top 3
+      const sortedJobs = jobsData.sort(
+        (a, b) => new Date(b.datePosted) - new Date(a.datePosted)
+      );
+      res.status(200).json(sortedJobs.slice(0, 3));
+    });
+  });
+};

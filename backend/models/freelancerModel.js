@@ -56,3 +56,7 @@ export const findFreelancerByUserId = (userId) => {
     });
   });
 };
+export const getFreelancerSkills = (userId, callback) => {
+  const query = "SELECT skills FROM freelancers WHERE userID = ?";
+  db.query(query, [userId], callback);
+};

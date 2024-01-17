@@ -35,3 +35,8 @@ export const getJobById = (jobId, callback) => {
   const query = "SELECT * FROM jobs WHERE id = ?";
   db.query(query, [jobId], callback);
 };
+
+export const getJobsBySkills = (skillsArray, callback) => {
+  const query = "SELECT * FROM jobs WHERE FIND_IN_SET(?, requiredSkills)";
+  db.query(query, [skillsArray.join(",")], callback);
+};

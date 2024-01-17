@@ -25,7 +25,7 @@ function JobPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterLocation, setFilterLocation] = useState("");
   const [selectedSkills, setSelectedSkills] = useState([]);
-  const [maxBudget, setMaxBudget] = useState(50000); // Example initial value
+  const [maxBudget, setMaxBudget] = useState(50000);
 
   const districts = [
     "Ampara",
@@ -161,6 +161,29 @@ function JobPage() {
     );
   });
 
+  const [recommendedJobs, setRecommendedJobs] = useState([]);
+
+  const fetchRecommendedJobs = async () => {
+    if (userData.role === "freelancer") {
+      try {
+        const response = await axios.get(
+          `http://localhost:8081/recommendedJobs/${userData.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${
+                JSON.parse(localStorage.getItem("auth"))?.token
+              }`,
+            },
+          }
+        );
+        console.log("Response" + JSON.stringify(response.data, null, 2));
+        setRecommendedJobs(response.data);
+      } catch (error) {
+        console.error("Error fetching recommended jobs: ", error);
+      }
+    }
+  };
+
   useEffect(() => {
     getUserData();
   }, []);
@@ -169,6 +192,10 @@ function JobPage() {
     if (userData.role !== "") {
       getJobData();
     }
+  }, [userData]);
+
+  useEffect(() => {
+    fetchRecommendedJobs();
   }, [userData]);
 
   return (
@@ -238,6 +265,14 @@ function JobPage() {
                 </Accordion>
               </Col>
             </Row>
+            {userData.role === "freelancer" && recommendedJobs.length > 0 && (
+              <Row>
+                <h2 className="heading">Recommended Jobs</h2>
+                {recommendedJobs.map((job, index) => (
+                  <JobCard key={index} job={job} userRole={userData.role} />
+                ))}
+              </Row>
+            )}
             <Row>
               <h2 className="heading">
                 {userData.role === "employer"
