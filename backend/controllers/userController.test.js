@@ -7,6 +7,8 @@ const employerModel = require("../models/employerModel");
 const bidModel = require("../models/bidModel");
 const ratingModel = require("../models/ratingModel");
 const resourceModel = require("../models/resourceModel");
+const endorsementModel = require("../models/endorsementModel");
+const clusterModel = require("../models/clusterModel");
 const {
   register,
   login,
@@ -37,6 +39,20 @@ const {
   getFreelancerDataById,
   submitRating,
   getResources,
+  endorseSkills,
+  getEmployersData,
+  getEmployerDataById,
+  getClusters,
+  updateResource,
+  deleteResource,
+  addResource,
+  addCluster,
+  getClusterDataById,
+  getClustersEmployer,
+  joinCluster,
+  leaveCluster,
+  hireCluster,
+  getRecommendedJobs,
 } = require("./userController");
 
 jest.mock("bcrypt", () => ({
@@ -56,6 +72,7 @@ jest.mock("../models/userModel", () => ({
   findOne: jest.fn(),
   updateUser: jest.fn(),
   findFreelancers: jest.fn(),
+  findEmployers: jest.fn(),
 }));
 
 jest.mock("../models/jobModel", () => ({
@@ -63,6 +80,7 @@ jest.mock("../models/jobModel", () => ({
   getJobById: jest.fn(),
   getJobFromEmployer: jest.fn(),
   getAllJobs: jest.fn(),
+  getJobsBySkills: jest.fn(),
 }));
 
 jest.mock("../models/freelancerModel", () => ({
@@ -73,6 +91,7 @@ jest.mock("../models/freelancerModel", () => ({
   updateFreelancerWebsite: jest.fn(),
   insertFreelancer: jest.fn(),
   findFreelancerByUserId: jest.fn(),
+  freelancerModel: jest.fn(),
 }));
 
 jest.mock("../models/employerModel", () => ({
@@ -81,6 +100,7 @@ jest.mock("../models/employerModel", () => ({
   updateEmployerLanguages: jest.fn(),
   updateEmployerWebsite: jest.fn(),
   insertEmployer: jest.fn(),
+  findEmployerByUserId: jest.fn(),
 }));
 
 jest.mock("../models/bidModel", () => ({
@@ -98,6 +118,23 @@ jest.mock("../models/ratingModel", () => ({
 
 jest.mock("../models/resourceModel", () => ({
   getAllResources: jest.fn(),
+  updateResource: jest.fn(),
+  deleteResource: jest.fn(),
+  addResource: jest.fn(),
+}));
+
+jest.mock("../models/endorsementModel", () => ({
+  endorseSkills: jest.fn(),
+}));
+
+jest.mock("../models/clusterModel", () => ({
+  getAllClusters: jest.fn(),
+  addCluster: jest.fn(),
+  getClusterDataById: jest.fn(),
+  getClustersEmployer: jest.fn(),
+  joinCluster: jest.fn(),
+  leaveCluster: jest.fn(),
+  hireCluster: jest.fn(),
 }));
 
 describe("Register function in userController", () => {
@@ -2888,5 +2925,920 @@ describe("getResources function in userController", () => {
 
     expect(resourceModel.getAllResources).toHaveBeenCalled();
     expect(res.json).toHaveBeenCalledWith({ Error: "No resources found" });
+  });
+});
+
+describe("endorseSkills function in userController", () => {
+  // Utility functions for creating mock requests and responses
+  const mockReq = (body = {}) => ({
+    body,
+  });
+
+  const mockRes = () => {
+    const res = {};
+    res.json = jest.fn().mockReturnValue(res);
+    return res;
+  };
+
+  beforeEach(() => {
+    endorsementModel.endorseSkills.mockReset();
+  });
+
+  it("should successfully endorse freelancer skills", async () => {
+    endorsementModel.endorseSkills.mockImplementationOnce(
+      (endorserId, freelancerId, skills, callback) =>
+        callback(null, { insertId: 1 })
+    );
+
+    const req = mockReq({
+      endorserId: "123",
+      freelancerId: "456",
+      skills: ["JavaScript", "React"],
+    });
+    const res = mockRes();
+
+    await endorseSkills(req, res);
+
+    expect(endorsementModel.endorseSkills).toHaveBeenCalledWith(
+      "123",
+      "456",
+      ["JavaScript", "React"],
+      expect.any(Function)
+    );
+    expect(res.json).toHaveBeenCalledWith({
+      Status: "Success",
+      Message: "Freelancer Skills endorsed",
+      endorsement: {
+        endorserId: "123",
+        freelancerId: "456",
+        skills: ["JavaScript", "React"],
+      },
+    });
+  });
+
+  it("should return an error during skills endorsement", async () => {
+    endorsementModel.endorseSkills.mockImplementationOnce(
+      (endorserId, freelancerId, skills, callback) =>
+        callback(new Error("Database error"), null)
+    );
+
+    const req = mockReq({
+      endorserId: "123",
+      freelancerId: "456",
+      skills: ["Node.js"],
+    });
+    const res = mockRes();
+
+    await endorseSkills(req, res);
+
+    expect(endorsementModel.endorseSkills).toHaveBeenCalledWith(
+      "123",
+      "456",
+      ["Node.js"],
+      expect.any(Function)
+    );
+    expect(res.json).toHaveBeenCalledWith({ Error: "Database error" });
+  });
+});
+
+describe("getEmployersData function in userController", () => {
+  // Utility functions for creating mock requests and responses
+  const mockReq = () => ({});
+  const mockRes = () => {
+    const res = {};
+    res.json = jest.fn().mockReturnValue(res);
+    return res;
+  };
+
+  beforeEach(() => {
+    UserModel.findEmployers.mockReset();
+    employerModel.findEmployerByUserId.mockReset();
+  });
+
+  it("should successfully retrieve employers data", async () => {
+    UserModel.findEmployers.mockImplementationOnce((callback) =>
+      callback(null, [{ id: 1, name: "ACME Corp", email: "contact@acme.com" }])
+    );
+    employerModel.findEmployerByUserId.mockResolvedValue([
+      {
+        description: "Tech Company",
+        languages: "English",
+        website: "https://acme.com",
+      },
+    ]);
+
+    const req = mockReq();
+    const res = mockRes();
+
+    await getEmployersData(req, res);
+
+    expect(UserModel.findEmployers).toHaveBeenCalled();
+    expect(employerModel.findEmployerByUserId).toHaveBeenCalledWith(1);
+    expect(res.json).toHaveBeenCalledWith({
+      Status: "Success",
+      employers: expect.any(Array),
+    });
+  });
+
+  it("should return an error during database query in UserModel", async () => {
+    UserModel.findEmployers.mockImplementationOnce((callback) =>
+      callback(new Error("Database query error"), null)
+    );
+
+    const req = mockReq();
+    const res = mockRes();
+
+    await getEmployersData(req, res);
+
+    expect(UserModel.findEmployers).toHaveBeenCalled();
+    expect(res.json).toHaveBeenCalledWith({ Error: "Database query error" });
+  });
+
+  it("should return a message when no employers are found", async () => {
+    UserModel.findEmployers.mockImplementationOnce((callback) =>
+      callback(null, [])
+    );
+
+    const req = mockReq();
+    const res = mockRes();
+
+    await getEmployersData(req, res);
+
+    expect(UserModel.findEmployers).toHaveBeenCalled();
+    expect(res.json).toHaveBeenCalledWith({ Error: "No employers found" });
+  });
+});
+
+describe("getEmployerDataById function in userController", () => {
+  // Utility functions for creating mock requests and responses
+  const mockReq = (params = {}) => ({
+    params,
+  });
+
+  const mockRes = () => {
+    const res = {};
+    res.json = jest.fn().mockReturnValue(res);
+    return res;
+  };
+
+  beforeEach(() => {
+    UserModel.findOne.mockReset();
+    employerModel.findEmployerById.mockReset();
+  });
+
+  it("should successfully retrieve employer data by ID", async () => {
+    UserModel.findOne.mockImplementationOnce((id, callback) =>
+      callback(null, [{ id: 1, name: "ACME Corp", email: "contact@acme.com" }])
+    );
+    employerModel.findEmployerById.mockImplementationOnce((id, callback) =>
+      callback(null, [
+        {
+          description: "Tech Company",
+          languages: "English",
+          website: "https://acme.com",
+        },
+      ])
+    );
+
+    const req = mockReq({ employerId: "1" });
+    const res = mockRes();
+
+    await getEmployerDataById(req, res);
+
+    expect(UserModel.findOne).toHaveBeenCalledWith("1", expect.any(Function));
+    expect(employerModel.findEmployerById).toHaveBeenCalledWith(
+      "1",
+      expect.any(Function)
+    );
+    expect(res.json).toHaveBeenCalledWith({
+      Status: "Success",
+      employer: expect.any(Object),
+    });
+  });
+
+  it("should return an error during database query in UserModel", async () => {
+    UserModel.findOne.mockImplementationOnce((id, callback) =>
+      callback(new Error("Database query error"), null)
+    );
+
+    const req = mockReq({ employerId: "1" });
+    const res = mockRes();
+
+    await getEmployerDataById(req, res);
+
+    expect(UserModel.findOne).toHaveBeenCalledWith("1", expect.any(Function));
+    expect(res.json).toHaveBeenCalledWith({ Error: "Database query error" });
+  });
+
+  it("should return a message when employer not found in UserModel", async () => {
+    UserModel.findOne.mockImplementationOnce((id, callback) =>
+      callback(null, [])
+    );
+
+    const req = mockReq({ employerId: "1" });
+    const res = mockRes();
+
+    await getEmployerDataById(req, res);
+
+    expect(UserModel.findOne).toHaveBeenCalledWith("1", expect.any(Function));
+    expect(res.json).toHaveBeenCalledWith({ Error: "Employer not found" });
+  });
+});
+
+describe("getClusters function in userController", () => {
+  // Utility functions for creating mock requests and responses
+  const mockReq = (body = {}) => ({
+    body,
+  });
+
+  const mockRes = () => {
+    const res = {};
+    res.json = jest.fn().mockReturnValue(res);
+    return res;
+  };
+
+  beforeEach(() => {
+    clusterModel.getAllClusters.mockReset();
+  });
+
+  it("should successfully retrieve clusters", async () => {
+    clusterModel.getAllClusters.mockImplementationOnce((callback) =>
+      callback(null, [
+        { id: 1, name: "Cluster 1", description: "Description 1" },
+      ])
+    );
+
+    const req = mockReq({ userId: "123" });
+    const res = mockRes();
+
+    await getClusters(req, res);
+
+    expect(clusterModel.getAllClusters).toHaveBeenCalled();
+    expect(res.json).toHaveBeenCalledWith({
+      Status: "Success",
+      Message: "Clusters found",
+      clusters: [{ id: 1, name: "Cluster 1", description: "Description 1" }],
+    });
+  });
+
+  it("should return an error during clusters retrieval", async () => {
+    clusterModel.getAllClusters.mockImplementationOnce((callback) =>
+      callback(new Error("Database error"), null)
+    );
+
+    const req = mockReq({ userId: "123" });
+    const res = mockRes();
+
+    await getClusters(req, res);
+
+    expect(clusterModel.getAllClusters).toHaveBeenCalled();
+    expect(res.json).toHaveBeenCalledWith({ Error: "Database error" });
+  });
+
+  it("should handle the case when no clusters are found", async () => {
+    clusterModel.getAllClusters.mockImplementationOnce((callback) =>
+      callback(null, [])
+    );
+
+    const req = mockReq({ userId: "123" });
+    const res = mockRes();
+
+    await getClusters(req, res);
+
+    expect(clusterModel.getAllClusters).toHaveBeenCalled();
+    expect(res.json).toHaveBeenCalledWith({
+      Status: "Success",
+      Message: "Clusters found",
+      clusters: [],
+    });
+  });
+});
+
+describe("updateResource function in userController", () => {
+  // Utility functions for creating mock requests and responses
+  const mockReq = (body = {}) => ({
+    body,
+  });
+
+  const mockRes = () => {
+    const res = {};
+    res.status = jest.fn().mockReturnValue(res);
+    res.send = jest.fn().mockReturnValue(res);
+    return res;
+  };
+
+  beforeEach(() => {
+    resourceModel.updateResource.mockReset();
+  });
+
+  it("should successfully update a resource", async () => {
+    resourceModel.updateResource.mockImplementationOnce((id, data, callback) =>
+      callback(null, { affectedRows: 1 })
+    );
+
+    const req = mockReq({
+      id: "123",
+      title: "New Title",
+      category: "Education",
+      description: "Updated description",
+      url: "https://newurl.com",
+    });
+    const res = mockRes();
+
+    await updateResource(req, res);
+
+    expect(resourceModel.updateResource).toHaveBeenCalledWith(
+      "123",
+      expect.any(Object),
+      expect.any(Function)
+    );
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.send).toHaveBeenCalledWith("Resource updated successfully!");
+  });
+
+  it("should return an error during resource update", async () => {
+    resourceModel.updateResource.mockImplementationOnce((id, data, callback) =>
+      callback(new Error("Database error"), null)
+    );
+
+    const req = mockReq({
+      id: "123",
+      title: "Another Title",
+      category: "Tech",
+      description: "Another description",
+      url: "https://anotherurl.com",
+    });
+    const res = mockRes();
+
+    await updateResource(req, res);
+
+    expect(resourceModel.updateResource).toHaveBeenCalledWith(
+      "123",
+      expect.any(Object),
+      expect.any(Function)
+    );
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith("Error updating resource");
+  });
+});
+
+describe("deleteResource function in userController", () => {
+  // Utility functions for creating mock requests and responses
+  const mockReq = (body = {}) => ({
+    body,
+  });
+
+  const mockRes = () => {
+    const res = {};
+    res.status = jest.fn().mockReturnValue(res);
+    res.send = jest.fn().mockReturnValue(res);
+    return res;
+  };
+
+  beforeEach(() => {
+    resourceModel.deleteResource.mockReset();
+  });
+
+  it("should successfully delete a resource", async () => {
+    resourceModel.deleteResource.mockImplementationOnce(
+      (resourceId, callback) => callback(null, { affectedRows: 1 })
+    );
+
+    const req = mockReq({ resourceId: "123" });
+    const res = mockRes();
+
+    await deleteResource(req, res);
+
+    expect(resourceModel.deleteResource).toHaveBeenCalledWith(
+      "123",
+      expect.any(Function)
+    );
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.send).toHaveBeenCalledWith("Resource deleted successfully!");
+  });
+
+  it("should return an error during resource deletion", async () => {
+    resourceModel.deleteResource.mockImplementationOnce(
+      (resourceId, callback) => callback(new Error("Database error"), null)
+    );
+
+    const req = mockReq({ resourceId: "123" });
+    const res = mockRes();
+
+    await deleteResource(req, res);
+
+    expect(resourceModel.deleteResource).toHaveBeenCalledWith(
+      "123",
+      expect.any(Function)
+    );
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith("Error deleting resource");
+  });
+});
+
+describe("addResource function in userController", () => {
+  // Utility functions for creating mock requests and responses
+  const mockReq = (body = {}) => ({
+    body,
+  });
+
+  const mockRes = () => {
+    const res = {};
+    res.status = jest.fn().mockReturnValue(res);
+    res.send = jest.fn().mockReturnValue(res);
+    res.json = jest.fn().mockReturnValue(res);
+    return res;
+  };
+
+  beforeEach(() => {
+    resourceModel.addResource.mockReset();
+  });
+
+  it("should successfully add a resource", async () => {
+    resourceModel.addResource.mockImplementationOnce((data, callback) =>
+      callback(null, { insertId: 1, affectedRows: 1 })
+    );
+
+    const req = mockReq({
+      title: "New Resource",
+      category: "Education",
+      description: "Resource Description",
+      url: "https://resourceurl.com",
+    });
+    const res = mockRes();
+
+    await addResource(req, res);
+
+    expect(resourceModel.addResource).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.any(Function)
+    );
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Resource added successfully",
+      data: expect.any(Object),
+    });
+  });
+
+  it("should return an error during resource addition", async () => {
+    resourceModel.addResource.mockImplementationOnce((data, callback) =>
+      callback(new Error("Database error"), null)
+    );
+
+    const req = mockReq({
+      title: "Another Resource",
+      category: "Tech",
+      description: "Another Description",
+      url: "https://anotherresource.com",
+    });
+    const res = mockRes();
+
+    await addResource(req, res);
+
+    expect(resourceModel.addResource).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.any(Function)
+    );
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith(expect.any(Error));
+  });
+});
+
+describe("addCluster function in userController", () => {
+  // Utility functions for creating mock requests and responses
+  const mockReq = (body = {}) => ({
+    body,
+  });
+
+  const mockRes = () => {
+    const res = {};
+    res.status = jest.fn().mockReturnValue(res);
+    res.send = jest.fn().mockReturnValue(res);
+    res.json = jest.fn().mockReturnValue(res);
+    return res;
+  };
+
+  beforeEach(() => {
+    clusterModel.addCluster.mockReset();
+  });
+
+  it("should successfully add a cluster", async () => {
+    clusterModel.addCluster.mockImplementationOnce((data, callback) =>
+      callback(null, { insertId: 1, affectedRows: 1 })
+    );
+
+    const req = mockReq({
+      name: "New Cluster",
+      description: "Cluster Description",
+    });
+    const res = mockRes();
+
+    await addCluster(req, res);
+
+    expect(clusterModel.addCluster).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.any(Function)
+    );
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Cluster added successfully",
+      data: expect.any(Object),
+    });
+  });
+
+  it("should return an error during cluster addition", async () => {
+    clusterModel.addCluster.mockImplementationOnce((data, callback) =>
+      callback(new Error("Database error"), null)
+    );
+
+    const req = mockReq({
+      name: "Another Cluster",
+      description: "Another Description",
+    });
+    const res = mockRes();
+
+    await addCluster(req, res);
+
+    expect(clusterModel.addCluster).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.any(Function)
+    );
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith(expect.any(Error));
+  });
+});
+
+describe("getClusterDataById function in userController", () => {
+  // Utility functions for creating mock requests and responses
+  const mockReq = (params = {}) => ({
+    params,
+  });
+
+  const mockRes = () => {
+    const res = {};
+    res.json = jest.fn().mockReturnValue(res);
+    return res;
+  };
+
+  beforeEach(() => {
+    clusterModel.getClusterDataById.mockReset();
+  });
+
+  it("should successfully retrieve cluster data by ID", async () => {
+    clusterModel.getClusterDataById.mockImplementationOnce((id, callback) =>
+      callback(null, {
+        id: "123",
+        name: "Cluster 1",
+        description: "Description 1",
+      })
+    );
+
+    const req = mockReq({ clusterId: "123" });
+    const res = mockRes();
+
+    await getClusterDataById(req, res);
+
+    expect(clusterModel.getClusterDataById).toHaveBeenCalledWith(
+      "123",
+      expect.any(Function)
+    );
+    expect(res.json).toHaveBeenCalledWith({
+      Status: "Success",
+      Message: "Cluster found",
+      cluster: expect.any(Object),
+    });
+  });
+
+  it("should return an error during cluster data retrieval", async () => {
+    clusterModel.getClusterDataById.mockImplementationOnce((id, callback) =>
+      callback(new Error("Database error"), null)
+    );
+
+    const req = mockReq({ clusterId: "123" });
+    const res = mockRes();
+
+    await getClusterDataById(req, res);
+
+    expect(clusterModel.getClusterDataById).toHaveBeenCalledWith(
+      "123",
+      expect.any(Function)
+    );
+    expect(res.json).toHaveBeenCalledWith({ Error: "Database error" });
+  });
+
+  it("should handle the case when cluster not found for given ID", async () => {
+    clusterModel.getClusterDataById.mockImplementationOnce(
+      (id, callback) => callback(null, null) // Assuming null is returned when no cluster is found
+    );
+
+    const req = mockReq({ clusterId: "123" });
+    const res = mockRes();
+
+    await getClusterDataById(req, res);
+
+    expect(clusterModel.getClusterDataById).toHaveBeenCalledWith(
+      "123",
+      expect.any(Function)
+    );
+    expect(res.json).toHaveBeenCalledWith({
+      Status: "Success",
+      Message: "Cluster found",
+      cluster: null,
+    });
+  });
+
+});
+
+describe("getClustersEmployer function in userController", () => {
+  // Utility functions for creating mock requests and responses
+  const mockReq = (body = {}) => ({
+    body,
+  });
+
+  const mockRes = () => {
+    const res = {};
+    res.json = jest.fn().mockReturnValue(res);
+    return res;
+  };
+
+  beforeEach(() => {
+    clusterModel.getClustersEmployer.mockReset();
+  });
+
+  it("should successfully retrieve clusters for employer", async () => {
+    clusterModel.getClustersEmployer.mockImplementationOnce((callback) =>
+      callback(null, [
+        { id: 1, name: "Cluster 1", description: "Description 1" },
+      ])
+    );
+
+    const req = mockReq({ userId: "123" });
+    const res = mockRes();
+
+    await getClustersEmployer(req, res);
+
+    expect(clusterModel.getClustersEmployer).toHaveBeenCalled();
+    expect(res.json).toHaveBeenCalledWith({
+      Status: "Success",
+      Message: "Clusters found",
+      clusters: [{ id: 1, name: "Cluster 1", description: "Description 1" }],
+    });
+  });
+
+  it("should return an error during clusters retrieval", async () => {
+    clusterModel.getClustersEmployer.mockImplementationOnce((callback) =>
+      callback(new Error("Database error"), null)
+    );
+
+    const req = mockReq({ userId: "123" });
+    const res = mockRes();
+
+    await getClustersEmployer(req, res);
+
+    expect(clusterModel.getClustersEmployer).toHaveBeenCalled();
+    expect(res.json).toHaveBeenCalledWith({ Error: "Database error" });
+  });
+
+  it("should handle the case when no clusters are found for employer", async () => {
+    clusterModel.getClustersEmployer.mockImplementationOnce((callback) =>
+      callback(null, [])
+    );
+
+    const req = mockReq({ userId: "123" });
+    const res = mockRes();
+
+    await getClustersEmployer(req, res);
+
+    expect(clusterModel.getClustersEmployer).toHaveBeenCalled();
+    expect(res.json).toHaveBeenCalledWith({
+      Status: "Success",
+      Message: "Clusters found",
+      clusters: [],
+    });
+  });
+});
+
+describe("joinCluster function in userController", () => {
+  // Utility functions for creating mock requests and responses
+  const mockReq = (body = {}) => ({
+    body,
+  });
+
+  const mockRes = () => {
+    const res = {};
+    res.json = jest.fn().mockReturnValue(res);
+    return res;
+  };
+
+  beforeEach(() => {
+    clusterModel.joinCluster.mockReset();
+  });
+
+  it("should successfully join a cluster", async () => {
+    clusterModel.joinCluster.mockImplementationOnce((memberData, callback) =>
+      callback(null, { affectedRows: 1 })
+    );
+
+    const req = mockReq({
+      clusterId: "123",
+      freelancerId: "456",
+    });
+    const res = mockRes();
+
+    await joinCluster(req, res);
+
+    expect(clusterModel.joinCluster).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.any(Function)
+    );
+    expect(res.json).toHaveBeenCalledWith({
+      Status: "Success",
+      Message: "Joined cluster successfully!",
+    });
+  });
+
+  it("should return an error during joining of cluster", async () => {
+    clusterModel.joinCluster.mockImplementationOnce((memberData, callback) =>
+      callback(new Error("Database error"), null)
+    );
+
+    const req = mockReq({
+      clusterId: "123",
+      freelancerId: "456",
+    });
+    const res = mockRes();
+
+    await joinCluster(req, res);
+
+    expect(clusterModel.joinCluster).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.any(Function)
+    );
+    expect(res.json).toHaveBeenCalledWith({ Error: "Database error" });
+  });
+});
+
+describe("leaveCluster function in userController", () => {
+  // Utility functions for creating mock requests and responses
+  const mockReq = (body = {}) => ({
+    body,
+  });
+
+  const mockRes = () => {
+    const res = {};
+    res.json = jest.fn().mockReturnValue(res);
+    return res;
+  };
+
+  beforeEach(() => {
+    clusterModel.leaveCluster.mockReset();
+  });
+
+  it("should successfully leave a cluster", async () => {
+    clusterModel.leaveCluster.mockImplementationOnce((memberData, callback) =>
+      callback(null, { affectedRows: 1 })
+    );
+
+    const req = mockReq({
+      clusterId: "123",
+      freelancerId: "456",
+    });
+    const res = mockRes();
+
+    await leaveCluster(req, res);
+
+    expect(clusterModel.leaveCluster).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.any(Function)
+    );
+    expect(res.json).toHaveBeenCalledWith({
+      Status: "Success",
+      Message: "Left cluster successfully!",
+    });
+  });
+
+  it("should return an error during leaving of cluster", async () => {
+    clusterModel.leaveCluster.mockImplementationOnce((memberData, callback) =>
+      callback(new Error("Database error"), null)
+    );
+
+    const req = mockReq({
+      clusterId: "123",
+      freelancerId: "456",
+    });
+    const res = mockRes();
+
+    await leaveCluster(req, res);
+
+    expect(clusterModel.leaveCluster).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.any(Function)
+    );
+    expect(res.json).toHaveBeenCalledWith({ Error: "Database error" });
+  });
+});
+
+describe("hireCluster function in userController", () => {
+  // Utility functions for creating mock requests and responses
+  const mockReq = (body = {}) => ({
+    body,
+  });
+
+  const mockRes = () => {
+    const res = {};
+    res.status = jest.fn().mockReturnValue(res);
+    res.json = jest.fn().mockReturnValue(res);
+    return res;
+  };
+
+  beforeEach(() => {
+    clusterModel.hireCluster.mockReset();
+  });
+
+  it("should successfully hire a cluster", async () => {
+    clusterModel.hireCluster.mockImplementationOnce((hireData, callback) =>
+      callback(null, { insertId: 1, affectedRows: 1 })
+    );
+
+    const req = mockReq({
+      employerId: "123",
+      clusterId: "456",
+    });
+    const res = mockRes();
+
+    await hireCluster(req, res);
+
+    expect(clusterModel.hireCluster).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.any(Function)
+    );
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Cluster hired successfully!",
+      result: expect.any(Object),
+    });
+  });
+
+  it("should return an error during hiring of cluster", async () => {
+    clusterModel.hireCluster.mockImplementationOnce((hireData, callback) =>
+      callback(new Error("Database error"), null)
+    );
+
+    const req = mockReq({
+      employerId: "123",
+      clusterId: "456",
+    });
+    const res = mockRes();
+
+    await hireCluster(req, res);
+
+    expect(clusterModel.hireCluster).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.any(Function)
+    );
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Error hiring cluster",
+      error: expect.any(Error),
+    });
+  });
+});
+
+describe("getRecommendedJobs function in userController", () => {
+  // Mock setup
+  beforeEach(() => {
+    jest.clearAllMocks(); // Clear previous mocks
+  });
+
+  it("should successfully retrieve recommended jobs based on skills", async () => {
+    // Mock freelancer skills retrieval
+    freelancerModel.getFreelancerSkills.mockImplementation((userId, callback) =>
+      callback(null, [{ skills: "Python,JavaScript" }])
+    );
+    // Mock job retrieval based on skills
+    jobModel.getJobsBySkills.mockImplementation((skillsArray, callback) =>
+      callback(null, [
+        { id: 1, title: "Python Developer", datePosted: new Date() },
+        { id: 2, title: "JavaScript Developer", datePosted: new Date() },
+      ])
+    );
+
+    const req = mockReq({ user: { id: "123" } });
+    const res = mockRes();
+
+    await getRecommendedJobs(req, res);
+
+    expect(freelancerModel.getFreelancerSkills).toHaveBeenCalledWith(
+      "123",
+      expect.any(Function)
+    );
+    expect(jobModel.getJobsBySkills).toHaveBeenCalledWith(
+      ["Python", "JavaScript"],
+      expect.any(Function)
+    );
+    expect(res.json).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.objectContaining({ id: expect.any(Number) }),
+      ])
+    );
   });
 });
