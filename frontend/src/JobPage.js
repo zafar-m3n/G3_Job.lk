@@ -265,14 +265,16 @@ function JobPage() {
                 </Accordion>
               </Col>
             </Row>
-            {userData.role === "freelancer" && recommendedJobs.length > 0 && (
-              <Row>
-                <h2 className="heading">Recommended Jobs</h2>
-                {recommendedJobs.map((job, index) => (
-                  <JobCard key={index} job={job} userRole={userData.role} />
-                ))}
-              </Row>
-            )}
+            {userData.role === "freelancer" &&
+              recommendedJobs.length > 0 &&
+              searchQuery === "" && (
+                <Row>
+                  <h2 className="heading">Recommended Jobs</h2>
+                  {recommendedJobs.map((job, index) => (
+                    <JobCard key={index} job={job} userRole={userData.role} />
+                  ))}
+                </Row>
+              )}
             <Row>
               <h2 className="heading">
                 {userData.role === "employer"
