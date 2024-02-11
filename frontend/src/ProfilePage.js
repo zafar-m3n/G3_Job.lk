@@ -150,6 +150,33 @@ function ProfilePage() {
     setIsEditMode(false);
   };
 
+  const [verified, setVerified] = useState(true);
+  useEffect(() => {
+    const getVerification = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:8081/getVerification/${userData.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${
+                JSON.parse(localStorage.getItem("auth"))?.token
+              }`,
+            },
+          }
+        );
+        console.log(res.data);
+        if (res.data.awardedBidsCount >= 5) {
+          setVerified(true);
+        } else {
+          setVerified(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getVerification();
+  }, [userData.id]);
+
   useEffect(() => {
     getUserData();
   }, []);
@@ -205,7 +232,17 @@ function ProfilePage() {
                         className="profile-img"
                       />
                     )}
-                    <h3 className="text-center">{userData.name}</h3>
+
+                    <h3 className="text-center d-flex">
+                      {userData.name}
+                      <p className="ms-2 text-muted text-capitalize">
+                        {verified ? (
+                          <i className="fas fa-check-circle me-2 text-primary"></i>
+                        ) : (
+                          <></>
+                        )}
+                      </p>
+                    </h3>
                     <p>Role: {toTitleCase(userData.role)}</p>
                     {!isEditMode && (
                       <button

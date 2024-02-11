@@ -20,16 +20,13 @@ function Freelancer() {
 
   const getUserData = async () => {
     try {
-      const res = await axios.get(
-        "http://localhost:8081/getUserData",
-        {
-          headers: {
-            Authorization: `Bearer ${
-              JSON.parse(localStorage.getItem("auth"))?.token
-            }`,
-          },
-        }
-      );
+      const res = await axios.get("http://localhost:8081/getUserData", {
+        headers: {
+          Authorization: `Bearer ${
+            JSON.parse(localStorage.getItem("auth"))?.token
+          }`,
+        },
+      });
       const userData = {
         id: res.data.user.id,
         name: res.data.user.first_name + " " + res.data.user.last_name,

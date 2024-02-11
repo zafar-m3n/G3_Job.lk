@@ -169,4 +169,11 @@ router.get(
   authMiddleware,
   UserController.getRecommendedJobs
 );
+
+//freelancer verification
+router.get(
+  "/getVerification/:userId",
+  authMiddleware,
+  UserController.getFreelancerAwardedBidsCount
+);
 export default router;

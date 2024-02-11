@@ -58,3 +58,14 @@ export const declineBid = (bidId, callback) => {
   const query = "UPDATE bids SET status = 'declined' WHERE bidId = ?";
   db.query(query, [bidId], callback);
 };
+
+export const getAwardedBidsCount = (freelancerId, callback) => {
+  const query =
+    "SELECT COUNT(*) as awardedBidsCount FROM bids WHERE freelancerId = ? AND status = 'awarded'";
+  db.query(query, [freelancerId], (err, result) => {
+    if (err) {
+      return callback(err, null);
+    }
+    callback(null, result[0]);
+  });
+};

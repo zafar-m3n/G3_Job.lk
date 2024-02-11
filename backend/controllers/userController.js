@@ -1347,3 +1347,19 @@ export const getRecommendedJobs = (req, res) => {
     });
   });
 };
+
+export const getFreelancerAwardedBidsCount = (req, res) => {
+  console.log("In the controller", JSON.stringify(req.params, null, 2));
+  const freelancerId = req.params.userId;
+  bidModel.getAwardedBidsCount(freelancerId, (err, result) => {
+    if (err) {
+      console.error("Error fetching awarded bids count:", err);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    console.log("Awarded Bids Count:", JSON.stringify(result, null, 2));
+
+    const awardedBidsCount = result.awardedBidsCount;
+    res.json({ awardedBidsCount });
+  });
+};
