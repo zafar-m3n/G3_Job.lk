@@ -17,7 +17,7 @@ function JobDetailsFreelancer() {
   });
   const getUserData = async () => {
     try {
-      const res = await axios.get("http://localhost:8081/getUserData", {
+      const res = await axios.get("https://g3-job-lk.onrender.com/getUserData", {
         headers: {
           Authorization: `Bearer ${
             JSON.parse(localStorage.getItem("auth"))?.token
@@ -43,7 +43,7 @@ function JobDetailsFreelancer() {
 
   const getSingleJobData = async () => {
     try {
-      const res = await axios.get(`http://localhost:8081/getJobData/${jobId}`, {
+      const res = await axios.get(`https://g3-job-lk.onrender.com/getJobData/${jobId}`, {
         headers: {
           Authorization: `Bearer ${
             JSON.parse(localStorage.getItem("auth"))?.token
@@ -64,7 +64,7 @@ function JobDetailsFreelancer() {
   const getEmployerData = async (email) => {
     try {
       const response = await axios.get(
-        `http://localhost:8081/getEmployerData/${email}`,
+        `https://g3-job-lk.onrender.com/getEmployerData/${email}`,
         {
           headers: {
             Authorization: `Bearer ${
@@ -145,7 +145,7 @@ function JobDetailsFreelancer() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8081/submitBid",
+        "https://g3-job-lk.onrender.com/submitBid",
         bidDetails,
         {
           headers: {
@@ -173,7 +173,7 @@ function JobDetailsFreelancer() {
   const getBidData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8081/getJobBids/${jobs.id}/${userData.id}`,
+        `https://g3-job-lk.onrender.com/getJobBids/${jobs.id}/${userData.id}`,
         {
           headers: {
             Authorization: `Bearer ${

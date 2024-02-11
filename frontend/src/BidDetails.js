@@ -18,7 +18,7 @@ function BidDetails() {
   const getUserData = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8081/getUserData",
+        "https://g3-job-lk.onrender.com/getUserData",
         {
           headers: {
             Authorization: `Bearer ${
@@ -58,7 +58,7 @@ function BidDetails() {
   const getSingleBidData = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:8081/getBidData/${bidId}`,
+        `https://g3-job-lk.onrender.com/getBidData/${bidId}`,
         {
           headers: {
             Authorization: `Bearer ${
@@ -92,7 +92,7 @@ function BidDetails() {
     console.log("Accept Bid clicked");
     try {
       const res = await axios.post(
-        "http://localhost:8081/acceptBid",
+        "https://g3-job-lk.onrender.com/acceptBid",
         {
           bidId: bidId,
           jobId: bids.jobId,
@@ -123,7 +123,7 @@ function BidDetails() {
     console.log("Decline Bid clicked");
     try {
       const res = await axios.post(
-        "http://localhost:8081/declineBid",
+        "https://g3-job-lk.onrender.com/declineBid",
         {
           bidId: bidId,
         },

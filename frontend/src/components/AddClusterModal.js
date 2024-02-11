@@ -25,7 +25,7 @@ function AddClusterModal({ onClusterAdded }) {
 
     try {
       const response = await axios.post(
-        "http://localhost:8081/addCluster",
+        "https://g3-job-lk.onrender.com/addCluster",
         clusterData,
         {
           headers: {

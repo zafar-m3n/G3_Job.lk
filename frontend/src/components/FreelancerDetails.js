@@ -23,7 +23,7 @@ function FreelancerDetails({ userData }) {
   const getFreelancersData = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8081/getFreelancerData",
+        "https://g3-job-lk.onrender.com/getFreelancerData",
         {
           headers: {
             Authorization: `Bearer ${
@@ -53,7 +53,7 @@ function FreelancerDetails({ userData }) {
     setFreelancerData(updatedFreelancerData);
     try {
       const res = await axios.post(
-        "http://localhost:8081/updateFreelancerDescription",
+        "https://g3-job-lk.onrender.com/updateFreelancerDescription",
         updatedFreelancerData,
         {
           headers: {
@@ -76,7 +76,7 @@ function FreelancerDetails({ userData }) {
     setFreelancerData(updatedFreelancerData);
     try {
       const res = await axios.post(
-        "http://localhost:8081/updateFreelancerLanguages",
+        "https://g3-job-lk.onrender.com/updateFreelancerLanguages",
         updatedFreelancerData,
         {
           headers: {
@@ -99,7 +99,7 @@ function FreelancerDetails({ userData }) {
     setFreelancerData(updatedFreelancerData);
     try {
       const res = await axios.post(
-        "http://localhost:8081/updateFreelancerSkills",
+        "https://g3-job-lk.onrender.com/updateFreelancerSkills",
         updatedFreelancerData,
         {
           headers: {
@@ -122,7 +122,7 @@ function FreelancerDetails({ userData }) {
     setFreelancerData(updatedFreelancerData);
     try {
       const res = await axios.post(
-        "http://localhost:8081/updateFreelancerWebsite",
+        "https://g3-job-lk.onrender.com/updateFreelancerWebsite",
         updatedFreelancerData,
         {
           headers: {
