@@ -16,7 +16,7 @@ function FreelancerClusters() {
   });
   const getUserData = async () => {
     try {
-      const res = await axios.get("https://g3-job-lk.onrender.com/getUserData", {
+      const res = await axios.get("http://localhost:8081/getUserData", {
         headers: {
           Authorization: `Bearer ${
             JSON.parse(localStorage.getItem("auth"))?.token
@@ -39,10 +39,10 @@ function FreelancerClusters() {
   const [clusterData, setClusterData] = useState([{}]);
   const getClusterData = async () => {
     try {
-      let url = "https://g3-job-lk.onrender.com/getClusters";
+      let url = "http://localhost:8081/getClusters";
       console.log("User Role:" + userData.role);
       if (userData.role === "employer") {
-        url = "https://g3-job-lk.onrender.com/getClustersEmployer";
+        url = "http://localhost:8081/getClustersEmployer";
       }
 
       const res = await axios.get(url, {

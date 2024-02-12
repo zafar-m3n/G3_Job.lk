@@ -22,7 +22,7 @@ function FreelancerCluster() {
 
   const getUserData = async () => {
     try {
-      const res = await axios.get("https://g3-job-lk.onrender.com/getUserData", {
+      const res = await axios.get("http://localhost:8081/getUserData", {
         headers: {
           Authorization: `Bearer ${
             JSON.parse(localStorage.getItem("auth"))?.token
@@ -48,7 +48,7 @@ function FreelancerCluster() {
     try {
       console.log("Cluster ID:" + clusterId);
       const res = await axios.get(
-        `https://g3-job-lk.onrender.com/getClusterData/${clusterId}`,
+        `http://localhost:8081/getClusterData/${clusterId}`,
         {
           headers: {
             Authorization: `Bearer ${
@@ -82,7 +82,7 @@ function FreelancerCluster() {
   const handleJoinCluster = async () => {
     try {
       const res = await axios.post(
-        "https://g3-job-lk.onrender.com/joinCluster",
+        "http://localhost:8081/joinCluster",
         {
           clusterId: clusterId,
           freelancerId: userData.id,
@@ -110,7 +110,7 @@ function FreelancerCluster() {
   const handleLeaveCluster = async () => {
     try {
       const res = await axios.post(
-        "https://g3-job-lk.onrender.com/leaveCluster",
+        "http://localhost:8081/leaveCluster",
         {
           clusterId: clusterId,
           freelancerId: userData.id,
@@ -140,7 +140,7 @@ function FreelancerCluster() {
   const handleHireCluster = async () => {
     try {
       const res = await axios.post(
-        "https://g3-job-lk.onrender.com/hireCluster",
+        "http://localhost:8081/hireCluster",
         {
           clusterId: clusterId,
           employerId: userData.id,
